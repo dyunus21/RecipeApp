@@ -49,7 +49,6 @@ _Version2_
     * Recipes created
     * Recipes uploaded
 * [ ] User can post recipes/questions/challenges in the social feed
-* [ ] User can switch tabs from bottom Navigation Bar (Recipe Search, Ingredients Inventory, Social Feed, Profile Page)
 * [ ] User can like, share, and reviews recipes/posts
 
 **Optional Nice-to-have Stories**

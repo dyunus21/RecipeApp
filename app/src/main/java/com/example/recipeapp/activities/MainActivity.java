@@ -19,13 +19,14 @@ import com.parse.ParseUser;
 public class MainActivity extends AppCompatActivity {
 
     private static final String TAG = "MainActivity";
+    public NavController navController;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
+        navController = Navigation.findNavController(this, R.id.nav_host_fragment);
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
         NavigationUI.setupWithNavController(bottomNavigationView, navController);
 
@@ -40,7 +41,9 @@ public class MainActivity extends AppCompatActivity {
 
     private void logoutUser() {
         Log.i(TAG, "Attempting to logout user!");
-//        ParseUser.logOut();
+        ParseUser.logOut();
+        navController.navigate(R.id.loginFragment);
+
 //        NavHostFragment.findNavController().navigate(R.id.loginFragment);
 //        startActivity(intent);
     }
