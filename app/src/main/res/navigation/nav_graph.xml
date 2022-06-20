@@ -5,21 +5,15 @@
     android:id="@+id/nav_graph"
     app:startDestination="@id/loginFragment">
 
-    <activity
-        android:id="@+id/registerActivity"
-        android:name="com.example.recipeapp.activities.RegisterActivity"
-        android:label="activity_register"
-        tools:layout="@layout/activity_register" />
-    <activity
-        android:id="@+id/loginActivity"
-        android:name="com.example.recipeapp.activities.LoginActivity"
-        android:label="activity_login"
-        tools:layout="@layout/activity_login" />
     <fragment
         android:id="@+id/recipeSearchFragment"
         android:name="com.example.recipeapp.fragments.RecipeSearchFragment"
         android:label="fragment_recipe_search"
-        tools:layout="@layout/fragment_recipe_search" />
+        tools:layout="@layout/fragment_recipe_search" >
+        <action
+            android:id="@+id/action_recipeSearchFragment_to_recipeDetailsFragment"
+            app:destination="@id/recipeDetailsFragment" />
+    </fragment>
     <fragment
         android:id="@+id/loginFragment"
         android:name="com.example.recipeapp.fragments.LoginFragment"
@@ -38,4 +32,33 @@
             android:id="@+id/action_registerFragment_to_recipeSearchFragment"
             app:destination="@id/recipeSearchFragment" />
     </fragment>
+    <fragment
+        android:id="@+id/profileFragment"
+        android:name="com.example.recipeapp.fragments.ProfileFragment"
+        android:label="fragment_profile"
+        tools:layout="@layout/fragment_profile" />
+    <fragment
+        android:id="@+id/recipeDetailsFragment"
+        android:name="com.example.recipeapp.fragments.RecipeDetailsFragment"
+        android:label="fragment_recipe_details"
+        tools:layout="@layout/fragment_recipe_details" />
+    <fragment
+        android:id="@+id/socialFeedFragment"
+        android:name="com.example.recipeapp.fragments.SocialFeedFragment"
+        android:label="fragment_social_feed"
+        tools:layout="@layout/fragment_social_feed" >
+        <action
+            android:id="@+id/action_socialFeedFragment_to_profileFragment"
+            app:destination="@id/profileFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/uploadFragment"
+        android:name="com.example.recipeapp.fragments.UploadFragment"
+        android:label="fragment_upload"
+        tools:layout="@layout/fragment_upload" />
+    <fragment
+        android:id="@+id/inventoryFragment"
+        android:name="com.example.recipeapp.fragments.InventoryFragment"
+        android:label="fragment_inventory"
+        tools:layout="@layout/fragment_inventory" />
 </navigation>

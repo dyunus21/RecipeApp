@@ -9,16 +9,22 @@ import androidx.fragment.app.Fragment;
 
 import com.example.recipeapp.R;
 
-public class RecipeSearchFragment extends Fragment {
+public class UploadFragment extends Fragment {
 
 
-    public RecipeSearchFragment() {
+    public UploadFragment() {
+
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
 
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_recipe_search, container, false);
+        return inflater.inflate(R.layout.fragment_upload, container, false);
     }
 }

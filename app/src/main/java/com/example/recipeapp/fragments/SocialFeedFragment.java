@@ -9,16 +9,22 @@ import androidx.fragment.app.Fragment;
 
 import com.example.recipeapp.R;
 
-public class RecipeSearchFragment extends Fragment {
 
+public class SocialFeedFragment extends Fragment {
 
-    public RecipeSearchFragment() {
+    public SocialFeedFragment() {
+
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
 
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_recipe_search, container, false);
+        return inflater.inflate(R.layout.fragment_social_feed, container, false);
     }
 }

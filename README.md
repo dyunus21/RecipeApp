@@ -35,14 +35,14 @@ _Version1_
 * [ ] User can search for recipes based on user preferences using [Spoonacular Nutrition API](https://rapidapi.com/spoonacular/api/recipe-food-nutrition)
 * [ ] User can view details about recipe
     * Ingredients, instructions, cook time, images, videos, tags
-* [ ] User can create a new account
-* [ ] User can login/logout 
+* [x] User can create a new account
+* [x] User can login/logout 
 * [ ] User can view/update ingredients inventory
 * [ ] User can upload recipes (including photos/videos) and update recipe database
     * Initialize database with recipes extracted from a Recipe API (Ex: Spoonacular API), then update database with user-uploaded recipes
+* [x] User can switch between Tabs (Recipe Search, Ingredients Inventory, Social Feed, Profile Page)
    
 _Version2_
-* [ ] User can switch between Tabs (Recipe Search, Ingredients Inventory, Social Feed, Profile Page)
 * [ ] User can follow other users
 * [ ] User can view/update user profiles
     * Personal Information
