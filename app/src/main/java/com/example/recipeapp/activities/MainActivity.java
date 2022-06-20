@@ -1,6 +1,7 @@
-package com.example.recipeapp;
+package com.example.recipeapp.activities;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.navigation.fragment.NavHostFragment;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -8,7 +9,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 
-import com.example.recipeapp.activities.LoginActivity;
+import com.example.recipeapp.R;
 import com.parse.ParseUser;
 
 public class MainActivity extends AppCompatActivity {
@@ -31,8 +32,8 @@ public class MainActivity extends AppCompatActivity {
 
     private void logoutUser() {
         Log.i(TAG, "Attempting to logout user!");
-        ParseUser.logOut();
-        Intent intent = new Intent(MainActivity.this, LoginActivity.class);
-        startActivity(intent);
+//        ParseUser.logOut();
+//        NavHostFragment.findNavController().navigate(R.id.loginFragment);
+//        startActivity(intent);
     }
 }

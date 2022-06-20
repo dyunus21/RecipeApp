@@ -1,31 +1,44 @@
-package com.example.recipeapp.activities;
+package com.example.recipeapp.fragments;
 
-import androidx.appcompat.app.AppCompatActivity;
-
-import android.content.Intent;
 import android.os.Bundle;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+import androidx.navigation.fragment.NavHostFragment;
+
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Toast;
 
-import com.example.recipeapp.MainActivity;
-import com.example.recipeapp.databinding.ActivityLoginBinding;
+import com.example.recipeapp.R;
+import com.example.recipeapp.databinding.FragmentLoginBinding;
 import com.parse.LogInCallback;
 import com.parse.ParseException;
 import com.parse.ParseUser;
 
-public class LoginActivity extends AppCompatActivity {
 
-    private static final String TAG = "LoginActivity";
-    private ActivityLoginBinding binding;
+public class LoginFragment extends Fragment {
+    private static final String TAG = "LoginFragment";
+    private FragmentLoginBinding binding;
+
+    public LoginFragment() {
+
+    }
+
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        binding = ActivityLoginBinding.inflate(getLayoutInflater());
-        View view = binding.getRoot();
-        setContentView(view);
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        binding = FragmentLoginBinding.inflate(getLayoutInflater());
+        return binding.getRoot();
+    }
 
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
         if (ParseUser.getCurrentUser() != null) {
             goMainActivity();
         }
@@ -42,8 +55,8 @@ public class LoginActivity extends AppCompatActivity {
                 goRegister();
             }
         });
-    }
 
+    }
     private void loginUser() {
         Log.i(TAG, "Attempting to login user");
         String username = binding.etUsername.getText().toString();
@@ -57,20 +70,18 @@ public class LoginActivity extends AppCompatActivity {
                 }
 
                 goMainActivity();
-                Toast.makeText(LoginActivity.this, "Welcome " + ParseUser.getCurrentUser().getUsername(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), "Welcome " + ParseUser.getCurrentUser().getUsername(), Toast.LENGTH_SHORT).show();
             }
         });
     }
 
     private void goMainActivity() {
-        Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-        startActivity(intent);
-        finish();
+        NavHostFragment.findNavController(this).navigate(R.id.recipeSearchFragment);
     }
 
     private void goRegister() {
-        Intent intent = new Intent(LoginActivity.this, RegisterActivity.class);
-        startActivity(intent);
-        finish();
+        NavHostFragment.findNavController(this).navigate(R.id.registerFragment);
     }
+
+
 }
