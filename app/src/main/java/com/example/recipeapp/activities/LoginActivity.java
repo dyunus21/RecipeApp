@@ -1,43 +1,30 @@
-package com.example.recipeapp.fragments;
+package com.example.recipeapp.activities;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
-import androidx.navigation.fragment.NavHostFragment;
+import androidx.appcompat.app.AppCompatActivity;
 
-import com.example.recipeapp.R;
-import com.example.recipeapp.databinding.FragmentLoginBinding;
+import com.example.recipeapp.databinding.ActivityLoginBinding;
 import com.parse.LogInCallback;
 import com.parse.ParseException;
 import com.parse.ParseUser;
 
+public class LoginActivity extends AppCompatActivity {
 
-public class LoginFragment extends Fragment {
-    private static final String TAG = "LoginFragment";
-    private FragmentLoginBinding binding;
-
-    public LoginFragment() {
-
-    }
-
+    private static final String TAG = "LoginActivity";
+    private ActivityLoginBinding binding;
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        binding = FragmentLoginBinding.inflate(getLayoutInflater());
-        return binding.getRoot();
-    }
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        binding = ActivityLoginBinding.inflate(getLayoutInflater());
+        View view = binding.getRoot();
+        setContentView(view);
 
-    @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
         if (ParseUser.getCurrentUser() != null) {
             goMainActivity();
         }
@@ -54,7 +41,6 @@ public class LoginFragment extends Fragment {
                 goRegister();
             }
         });
-
     }
 
     private void loginUser() {
@@ -70,18 +56,20 @@ public class LoginFragment extends Fragment {
                 }
 
                 goMainActivity();
-                Toast.makeText(getContext(), "Welcome " + ParseUser.getCurrentUser().getUsername(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(LoginActivity.this, "Welcome " + ParseUser.getCurrentUser().getUsername(), Toast.LENGTH_SHORT).show();
             }
         });
     }
 
     private void goMainActivity() {
-        NavHostFragment.findNavController(this).navigate(R.id.recipeSearchFragment);
+        Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+        startActivity(intent);
+        finish();
     }
 
     private void goRegister() {
-        NavHostFragment.findNavController(this).navigate(R.id.registerFragment);
+        Intent intent = new Intent(LoginActivity.this, RegisterActivity.class);
+        startActivity(intent);
+        finish();
     }
-
-
 }

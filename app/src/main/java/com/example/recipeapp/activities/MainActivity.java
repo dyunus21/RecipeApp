@@ -33,11 +33,6 @@ public class MainActivity extends AppCompatActivity {
         navController = Navigation.findNavController(this, R.id.nav_host_fragment);
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
         NavigationUI.setupWithNavController(bottomNavigationView, navController);
-        Fragment navHostFragment = getSupportFragmentManager().findFragmentById(R.id.nav_host_fragment);
-        // TODO: Hide bottom Navigation bar during login and register screen
-        if( navHostFragment.getChildFragmentManager().getFragments().get(0) == getSupportFragmentManager().findFragmentById(R.id.loginFragment)) {
-            bottomNavigationView.setVisibility(View.GONE);
-        }
     }
 
     @Override
@@ -57,7 +52,8 @@ public class MainActivity extends AppCompatActivity {
     private void logoutUser() {
         Log.i(TAG, "Attempting to logout user!");
         ParseUser.logOut();
-        navController.navigate(R.id.loginFragment);
+        Intent intent = new Intent(this, LoginActivity.class);
+        startActivity(intent);
 
     }
 }

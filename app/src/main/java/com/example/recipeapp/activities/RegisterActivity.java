@@ -1,4 +1,4 @@
-package com.example.recipeapp.fragments;
+package com.example.recipeapp.activities;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
@@ -12,19 +12,14 @@ import android.os.Environment;
 import android.provider.MediaStore;
 import android.provider.OpenableColumns;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
-import androidx.navigation.fragment.NavHostFragment;
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.bumptech.glide.Glide;
-import com.example.recipeapp.R;
-import com.example.recipeapp.databinding.FragmentRegisterBinding;
+import com.example.recipeapp.databinding.ActivityRegisterBinding;
 import com.example.recipeapp.models.BitmapScaler;
 import com.example.recipeapp.models.User;
 import com.parse.ParseException;
@@ -38,28 +33,24 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
+public class RegisterActivity extends AppCompatActivity {
 
-public class RegisterFragment extends Fragment {
-
+    private static final String TAG = "RegisterActivity";
+    private ActivityRegisterBinding binding;
     public final static int PICK_PHOTO_CODE = 1046;
-    private static final String TAG = "RegisterFragment";
     public String photoFileName = "photo.jpg";
     File photoFile;
-    private FragmentRegisterBinding binding;
 
-    public RegisterFragment() {
+    public RegisterActivity() {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        binding = FragmentRegisterBinding.inflate(getLayoutInflater());
-        return binding.getRoot();
-    }
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        binding = ActivityRegisterBinding.inflate(getLayoutInflater());
+        View view = binding.getRoot();
+        setContentView(view);
 
-    @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
         binding.btnSignup.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -67,7 +58,6 @@ public class RegisterFragment extends Fragment {
                 registerUser();
             }
         });
-
         binding.tvLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -85,30 +75,28 @@ public class RegisterFragment extends Fragment {
 
     private void registerUser() {
         Log.i(TAG, "Attempting to register user");
+        String email = binding.etEmail.getText().toString();
+        String firstName = binding.etFirstName.getText().toString();
+        String lastName = binding.etLastName.getText().toString();
+        String username = binding.etUsername.getText().toString();
+        String password = binding.etPassword.getText().toString();
         User user = new User();
-        user.setEmail(binding.etEmail.getText().toString());
-        user.setFirstName(binding.etFirstName.getText().toString());
-        user.setLastName(binding.etLastName.getText().toString());
-        user.setUsername(binding.etUsername.getText().toString());
-        user.setPassword(binding.etPassword.getText().toString());
-
+        user.setEmail(email);
+        user.setFirstName(firstName);
+        user.setLastName(lastName);
+        user.setUsername(username);
+        user.setPassword(password);
         user.signUpInBackground(new SignUpCallback() {
             @Override
             public void done(ParseException e) {
                 if (e != null) {
-                    Log.e(TAG, "Issue with registering user!", e);
-                    Toast.makeText(getContext(), "Unable to register user!", Toast.LENGTH_SHORT).show();
-                } else {
-                    Log.i(TAG, "Successfully registered user");
-                    if (photoFile != null) {
-                        setProfileImage(user);
-                    }
-                    goMainActivity();
+                    Log.e(TAG, "Issue with registering user!");
+                    Toast.makeText(RegisterActivity.this, "Unable to register user!", Toast.LENGTH_SHORT).show();
                 }
+                Log.i(TAG, "Successfully registered user");
+                goMainActivity();
             }
         });
-
-
     }
 
     private void setProfileImage(User user) {
@@ -118,24 +106,15 @@ public class RegisterFragment extends Fragment {
             public void done(ParseException e) {
                 if (e != null) {
                     Log.e(TAG, "Issue with saving profile image!", e);
-                    Toast.makeText(getContext(), "Unable to save profile image. Please try again!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(RegisterActivity.this, "Unable to save profile image. Please try again!", Toast.LENGTH_SHORT).show();
                     return;
                 } else {
-                    Toast.makeText(getContext(), "Successfully saved profile image!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(RegisterActivity.this, "Successfully saved profile image!", Toast.LENGTH_SHORT).show();
                     goMainActivity();
                 }
 
             }
         });
-    }
-
-    private void goMainActivity() {
-        Log.i(TAG, "go to main");
-        NavHostFragment.findNavController(this).navigate(R.id.recipeSearchFragment);
-    }
-
-    private void goLogin() {
-        NavHostFragment.findNavController(this).navigate(R.id.loginFragment);
     }
 
     @Override
@@ -145,9 +124,16 @@ public class RegisterFragment extends Fragment {
             Bitmap selectedImage = loadFromUri(photoUri);
             photoFile = getPhotoFileUri(getFileName(photoUri));
             photoFile = resizeFile(selectedImage);
-            Glide.with(getContext()).load(photoUri).circleCrop().into(binding.ivProfileImage);
+            Glide.with(this).load(photoUri).circleCrop().into(binding.ivProfileImage);
             Log.i(TAG, "File: " + photoFile.toString());
         }
+    }
+
+    public void onPickPhoto(View view) {
+        Log.i(TAG, "onPickPhoto!");
+        Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+        Log.i(TAG, "start intent for gallery!");
+        startActivityForResult(intent, PICK_PHOTO_CODE);
     }
 
     public File resizeFile(Bitmap image) {
@@ -184,7 +170,7 @@ public class RegisterFragment extends Fragment {
     public String getFileName(Uri uri) {
         String result = null;
         if (uri.getScheme().equals("content")) {
-            Cursor cursor = getContext().getContentResolver().query(uri, null, null, null, null);
+            Cursor cursor = getContentResolver().query(uri, null, null, null, null);
             try {
                 if (cursor != null && cursor.moveToFirst()) {
                     result = cursor.getString(cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME));
@@ -204,7 +190,7 @@ public class RegisterFragment extends Fragment {
     }
 
     public File getPhotoFileUri(String fileName) {
-        File mediaStorageDir = new File(getContext().getExternalFilesDir(Environment.DIRECTORY_PICTURES), TAG);
+        File mediaStorageDir = new File(getExternalFilesDir(Environment.DIRECTORY_PICTURES), TAG);
 
         if (!mediaStorageDir.exists() && !mediaStorageDir.mkdirs()) {
             Log.d(TAG, "failed to create directory");
@@ -218,10 +204,10 @@ public class RegisterFragment extends Fragment {
         try {
             // check version of Android on device
             if (Build.VERSION.SDK_INT > 27) {
-                ImageDecoder.Source source = ImageDecoder.createSource(getContext().getContentResolver(), photoUri);
+                ImageDecoder.Source source = ImageDecoder.createSource(getContentResolver(), photoUri);
                 image = ImageDecoder.decodeBitmap(source);
             } else {
-                image = MediaStore.Images.Media.getBitmap(getContext().getContentResolver(), photoUri);
+                image = MediaStore.Images.Media.getBitmap(getContentResolver(), photoUri);
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -229,10 +215,16 @@ public class RegisterFragment extends Fragment {
         return image;
     }
 
-    public void onPickPhoto(View view) {
-        Log.i(TAG, "onPickPhoto!");
-        Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-        Log.i(TAG, "start intent for gallery!");
-        startActivityForResult(intent, PICK_PHOTO_CODE);
+
+    private void goMainActivity() {
+        Intent intent = new Intent(RegisterActivity.this, MainActivity.class);
+        startActivity(intent);
+        finish();
+    }
+
+    private void goLogin() {
+        Intent intent = new Intent(RegisterActivity.this, LoginActivity.class);
+        startActivity(intent);
+        finish();
     }
 }
