@@ -35,11 +35,11 @@ import java.io.IOException;
 
 public class RegisterActivity extends AppCompatActivity {
 
-    private static final String TAG = "RegisterActivity";
-    private ActivityRegisterBinding binding;
     public final static int PICK_PHOTO_CODE = 1046;
+    private static final String TAG = "RegisterActivity";
     public String photoFileName = "photo.jpg";
     File photoFile;
+    private ActivityRegisterBinding binding;
 
     public RegisterActivity() {
     }
@@ -144,23 +144,23 @@ public class RegisterActivity extends AppCompatActivity {
         try {
             resizedFile.createNewFile();
         } catch (IOException e) {
-            e.printStackTrace();
+            Log.e(TAG, "Unable to create new file ", e)
         }
         FileOutputStream fos = null;
         try {
             fos = new FileOutputStream(resizedFile);
         } catch (FileNotFoundException e) {
-            e.printStackTrace();
+            Log.e(TAG, "File not found ", e);
         }
         try {
             fos.write(bytes.toByteArray());
         } catch (IOException e) {
-            e.printStackTrace();
+            Log.e(TAG, "Unable to write to file ", e);
         }
         try {
             fos.close();
         } catch (IOException e) {
-            e.printStackTrace();
+            Log.e(TAG, "Unable to close file ", e);
         }
         Log.i(TAG, "File: " + resizedFile);
         return resizedFile;
@@ -210,7 +210,7 @@ public class RegisterActivity extends AppCompatActivity {
                 image = MediaStore.Images.Media.getBitmap(getContentResolver(), photoUri);
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            Log.e(TAG, "Unable to load image from URI", e);
         }
         return image;
     }
