@@ -177,7 +177,6 @@ public class RegisterFragment extends Fragment {
             e.printStackTrace();
         }
         Log.i(TAG, "File: " + resizedFile);
-//        binding.ivProfileImage.setImageBitmap(resizedBitmap);
         return resizedFile;
     }
 
