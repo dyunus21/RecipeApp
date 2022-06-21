@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/recipeSearchFragment"
+        android:icon="@drawable/search"
+        android:title="Search"
+        app:showAsAction="always" />
+    <item
+        android:id="@+id/socialFeedFragment"
+        android:icon="@drawable/social"
+        android:title="Social"
+        app:showAsAction="always" />
+    <item
+        android:id="@+id/uploadFragment"
+        android:icon="@drawable/upload"
+        android:title="Upload"
+        app:showAsAction="always" />
+    <item
+        android:id="@+id/inventoryFragment"
+        android:icon="@drawable/inventory"
+        android:title="Inventory"
+        app:showAsAction="always" />
+    <item
+        android:id="@+id/profileFragment"
+        android:icon="@drawable/profile"
+        android:title="Profile"
+        app:showAsAction="always" />
+</menu>

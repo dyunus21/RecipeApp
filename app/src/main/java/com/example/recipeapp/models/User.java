@@ -3,12 +3,13 @@ package com.example.recipeapp.models;
 import com.parse.ParseClassName;
 import com.parse.ParseFile;
 import com.parse.ParseObject;
+import com.parse.ParseUser;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @ParseClassName("User")
-public class User extends ParseObject {
+public class User extends ParseUser {
     public static final String KEY_FIRSTNAME = "firstName";
     public static final String KEY_LASTNAME = "lastName";
     public static final String KEY_PROFILE_IMAGE = "profileImage";
