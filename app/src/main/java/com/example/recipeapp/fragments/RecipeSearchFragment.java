@@ -1,22 +1,52 @@
 package com.example.recipeapp.fragments;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.SearchView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
+import com.codepath.asynchttpclient.AsyncHttpClient;
+import com.codepath.asynchttpclient.RequestHeaders;
+import com.codepath.asynchttpclient.RequestParams;
+import com.codepath.asynchttpclient.callback.JsonHttpResponseHandler;
 import com.example.recipeapp.R;
+import com.example.recipeapp.adapters.RecipeSearchAdapter;
 import com.example.recipeapp.databinding.FragmentRecipeSearchBinding;
+import com.example.recipeapp.models.Recipe;
+import com.example.recipeapp.models.User;
+import com.parse.ParseException;
+import com.parse.ParseFile;
+import com.parse.ParseUser;
+import com.parse.SaveCallback;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+
+import okhttp3.Headers;
 
 public class RecipeSearchFragment extends Fragment {
     public static final String TAG = "RecipeSearchFragment";
     private FragmentRecipeSearchBinding binding;
+    public List<Recipe> recipes;
+    protected RecipeSearchAdapter adapter;
 
 
     public RecipeSearchFragment() {
@@ -33,16 +63,75 @@ public class RecipeSearchFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        recipes = new ArrayList<>();
+        adapter = new RecipeSearchAdapter(getContext(),recipes);
+        binding.rvRecipes.setAdapter(adapter);
+        binding.rvRecipes.setLayoutManager(new LinearLayoutManager(getContext()));
         binding.svSearch.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
                 Log.i(TAG, query);
+                try {
+                    getRecipes(query);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
                 return true;
             }
 
             @Override
             public boolean onQueryTextChange(String newText) {
                 return false;
+            }
+        });
+    }
+
+    private void getRecipes(String query) throws IOException {
+        AsyncHttpClient client = new AsyncHttpClient();
+        RequestHeaders headers = new RequestHeaders();
+        headers.put("X-RapidAPI-Key", getString(R.string.Nutrition_API_Key));
+        headers.put("X-RapidAPI-Host","spoonacular-recipe-food-nutrition-v1.p.rapidapi.com");
+
+        RequestParams params = new RequestParams();
+        params.put("query",query);
+
+        client.get("https://spoonacular-recipe-food-nutrition-v1.p.rapidapi.com/recipes/complexSearch",headers,params, new JsonHttpResponseHandler() {
+            @Override
+            public void onSuccess(int statusCode, Headers headers, JSON json) {
+                Log.d(TAG,"onSuccess");
+                JSONObject jsonObject = json.jsonObject;
+                try {
+                    JSONArray results = jsonObject.getJSONArray("results");
+                    Log.i(TAG,"Results: " + results.toString());
+                    Log.i(TAG,"Title: " + (results.getJSONObject(0).getString("title")));
+                    for(int i = 0; i<results.length(); i++) {
+                        Recipe recipe = new Recipe();
+                        recipe.setRecipeId(results.getJSONObject(i).getInt("id"));
+                        recipe.setTitle(results.getJSONObject(i).getString("title"));
+//                        recipe.setAuthor((User) ParseUser.getCurrentUser());
+                        List<ParseFile> media = new ArrayList<>();
+//                        recipe.setMedia(media);
+                        recipe.saveInBackground(new SaveCallback() {
+                            @Override
+                            public void done(ParseException e) {
+                                if(e != null) {
+                                    Log.e(TAG,"Unable to save recipe " + recipe.getTitle(),e);
+                                }
+                                Toast.makeText(getContext(),"Saved recipe: " + recipe.getTitle(),Toast.LENGTH_SHORT).show();
+
+                            }
+                        });
+                        recipes.add(recipe);
+                        adapter.notifyDataSetChanged();
+                    }
+                } catch (JSONException e) {
+                    Log.e(TAG, "Hit JSON exception");
+                }
+
+            }
+            @Override
+            public void onFailure(int statusCode, Headers headers, String response, Throwable throwable) {
+                Log.d(TAG,"onFailure");
             }
         });
     }
