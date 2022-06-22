@@ -69,6 +69,7 @@ public class RecipeSearchFragment extends Fragment {
         binding.rvRecipes.setAdapter(adapter);
         GridLayoutManager gridLayoutManager = new GridLayoutManager(getContext(), 2);
         binding.rvRecipes.setLayoutManager(gridLayoutManager);
+        // TODO: Implement Endless Scrolling and Refresh
         binding.svSearch.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
@@ -83,7 +84,14 @@ public class RecipeSearchFragment extends Fragment {
 
             @Override
             public boolean onQueryTextChange(String newText) {
-                return false;
+                Log.i(TAG, newText);
+                try {
+                    getRecipes(newText);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                return true;
+
             }
         });
     }

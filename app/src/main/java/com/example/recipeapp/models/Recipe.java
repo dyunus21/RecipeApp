@@ -31,6 +31,7 @@ public class Recipe extends ParseObject {
     public static final String KEY_AUTHOR = "author";
     public static final String KEY_TITLE = "title";
     public static final String KEY_IMAGE = "image";
+    public static final String KEY_IMAGE_URL = "imageUrl";
     public static final String KEY_MEDIA = "media";
     public static final String KEY_INGREDIENT_LIST = "ingredientList";
     public static final String KEY_INSTRUCTIONS = "instructions";
@@ -69,6 +70,14 @@ public class Recipe extends ParseObject {
 
     public void setImage(ParseFile image) {
         put(KEY_IMAGE, image);
+    }
+
+    public String getImageUrl() {
+        return getString(KEY_IMAGE_URL);
+    }
+
+    public void setImageUrl(String imageUrl) {
+        put(KEY_IMAGE_URL, imageUrl);
     }
 
     public List<ParseFile> getMedia() {
@@ -151,24 +160,25 @@ public class Recipe extends ParseObject {
             }
             recipe.setInstructions(instructions);
 
-            //TODO: Add instructions, image, and author
-            String imageURL = results.getJSONObject(i).getString("image");
-            Log.i(TAG, imageURL);
-            File resize = new File("photo.jpg");
-            try {
-                java.net.URL img_value = new java.net.URL(imageURL);
-                Bitmap mIcon = BitmapFactory.decodeStream(img_value.openConnection()
-                                .getInputStream());
-                if (mIcon != null) {
-                    byte[] imgByteArray = encodeToByteArray(mIcon);
-                    resize = recipe.resizeFile(mIcon);
-                }
-                Log.i(TAG,"Successfully saved file");
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-            recipe.setImage(new ParseFile(resize));
+            //TODO: Add instructions, image file, and author
+//            String imageURL = results.getJSONObject(i).getString("image");
+//            Log.i(TAG, imageURL);
+//            File resize = new File("photo.jpg");
+//            try {
+//                java.net.URL img_value = new java.net.URL(imageURL);
+//                Bitmap mIcon = BitmapFactory.decodeStream(img_value.openConnection()
+//                                .getInputStream());
+//                if (mIcon != null) {
+//                    byte[] imgByteArray = encodeToByteArray(mIcon);
+//                    resize = recipe.resizeFile(mIcon);
+//                }
+//                Log.i(TAG,"Successfully saved file");
+//            } catch (Exception e) {
+//                e.printStackTrace();
+//            }
+//            recipe.setImage(new ParseFile(resize));
 
+            recipe.setImageUrl(results.getJSONObject(i).getString("image"));
             if(!recipe.isRecipeStored()) {
                 recipe.saveInBackground(new SaveCallback() {
                     @Override

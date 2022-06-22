@@ -54,7 +54,7 @@ public class RecipeSearchAdapter extends RecyclerView.Adapter<RecipeSearchAdapte
         notifyDataSetChanged();
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder {
+    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         public ItemRecipeCardBinding binding;
         public ViewHolder(@NonNull ItemRecipeCardBinding itemView) {
             super(itemView.getRoot());
@@ -63,11 +63,16 @@ public class RecipeSearchAdapter extends RecyclerView.Adapter<RecipeSearchAdapte
 
         public void bind(Recipe recipe) {
             binding.tvTitle.setText(recipe.getTitle());
-//            Glide.with(context).load(recipe.getMedia().get(0).getUrl()).into(binding.ivImage);
+            // TODO: Add image to grid
+             Glide.with(context).load(recipe.getImageUrl()).into(binding.ivImage);
             binding.tvCooktime.setText(recipe.getCooktime() + "m");
             binding.tvCuisine.setText(recipe.getCuisineType());
         }
 
+        @Override
+        public void onClick(View v) {
+
+        }
 
     }
 }
