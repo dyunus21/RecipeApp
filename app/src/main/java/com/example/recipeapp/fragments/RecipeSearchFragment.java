@@ -13,6 +13,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -66,7 +67,8 @@ public class RecipeSearchFragment extends Fragment {
         recipes = new ArrayList<>();
         adapter = new RecipeSearchAdapter(getContext(),recipes);
         binding.rvRecipes.setAdapter(adapter);
-        binding.rvRecipes.setLayoutManager(new LinearLayoutManager(getContext()));
+        GridLayoutManager gridLayoutManager = new GridLayoutManager(getContext(), 2);
+        binding.rvRecipes.setLayoutManager(gridLayoutManager);
         binding.svSearch.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
@@ -107,8 +109,8 @@ public class RecipeSearchFragment extends Fragment {
                 try {
                     JSONArray results = jsonObject.getJSONArray("results");
                     Log.i(TAG,"Results: " + results.toString());
-                    recipes = Recipe.fromJSONArray(results);
-                    adapter.notifyDataSetChanged();
+                    recipes = Recipe.getRecipes(results);
+                    adapter.addAll(recipes);
                 } catch (JSONException e) {
                     Log.e(TAG, "Hit JSON exception");
                 }

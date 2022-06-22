@@ -64,6 +64,10 @@ public class RecipeSearchAdapter extends RecyclerView.Adapter<RecipeSearchAdapte
         public void bind(Recipe recipe) {
             binding.tvTitle.setText(recipe.getTitle());
 //            Glide.with(context).load(recipe.getMedia().get(0).getUrl()).into(binding.ivImage);
+            binding.tvCooktime.setText(recipe.getCooktime() + "m");
+            binding.tvCuisine.setText(recipe.getCuisineType());
         }
+
+
     }
 }

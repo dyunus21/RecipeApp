@@ -1,5 +1,8 @@
 package com.example.recipeapp.models;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.os.Environment;
 import android.util.Log;
 
 import com.parse.FindCallback;
@@ -14,6 +17,11 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -123,7 +131,7 @@ public class Recipe extends ParseObject {
         put(KEY_MEDIA, reviews);
     }
 
-    public static List<Recipe> fromJSONArray(JSONArray results) throws JSONException {
+    public static List<Recipe> getRecipes(JSONArray results) throws JSONException {
         List<Recipe> recipes = new ArrayList<>();
         for(int i = 0; i < results.length(); i++) {
             Recipe recipe = new Recipe();
@@ -133,6 +141,8 @@ public class Recipe extends ParseObject {
             JSONArray cuisineType = results.getJSONObject(i).getJSONArray("cuisines");
             if(cuisineType.length() > 0)
                 recipe.setCuisineType(cuisineType.getString(0));
+            else
+                recipe.setCuisineType("None");
 
             List<String> instructions = new ArrayList<>();
             JSONArray steps = (results.getJSONObject(i).getJSONArray("analyzedInstructions")).getJSONObject(0).getJSONArray("steps");
@@ -142,6 +152,23 @@ public class Recipe extends ParseObject {
             recipe.setInstructions(instructions);
 
             //TODO: Add instructions, image, and author
+            String imageURL = results.getJSONObject(i).getString("image");
+            Log.i(TAG, imageURL);
+            File resize = new File("photo.jpg");
+            try {
+                java.net.URL img_value = new java.net.URL(imageURL);
+                Bitmap mIcon = BitmapFactory.decodeStream(img_value.openConnection()
+                                .getInputStream());
+                if (mIcon != null) {
+                    byte[] imgByteArray = encodeToByteArray(mIcon);
+                    resize = recipe.resizeFile(mIcon);
+                }
+                Log.i(TAG,"Successfully saved file");
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            recipe.setImage(new ParseFile(resize));
+
             if(!recipe.isRecipeStored()) {
                 recipe.saveInBackground(new SaveCallback() {
                     @Override
@@ -152,13 +179,54 @@ public class Recipe extends ParseObject {
                             Log.i(TAG, "Added " + recipe.getTitle() + " to database!");
                     }
                 });
-                recipes.add(recipe);
+
             }
+            Log.i(TAG, "Added " + recipe.getTitle());
+            recipes.add(recipe);
 
         }
         return recipes;
     }
 
+    public File resizeFile(Bitmap image) {
+        Bitmap resizedBitmap = BitmapScaler.scaleToFitWidth(image, 800);
+        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+        resizedBitmap.compress(Bitmap.CompressFormat.JPEG, 40, bytes);
+        File resizedFile = new File("photo.jpg");
+        try {
+            resizedFile.createNewFile();
+        } catch (IOException e) {
+            Log.e(TAG, "Unable to create new file ", e);
+        }
+        FileOutputStream fos = null;
+        try {
+            fos = new FileOutputStream(resizedFile);
+        } catch (FileNotFoundException e) {
+            Log.e(TAG, "File not found ", e);
+        }
+        try {
+            fos.write(bytes.toByteArray());
+        } catch (IOException e) {
+            Log.e(TAG, "Unable to write to file ", e);
+        }
+        try {
+            fos.close();
+        } catch (IOException e) {
+            Log.e(TAG, "Unable to close file ", e);
+        }
+        Log.i(TAG, "File: " + resizedFile);
+        return resizedFile;
+    }
+
+
+    public static byte[] encodeToByteArray(Bitmap image) {
+        Log.d(TAG, "encodeToByteArray");
+        Bitmap b= image;
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        b.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+        byte[] imgByteArray = baos.toByteArray();
+        return imgByteArray ;
+    }
     public boolean isRecipeStored() {
         final boolean[] result = {false};
         ParseQuery<Recipe> query = ParseQuery.getQuery("Recipe");
