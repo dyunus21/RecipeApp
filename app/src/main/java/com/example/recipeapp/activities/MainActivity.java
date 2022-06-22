@@ -23,7 +23,7 @@ import com.parse.ParseUser;
 public class MainActivity extends AppCompatActivity {
 
     private static final String TAG = "MainActivity";
-    public NavController navController;
+    public static NavController navController;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

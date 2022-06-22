@@ -118,6 +118,7 @@ public class RecipeSearchFragment extends Fragment {
                     JSONArray results = jsonObject.getJSONArray("results");
                     Log.i(TAG,"Results: " + results.toString());
                     recipes = Recipe.getRecipes(results);
+                    adapter.clear();
                     adapter.addAll(recipes);
                 } catch (JSONException e) {
                     Log.e(TAG, "Hit JSON exception");

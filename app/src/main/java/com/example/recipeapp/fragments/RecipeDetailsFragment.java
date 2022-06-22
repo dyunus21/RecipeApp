@@ -8,12 +8,19 @@ import android.view.ViewGroup;
 import androidx.fragment.app.Fragment;
 
 import com.example.recipeapp.R;
+import com.example.recipeapp.databinding.FragmentRecipeDetailsBinding;
+import com.example.recipeapp.models.Recipe;
 
 public class RecipeDetailsFragment extends Fragment {
-
+    private static final String TAG = "RecipeDetailsFragment";
+//    private FragmentRecipeDetailsBinding binding;
+    private int recipeId;
 
     public RecipeDetailsFragment() {
 
+    }
+    public RecipeDetailsFragment(int recipeId) {
+        this.recipeId = recipeId;
     }
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,

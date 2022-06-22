@@ -1,15 +1,22 @@
 package com.example.recipeapp.adapters;
 
 import android.content.Context;
+import android.content.Intent;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.navigation.Navigation;
+import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.example.recipeapp.R;
 import com.example.recipeapp.databinding.ItemRecipeCardBinding;
+import com.example.recipeapp.fragments.RecipeDetailsFragment;
 import com.example.recipeapp.models.Recipe;
 
 import java.util.ArrayList;
@@ -37,6 +44,7 @@ public class RecipeSearchAdapter extends RecyclerView.Adapter<RecipeSearchAdapte
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         Recipe recipe = recipesList.get(position);
         holder.bind(recipe);
+        holder.itemView.setOnClickListener(Navigation.createNavigateOnClickListener(R.id.action_recipeSearchFragment_to_recipeDetailsFragment));
     }
 
     @Override
@@ -56,22 +64,24 @@ public class RecipeSearchAdapter extends RecyclerView.Adapter<RecipeSearchAdapte
 
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         public ItemRecipeCardBinding binding;
+        private Recipe currentRecipe;
         public ViewHolder(@NonNull ItemRecipeCardBinding itemView) {
             super(itemView.getRoot());
+            itemView.getRoot().setOnClickListener(this);
             this.binding = itemView;
         }
 
         public void bind(Recipe recipe) {
+            currentRecipe = recipe;
             binding.tvTitle.setText(recipe.getTitle());
-            // TODO: Add image to grid
              Glide.with(context).load(recipe.getImageUrl()).into(binding.ivImage);
-            binding.tvCooktime.setText(recipe.getCooktime() + "m");
+            binding.tvCookTime.setText(recipe.getCooktime() + "m");
             binding.tvCuisine.setText(recipe.getCuisineType());
         }
 
         @Override
         public void onClick(View v) {
-
+            Log.i(TAG,"Clicked on " + currentRecipe.getTitle());
         }
 
     }
