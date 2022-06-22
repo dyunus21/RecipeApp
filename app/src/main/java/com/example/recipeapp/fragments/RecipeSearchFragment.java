@@ -94,6 +94,10 @@ public class RecipeSearchFragment extends Fragment {
 
         RequestParams params = new RequestParams();
         params.put("query",query);
+        params.put("addRecipeInformation","true");
+        params.put("instructionsRequired","true");
+        params.put("sortDirection","asc");
+
 
         client.get("https://spoonacular-recipe-food-nutrition-v1.p.rapidapi.com/recipes/complexSearch",headers,params, new JsonHttpResponseHandler() {
             @Override
@@ -103,27 +107,8 @@ public class RecipeSearchFragment extends Fragment {
                 try {
                     JSONArray results = jsonObject.getJSONArray("results");
                     Log.i(TAG,"Results: " + results.toString());
-                    Log.i(TAG,"Title: " + (results.getJSONObject(0).getString("title")));
-                    for(int i = 0; i<results.length(); i++) {
-                        Recipe recipe = new Recipe();
-                        recipe.setRecipeId(results.getJSONObject(i).getInt("id"));
-                        recipe.setTitle(results.getJSONObject(i).getString("title"));
-//                        recipe.setAuthor((User) ParseUser.getCurrentUser());
-                        List<ParseFile> media = new ArrayList<>();
-//                        recipe.setMedia(media);
-                        recipe.saveInBackground(new SaveCallback() {
-                            @Override
-                            public void done(ParseException e) {
-                                if(e != null) {
-                                    Log.e(TAG,"Unable to save recipe " + recipe.getTitle(),e);
-                                }
-                                Toast.makeText(getContext(),"Saved recipe: " + recipe.getTitle(),Toast.LENGTH_SHORT).show();
-
-                            }
-                        });
-                        recipes.add(recipe);
-                        adapter.notifyDataSetChanged();
-                    }
+                    recipes = Recipe.fromJSONArray(results);
+                    adapter.notifyDataSetChanged();
                 } catch (JSONException e) {
                     Log.e(TAG, "Hit JSON exception");
                 }
