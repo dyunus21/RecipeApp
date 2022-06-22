@@ -179,21 +179,45 @@ public class Recipe extends ParseObject {
 //            recipe.setImage(new ParseFile(resize));
 
             recipe.setImageUrl(results.getJSONObject(i).getString("image"));
-            if(!recipe.isRecipeStored()) {
-                recipe.saveInBackground(new SaveCallback() {
-                    @Override
-                    public void done(ParseException e) {
-                        if (e != null) {
-                            Log.e(TAG, "Unable to save recipe! ", e);
-                        } else
-                            Log.i(TAG, "Added " + recipe.getTitle() + " to database!");
-                    }
-                });
-
-            }
+//            if(!recipe.isRecipeStored()) {
+//                recipe.saveInBackground(new SaveCallback() {
+//                    @Override
+//                    public void done(ParseException e) {
+//                        if (e != null) {
+//                            Log.e(TAG, "Unable to save recipe! ", e);
+//                        } else
+//                            Log.i(TAG, "Added " + recipe.getTitle() + " to database!");
+//                    }
+//                });
+//
+//            }
             Log.i(TAG, "Added " + recipe.getTitle());
             recipes.add(recipe);
 
+        }
+        return recipes;
+    }
+
+    public static List<Recipe> getRecipesDetailed(JSONArray results) throws JSONException {
+        List<Recipe> recipes = new ArrayList<>();
+        for(int i = 0; i < results.length(); i++) {
+            Recipe recipe = new Recipe();
+            recipe.setRecipeId(results.getJSONObject(i).getInt("id"));
+            recipe.setTitle(results.getJSONObject(i).getString("title"));
+            recipe.setCooktime(results.getJSONObject(i).getInt("readyInMinutes"));
+            JSONArray cuisineType = results.getJSONObject(i).getJSONArray("cuisines");
+            if (cuisineType.length() > 0)
+                recipe.setCuisineType(cuisineType.getString(0));
+            else
+                recipe.setCuisineType("None");
+
+            List<String> instructions = new ArrayList<>();
+            JSONArray steps = (results.getJSONObject(i).getJSONArray("analyzedInstructions")).getJSONObject(0).getJSONArray("steps");
+            for (int j = 0; j < steps.length(); j++) {
+                instructions.add(steps.getJSONObject(j).getString("step")+"\n");
+            }
+            recipe.setInstructions(instructions);
+            recipe.setImageUrl(results.getJSONObject(i).getString("image"));
         }
         return recipes;
     }

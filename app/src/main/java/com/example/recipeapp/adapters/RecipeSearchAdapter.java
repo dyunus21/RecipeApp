@@ -2,6 +2,7 @@ package com.example.recipeapp.adapters;
 
 import android.content.Context;
 import android.content.Intent;
+import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -25,7 +26,7 @@ import java.util.List;
 public class RecipeSearchAdapter extends RecyclerView.Adapter<RecipeSearchAdapter.ViewHolder> {
     private static final String TAG = "RecipeSearchAdapter";
     private Context context;
-    public List<Recipe> recipesList = new ArrayList<>();
+    public List<Recipe> recipesList;
     private ItemRecipeCardBinding item_binding;
 
     public RecipeSearchAdapter(Context context, List<Recipe> recipes) {
@@ -44,7 +45,9 @@ public class RecipeSearchAdapter extends RecyclerView.Adapter<RecipeSearchAdapte
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         Recipe recipe = recipesList.get(position);
         holder.bind(recipe);
-        holder.itemView.setOnClickListener(Navigation.createNavigateOnClickListener(R.id.action_recipeSearchFragment_to_recipeDetailsFragment));
+        Bundle bundle = new Bundle();
+        bundle.putParcelable(Recipe.class.getSimpleName(),recipe);
+        holder.itemView.setOnClickListener(Navigation.createNavigateOnClickListener(R.id.action_recipeSearchFragment_to_recipeDetailsFragment,bundle));
     }
 
     @Override
