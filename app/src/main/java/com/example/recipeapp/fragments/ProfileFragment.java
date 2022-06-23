@@ -11,7 +11,9 @@ import androidx.fragment.app.Fragment;
 
 import com.bumptech.glide.Glide;
 import com.example.recipeapp.databinding.FragmentProfileBinding;
+import com.example.recipeapp.models.ImageClient;
 import com.example.recipeapp.models.User;
+import com.parse.ParseFile;
 import com.parse.ParseUser;
 
 
@@ -35,6 +37,14 @@ public class ProfileFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         binding.tvUsername.setText(CURRENT_USER.getParseUser().getUsername());
         binding.tvFullname.setText(CURRENT_USER.getFirstName() + " " + CURRENT_USER.getLastName());
-        Glide.with(getContext()).load(CURRENT_USER.getProfileImage().getUrl()).into(binding.ivProfileImage);
+        Glide.with(getContext()).load(CURRENT_USER.getProfileImage().getUrl()).circleCrop().into(binding.ivProfileImage);
+        binding.tvChangeProfileImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ImageClient imageClient = new ImageClient(getContext());
+                imageClient.onPickPhoto(view);
+                Glide.with(getContext()).load(CURRENT_USER.getProfileImage().getUrl()).circleCrop().into(binding.ivProfileImage);
+            }
+        });
     }
 }
