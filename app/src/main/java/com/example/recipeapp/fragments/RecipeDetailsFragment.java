@@ -26,9 +26,7 @@ public class RecipeDetailsFragment extends Fragment {
     public RecipeDetailsFragment() {
 
     }
-    public RecipeDetailsFragment(Recipe recipe) {
-        this.recipe = recipe;
-    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
