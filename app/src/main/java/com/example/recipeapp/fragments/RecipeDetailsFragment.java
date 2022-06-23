@@ -12,16 +12,27 @@ import androidx.fragment.app.Fragment;
 import androidx.navigation.fragment.NavHostFragment;
 
 import com.bumptech.glide.Glide;
+import com.codepath.asynchttpclient.callback.JsonHttpResponseHandler;
 import com.example.recipeapp.R;
+import com.example.recipeapp.RecipeClient;
 import com.example.recipeapp.databinding.FragmentRecipeDetailsBinding;
 import com.example.recipeapp.models.Recipe;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
+
+import okhttp3.Headers;
 
 public class RecipeDetailsFragment extends Fragment {
     private static final String TAG = "RecipeDetailsFragment";
     private FragmentRecipeDetailsBinding binding;
     private Recipe recipe;
+    private RecipeClient client;
 
     public RecipeDetailsFragment() {
 
@@ -31,11 +42,13 @@ public class RecipeDetailsFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         binding = FragmentRecipeDetailsBinding.inflate(getLayoutInflater());
+        client = new RecipeClient(getContext());
         Bundle bundle = this.getArguments();
         if(bundle != null) {
             recipe = bundle.getParcelable("Recipe");
             Log.i(TAG,"Received bundle: " + recipe.getTitle());
         }
+
         return binding.getRoot();
     }
 
@@ -50,8 +63,17 @@ public class RecipeDetailsFragment extends Fragment {
         List<String> instructions = recipe.getInstructions();
         Log.i(TAG,"instructions: " + instructions.toString());
         for(int i = 0; i<instructions.size(); i++) {
-            binding.tvInstructionsList.append((i+1) + ". " + instructions.get(i) + "\n \n");
+            binding.tvInstructionsList.append((i+1) + ". " + instructions.get(i) + "\n");
         }
+
+        try {
+            getIngredients();
+            Log.i(TAG, "list: " +recipe.getIngredientList().toString());
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
         binding.ibBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -64,8 +86,45 @@ public class RecipeDetailsFragment extends Fragment {
 
     }
 
+    public void getIngredients() throws IOException {
+        List<String> ingredients = new ArrayList<>();
+
+        client.getRecipesDetailed(recipe.getRecipeId(), new JsonHttpResponseHandler() {
+
+            @Override
+            public void onSuccess(int statusCode, Headers headers, JSON json) {
+                Log.i(TAG, "onSuccess! " + json.toString());
+                JSONArray jsonArray = null;
+                try {
+                    jsonArray = json.jsonObject.getJSONArray("extendedIngredients");
+                    for (int i = 0; i < jsonArray.length(); i++) {
+                        ingredients.add(i,jsonArray.getJSONObject(i).getString("original"));
+                    }
+                    Log.i(TAG,"ingredients22: " + ingredients.toString());
+//                    recipe.setIngredientList(ingredients);
+                    Log.i(TAG,"Savedo ingredients " + recipe.getIngredientList().toString());
+                    for(int i = 0; i<ingredients.size(); i++) {
+                        binding.tvIngredientList.append( "• " + ingredients.get(i) + "\n");
+                    }
+                } catch (JSONException e) {
+                    Log.e(TAG, "Hit JSON exception",e);
+                }
+
+            }
+
+            @Override
+            public void onFailure(int statusCode, Headers headers, String response, Throwable throwable) {
+                Log.e(TAG, "onFailure" + response, throwable);
+            }
+        });
+
+        Log.i(TAG,"ingredients: " + ingredients.toString());
+    }
+
 
     public void goBackToSearch(View view) {
         NavHostFragment.findNavController(this).navigate(R.id.recipeSearchFragment);
     }
+
+
 }

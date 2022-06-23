@@ -82,7 +82,7 @@ public class RecipeSearchFragment extends Fragment {
         });
     }
 
-    private void populateRecipes(String query) throws IOException {
+    public void populateRecipes(String query) throws IOException {
         client.getRecipes(query, new JsonHttpResponseHandler() {
 
             @Override

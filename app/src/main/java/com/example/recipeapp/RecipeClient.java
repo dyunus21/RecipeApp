@@ -18,7 +18,6 @@ import java.io.IOException;
 import okhttp3.Headers;
 
 public class RecipeClient {
-//    public static final String API_KEY =
     public static final String BASE_URL = "https://spoonacular-recipe-food-nutrition-v1.p.rapidapi.com";
     public static final String HOST = "spoonacular-recipe-food-nutrition-v1.p.rapidapi.com";
     private static final String TAG = "RecipeClient";
@@ -43,4 +42,15 @@ public class RecipeClient {
 
         client.get(BASE_URL + "/recipes/complexSearch", headers, params, handler);
     }
+
+    // Currently only used to extract ingredient list
+    public void getRecipesDetailed(int recipeId, JsonHttpResponseHandler handler) throws IOException {
+        AsyncHttpClient client = new AsyncHttpClient();
+
+        RequestParams params = new RequestParams();
+        params.put("id", recipeId);
+        Log.i(TAG, "RecipeDetailedURL: " + BASE_URL + "/recipes/" + recipeId + "/information");
+        client.get(BASE_URL + "/recipes/" + recipeId + "/information", headers, params, handler);
+    }
+
 }

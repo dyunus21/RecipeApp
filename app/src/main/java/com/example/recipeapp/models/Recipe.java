@@ -91,14 +91,14 @@ public class Recipe extends ParseObject {
         put(KEY_MEDIA, media);
     }
 
-    public List<Ingredient> getIngredientList() {
-        List<Ingredient> ingredientList = getList(KEY_INGREDIENT_LIST);
+    public List<String> getIngredientList() {
+        List<String> ingredientList = getList(KEY_INGREDIENT_LIST);
         if (ingredientList == null)
             return new ArrayList<>();
         return ingredientList;
     }
 
-    public void setIngredientList(List<Ingredient> ingredientList) {
+    public void setIngredientList(List<String> ingredientList) {
         put(KEY_INGREDIENT_LIST, ingredientList);
     }
 
@@ -198,28 +198,10 @@ public class Recipe extends ParseObject {
         return recipes;
     }
 
-    public static List<Recipe> getRecipesDetailed(JSONArray results) throws JSONException {
-        List<Recipe> recipes = new ArrayList<>();
-        for(int i = 0; i < results.length(); i++) {
-            Recipe recipe = new Recipe();
-            recipe.setRecipeId(results.getJSONObject(i).getInt("id"));
-            recipe.setTitle(results.getJSONObject(i).getString("title"));
-            recipe.setCooktime(results.getJSONObject(i).getInt("readyInMinutes"));
-            JSONArray cuisineType = results.getJSONObject(i).getJSONArray("cuisines");
-            if (cuisineType.length() > 0)
-                recipe.setCuisineType(cuisineType.getString(0));
-            else
-                recipe.setCuisineType("None");
-
-            List<String> instructions = new ArrayList<>();
-            JSONArray steps = (results.getJSONObject(i).getJSONArray("analyzedInstructions")).getJSONObject(0).getJSONArray("steps");
-            for (int j = 0; j < steps.length(); j++) {
-                instructions.add(steps.getJSONObject(j).getString("step")+"\n");
-            }
-            recipe.setInstructions(instructions);
-            recipe.setImageUrl(results.getJSONObject(i).getString("image"));
-        }
-        return recipes;
+    public static Recipe addIngredients(Recipe recipe,List<String> ingredients) throws JSONException {
+        recipe.setIngredientList(ingredients);
+        Log.i(TAG,"Rec: " + recipe.getIngredientList().toString());
+        return recipe;
     }
 
     public File resizeFile(Bitmap image) {
@@ -251,6 +233,7 @@ public class Recipe extends ParseObject {
         Log.i(TAG, "File: " + resizedFile);
         return resizedFile;
     }
+
 
 
     public static byte[] encodeToByteArray(Bitmap image) {
