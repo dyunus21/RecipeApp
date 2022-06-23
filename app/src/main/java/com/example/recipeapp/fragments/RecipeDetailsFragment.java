@@ -45,14 +45,14 @@ public class RecipeDetailsFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         binding.tvRecipeName.setText(recipe.getTitle());
-        binding.tvCookTime.setText("Cooktime: " + recipe.getCooktime() + "mins");
+        binding.tvCookTime.setText("Cooktime: " + recipe.getCooktime() + " mins");
         binding.tvCuisine.setText("Cuisine: " + recipe.getCuisineType());
         Glide.with(getContext()).load(recipe.getImageUrl()).into(binding.ivImage);
 
         List<String> instructions = recipe.getInstructions();
         Log.i(TAG,"instructions: " + instructions.toString());
         for(int i = 0; i<instructions.size(); i++) {
-            binding.tvInstructionsList.append(i + ". " + instructions.get(i) + "\n");
+            binding.tvInstructionsList.append((i+1) + ". " + instructions.get(i) + "\n \n");
         }
         binding.ibBack.setOnClickListener(new View.OnClickListener() {
             @Override

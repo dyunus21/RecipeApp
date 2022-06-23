@@ -23,6 +23,7 @@ import com.codepath.asynchttpclient.RequestParams;
 import com.codepath.asynchttpclient.callback.JsonHttpResponseHandler;
 import com.example.recipeapp.R;
 import com.example.recipeapp.adapters.RecipeSearchAdapter;
+
 import com.example.recipeapp.databinding.FragmentRecipeSearchBinding;
 import com.example.recipeapp.models.Recipe;
 import com.example.recipeapp.models.User;
@@ -84,12 +85,12 @@ public class RecipeSearchFragment extends Fragment {
 
             @Override
             public boolean onQueryTextChange(String newText) {
-                Log.i(TAG, newText);
-                try {
-                    getRecipes(newText);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+//                Log.i(TAG, newText);
+//                try {
+//                    getRecipes(newText);
+//                } catch (IOException e) {
+//                    e.printStackTrace();
+//                }
                 return true;
 
             }
