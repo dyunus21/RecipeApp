@@ -10,7 +10,7 @@ public class Comment extends ParseObject {
     public static final String KEY_POST = "post";
 
     public User getAuthor() {
-        return (User) getParseUser(KEY_AUTHOR);
+        return new User(getParseUser(KEY_AUTHOR));
     }
 
     public void setAuthor(User author) {
