@@ -68,6 +68,7 @@ public class RecipeSearchFragment extends Fragment {
                 return true;
             }
 
+            // Note to self: Getting recipes everytime query changes might result in extensive API calls
             @Override
             public boolean onQueryTextChange(String newText) {
 //                Log.i(TAG, newText);

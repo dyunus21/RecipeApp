@@ -59,7 +59,8 @@ public class MainActivity extends AppCompatActivity {
         }
         return super.onOptionsItemSelected(item);
     }
-    private void logoutUser() {
+
+    public void logoutUser() {
         Log.i(TAG, "Attempting to logout user!");
         ParseUser.logOut();
         Intent intent = new Intent(this, LoginActivity.class);

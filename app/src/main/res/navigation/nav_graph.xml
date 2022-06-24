@@ -37,10 +37,27 @@
         android:id="@+id/uploadFragment"
         android:name="com.example.recipeapp.fragments.UploadFragment"
         android:label="fragment_upload"
-        tools:layout="@layout/fragment_upload" />
+        tools:layout="@layout/fragment_upload" >
+        <action
+            android:id="@+id/action_uploadFragment_to_uploadRecipeFragment"
+            app:destination="@id/uploadRecipeFragment" />
+        <action
+            android:id="@+id/action_uploadFragment_to_uploadPostFragment"
+            app:destination="@id/uploadPostFragment" />
+    </fragment>
     <fragment
         android:id="@+id/inventoryFragment"
         android:name="com.example.recipeapp.fragments.InventoryFragment"
         android:label="fragment_inventory"
         tools:layout="@layout/fragment_inventory" />
+    <fragment
+        android:id="@+id/uploadRecipeFragment"
+        android:name="com.example.recipeapp.fragments.UploadRecipeFragment"
+        android:label="fragment_upload_recipe"
+        tools:layout="@layout/fragment_upload_recipe" />
+    <fragment
+        android:id="@+id/uploadPostFragment"
+        android:name="com.example.recipeapp.fragments.UploadPostFragment"
+        android:label="fragment_upload_post"
+        tools:layout="@layout/fragment_upload_post" />
 </navigation>

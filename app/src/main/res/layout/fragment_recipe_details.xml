@@ -60,15 +60,15 @@
                 app:layout_constraintStart_toEndOf="@+id/ibBack"
                 app:layout_constraintTop_toTopOf="parent" />
 
-            <ImageView
-                android:id="@+id/ivImage"
-                android:layout_width="275dp"
-                android:layout_height="172dp"
-                android:layout_marginTop="10dp"
-                android:src="@android:drawable/ic_menu_gallery"
-                app:layout_constraintEnd_toEndOf="@+id/tvRecipeName"
-                app:layout_constraintStart_toStartOf="@+id/tvRecipeName"
-                app:layout_constraintTop_toBottomOf="@+id/tvRecipeName" />
+        <ImageView
+            android:id="@+id/ivImage"
+            android:layout_width="275dp"
+            android:layout_height="172dp"
+            android:layout_marginTop="10dp"
+            android:src="@android:drawable/ic_menu_gallery"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tvRecipeName" />
 
             <ImageButton
                 android:id="@+id/ibBack"
@@ -95,29 +95,30 @@
                 app:layout_constraintTop_toTopOf="parent"
                 tools:ignore="TouchTargetSizeCheck,SpeakableTextPresentCheck" />
 
-            <Button
-                android:id="@+id/btnMade"
-                android:layout_width="109dp"
-                android:layout_height="33dp"
-                android:layout_marginTop="10dp"
-                android:text="I made this"
-                android:textSize="10sp"
-                app:layout_constraintStart_toStartOf="@+id/ivImage"
-                app:layout_constraintTop_toBottomOf="@+id/ivImage"
-                tools:ignore="TouchTargetSizeCheck" />
+        <Button
+            android:id="@+id/btnMade"
+            android:layout_width="109dp"
+            android:layout_height="33dp"
+            android:layout_marginStart="128dp"
+            android:layout_marginTop="2dp"
+            android:text="I made this"
+            android:textSize="10sp"
+            app:layout_constraintStart_toEndOf="@+id/ibHeart"
+            app:layout_constraintTop_toBottomOf="@+id/textView"
+            tools:ignore="TouchTargetSizeCheck" />
 
-            <ImageButton
-                android:id="@+id/ibHeart"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
-                android:layout_marginTop="12dp"
-                android:layout_marginEnd="4dp"
-                android:background="@drawable/heart"
-                app:layout_constraintEnd_toEndOf="@+id/ivImage"
-                app:layout_constraintTop_toBottomOf="@+id/ivImage"
-                tools:ignore="SpeakableTextPresentCheck,TouchTargetSizeCheck" />
+        <ImageButton
+            android:id="@+id/ibHeart"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="2dp"
+            android:background="@drawable/heart"
+            app:layout_constraintStart_toStartOf="@+id/ivImage"
+            app:layout_constraintTop_toBottomOf="@+id/textView"
+            tools:ignore="SpeakableTextPresentCheck,TouchTargetSizeCheck" />
 
-            <TextView
+        <TextView
                 android:id="@+id/tvCookTime"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -234,6 +235,16 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/btnPost" />
             </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <TextView
+            android:id="@+id/textView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="2dp"
+            android:text="Uploaded by: @username"
+            app:layout_constraintEnd_toEndOf="@+id/ivImage"
+            app:layout_constraintStart_toStartOf="@+id/ivImage"
+            app:layout_constraintTop_toBottomOf="@+id/ivImage" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
