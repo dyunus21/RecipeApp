@@ -4,6 +4,9 @@ plugins {
 
 android {
     compileSdk 32
+    packagingOptions {
+        resources.excludes.add("META-INF/*")
+    }
 
     defaultConfig {
         applicationId "com.example.recipeapp"
@@ -54,4 +57,7 @@ dependencies {
     androidTestImplementation "androidx.navigation:navigation-testing:$nav_version"
 
     implementation "androidx.navigation:navigation-compose:$nav_version"
+//    implementation 'org.asynchttpclient:async-http-client:2.2.0'
+    implementation 'com.codepath.libraries:asynchttpclient:2.2.0'
+    implementation 'org.slf4j:slf4j-api:2.0.0-alpha7'
 }

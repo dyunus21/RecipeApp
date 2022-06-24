@@ -144,7 +144,7 @@ public class RegisterActivity extends AppCompatActivity {
         try {
             resizedFile.createNewFile();
         } catch (IOException e) {
-            Log.e(TAG, "Unable to create new file ", e)
+            Log.e(TAG, "Unable to create new file ", e);
         }
         FileOutputStream fos = null;
         try {
