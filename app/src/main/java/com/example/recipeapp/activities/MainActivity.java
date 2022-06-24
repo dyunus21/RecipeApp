@@ -32,7 +32,8 @@ public class MainActivity extends AppCompatActivity {
 
     private static final String TAG = "MainActivity";
     public static NavController navController;
-    public final static int PICK_PHOTO_CODE = 1046;
+    public final static int PROFILE_PHOTO_CODE = 0;
+    public final static int RECIPE_PHOTO_CODE = 0;
     private final User CURRENT_USER = new User(ParseUser.getCurrentUser());
 
     @Override
@@ -71,17 +72,22 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        ImageClient imageClient = new ImageClient(this);
         File photoFile;
-        if ((data != null) && requestCode == PICK_PHOTO_CODE) {
+        if ((data != null)) {
+            ImageClient imageClient = new ImageClient(this);
             Uri photoUri = data.getData();
             Bitmap selectedImage = imageClient.loadFromUri(photoUri);
             photoFile = imageClient.getPhotoFileUri(imageClient.getFileName(photoUri));
             photoFile = imageClient.resizeFile(selectedImage);
             Log.i(TAG, "File: " + photoFile.toString());
-            CURRENT_USER.setProfileImage(new ParseFile(photoFile));
-            CURRENT_USER.getParseUser().saveInBackground();
-            Log.i(TAG, "image: " + CURRENT_USER.getProfileImage().getUrl());
+            if(requestCode == PROFILE_PHOTO_CODE) {
+                CURRENT_USER.setProfileImage(new ParseFile(photoFile));
+                CURRENT_USER.getParseUser().saveInBackground();
+                Log.i(TAG, "image: " + CURRENT_USER.getProfileImage().getUrl());
+            }
+//            else if(requestCode == RECIPE_PHOTO_CODE) {
+//
+//            }
         }
     }
 }

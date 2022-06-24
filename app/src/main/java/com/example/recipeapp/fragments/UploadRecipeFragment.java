@@ -1,12 +1,27 @@
 package com.example.recipeapp.fragments;
 
+import static android.app.Activity.RESULT_OK;
+
+import android.annotation.SuppressLint;
+import android.app.Activity;
+import android.content.Intent;
+import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.ImageDecoder;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.content.FileProvider;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.fragment.NavHostFragment;
 
+import android.os.Environment;
+import android.provider.MediaStore;
+import android.provider.OpenableColumns;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,16 +31,29 @@ import android.widget.Toast;
 import com.example.recipeapp.R;
 import com.example.recipeapp.databinding.FragmentRecipeDetailsBinding;
 import com.example.recipeapp.databinding.FragmentUploadRecipeBinding;
+import com.example.recipeapp.models.BitmapScaler;
 import com.example.recipeapp.models.Recipe;
+import com.example.recipeapp.models.User;
 import com.parse.ParseException;
+import com.parse.ParseFile;
+import com.parse.ParseUser;
 import com.parse.SaveCallback;
 
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 
 public class UploadRecipeFragment extends Fragment {
     private FragmentUploadRecipeBinding binding;
     private static final String TAG = "FragmentUploadRecipe";
+    public final static int CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE = 42;
+    public final static int PICK_PHOTO_CODE = 1046;
+    public String photoFileName = "photo.jpg";
+    File photoFile;
     public UploadRecipeFragment() {
 
     }
@@ -46,12 +74,26 @@ public class UploadRecipeFragment extends Fragment {
                 goBackToUpload();
             }
         });
+        //TODO: Fix File provider issue for launch camera
+        binding.btnTakePic.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                launchCamera();
+            }
+        });
+        binding.btnGallery.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onPickPhoto(v);
+            }
+        });
         binding.btnPublish.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 validateRecipe();
             }
         });
+
     }
 
     private void validateRecipe() {
@@ -66,6 +108,11 @@ public class UploadRecipeFragment extends Fragment {
         //TODO: Later update to TOAST messages regarding specific fields
         if (title.isEmpty() || cuisineType.isEmpty() || cooktime == 0 || ingredients.isEmpty() || instructions.isEmpty()) {
             Toast.makeText(getContext(),"Field cannot be empty!", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        if (photoFile == null || binding.ivImage.getDrawable() == null) {
+            Toast.makeText(getContext(), "Post does not contain any image!", Toast.LENGTH_SHORT).show();
             return;
         }
         publishRecipe(title, cuisineType,cooktime,ingredients,instructions);
@@ -83,6 +130,7 @@ public class UploadRecipeFragment extends Fragment {
         Log.i(TAG, "Instruction List Uploaded: " + instructionList.toString());
         recipe.setInstructions(instructionList);
         Log.i(TAG, "Finished inputing recipe details");
+        recipe.setImage(new ParseFile(photoFile));
         recipe.saveInBackground(new SaveCallback() {
             @Override
             public void done(ParseException e) {
@@ -97,11 +145,131 @@ public class UploadRecipeFragment extends Fragment {
                 binding.etCooktime.setText("");
                 binding.etIngredientList.setText("");
                 binding.etInstructions.setText("");
+                binding.ivImage.setImageResource(0);
             }
         });
     }
 
     private void goBackToUpload() {
         NavHostFragment.findNavController(this).navigate(R.id.uploadFragment);
+    }
+
+    // TODO: Move this to ImageClient later
+    public void onPickPhoto(View view) {
+        Log.i(TAG, "onPickPhoto!");
+        Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+        Log.i(TAG, "start intent for gallery!");
+        startActivityForResult(intent, PICK_PHOTO_CODE);
+
+    }
+
+    public File resizeFile(Bitmap image) {
+        Bitmap resizedBitmap = BitmapScaler.scaleToFitWidth(image, 800);
+        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+        resizedBitmap.compress(Bitmap.CompressFormat.JPEG, 40, bytes);
+        File resizedFile = getPhotoFileUri(photoFileName);
+        try {
+            resizedFile.createNewFile();
+        } catch (IOException e) {
+            Log.e(TAG, "Unable to create new file ", e);
+        }
+        FileOutputStream fos = null;
+        try {
+            fos = new FileOutputStream(resizedFile);
+        } catch (FileNotFoundException e) {
+            Log.e(TAG, "File not found ", e);
+        }
+        try {
+            fos.write(bytes.toByteArray());
+        } catch (IOException e) {
+            Log.e(TAG, "Unable to write to file ", e);
+        }
+        try {
+            fos.close();
+        } catch (IOException e) {
+            Log.e(TAG, "Unable to close file ", e);
+        }
+        Log.i(TAG, "File: " + resizedFile);
+        binding.ivImage.setImageBitmap(resizedBitmap);
+        return resizedFile;
+    }
+
+    @SuppressLint("Range")
+    public String getFileName(Uri uri) {
+        String result = null;
+        if (uri.getScheme().equals("content")) {
+            Cursor cursor = getContext().getContentResolver().query(uri, null, null, null, null);
+            try {
+                if (cursor != null && cursor.moveToFirst()) {
+                    result = cursor.getString(cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME));
+                }
+            } finally {
+                cursor.close();
+            }
+        }
+        if (result == null) {
+            result = uri.getPath();
+            int cut = result.lastIndexOf('/');
+            if (cut != -1) {
+                result = result.substring(cut + 1);
+            }
+        }
+        return result;
+    }
+
+    public File getPhotoFileUri(String fileName) {
+        File mediaStorageDir = new File(getContext().getExternalFilesDir(Environment.DIRECTORY_PICTURES), TAG);
+
+        if (!mediaStorageDir.exists() && !mediaStorageDir.mkdirs()) {
+            Log.d(TAG, "failed to create directory");
+        }
+
+        return new File(mediaStorageDir.getPath() + File.separator + fileName);
+    }
+
+    public Bitmap loadFromUri(Uri photoUri) {
+        Bitmap image = null;
+        try {
+            // check version of Android on device
+            if (Build.VERSION.SDK_INT > 27) {
+                ImageDecoder.Source source = ImageDecoder.createSource(getContext().getContentResolver(), photoUri);
+                image = ImageDecoder.decodeBitmap(source);
+            } else {
+                image = MediaStore.Images.Media.getBitmap(getContext().getContentResolver(), photoUri);
+            }
+        } catch (IOException e) {
+            Log.e(TAG, "Unable to load image from URI", e);
+        }
+        return image;
+    }
+
+    private void launchCamera() {
+        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        photoFile = getPhotoFileUri(photoFileName);
+
+        Uri fileProvider = FileProvider.getUriForFile(getContext(), "com.example.fileprovider", photoFile);
+        intent.putExtra(MediaStore.EXTRA_OUTPUT, fileProvider);
+
+        if (intent.resolveActivity(getContext().getPackageManager()) != null) {
+            startActivityForResult(intent, CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE);
+        }
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        if (requestCode == CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE) {
+            if (resultCode == RESULT_OK) {
+                Bitmap takenImage = BitmapFactory.decodeFile(photoFile.getAbsolutePath());
+                photoFile = resizeFile(takenImage);
+            } else {
+                Toast.makeText(getContext(), "Picture wasn't taken!", Toast.LENGTH_SHORT).show();
+            }
+        } else if ((data != null) && requestCode == PICK_PHOTO_CODE) {
+            Uri photoUri = data.getData();
+            Bitmap selectedImage = loadFromUri(photoUri);
+            photoFile = getPhotoFileUri(getFileName(photoUri));
+            photoFile = resizeFile(selectedImage);
+            Log.i(TAG, "File: " + photoFile.toString());
+        }
     }
 }

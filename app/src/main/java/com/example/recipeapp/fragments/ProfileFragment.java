@@ -19,6 +19,7 @@ import com.parse.ParseUser;
 
 public class ProfileFragment extends Fragment {
     private FragmentProfileBinding binding;
+    private static final int PROFILE_PHOTO_CODE = 0;
     private final User CURRENT_USER = new User(ParseUser.getCurrentUser()); // TODO: FIX THIS
 
     public ProfileFragment() {
@@ -42,7 +43,7 @@ public class ProfileFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 ImageClient imageClient = new ImageClient(getContext());
-                imageClient.onPickPhoto(view);
+                imageClient.onPickPhoto(view, PROFILE_PHOTO_CODE);
                 Glide.with(getContext()).load(CURRENT_USER.getProfileImage().getUrl()).circleCrop().into(binding.ivProfileImage);
             }
         });
