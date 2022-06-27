@@ -60,13 +60,12 @@ public class RecipeSearchAdapter extends RecyclerView.Adapter<RecipeSearchAdapte
         notifyDataSetChanged();
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+    public class ViewHolder extends RecyclerView.ViewHolder{
         public ItemRecipeCardBinding binding;
         private Recipe currentRecipe;
 
         public ViewHolder(@NonNull ItemRecipeCardBinding itemView) {
             super(itemView.getRoot());
-            itemView.getRoot().setOnClickListener(this);
             this.binding = itemView;
         }
 
@@ -76,11 +75,6 @@ public class RecipeSearchAdapter extends RecyclerView.Adapter<RecipeSearchAdapte
             Glide.with(context).load(recipe.getImageUrl()).into(binding.ivImage);
             binding.tvCookTime.setText(recipe.getCooktime() + "m");
             binding.tvCuisine.setText(recipe.getCuisineType());
-        }
-
-        @Override
-        public void onClick(View v) {
-            Log.i(TAG, "Clicked on " + currentRecipe.getTitle());
         }
 
     }

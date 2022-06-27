@@ -30,8 +30,10 @@ import com.example.recipeapp.R;
 import com.example.recipeapp.databinding.FragmentUploadRecipeBinding;
 import com.example.recipeapp.models.BitmapScaler;
 import com.example.recipeapp.models.Recipe;
+import com.example.recipeapp.models.User;
 import com.parse.ParseException;
 import com.parse.ParseFile;
+import com.parse.ParseUser;
 import com.parse.SaveCallback;
 
 import java.io.ByteArrayOutputStream;
@@ -117,6 +119,7 @@ public class UploadRecipeFragment extends Fragment {
         recipe.setTitle(title);
         recipe.setCuisineType(cuisineType);
         recipe.setCooktime(cooktime);
+        recipe.setAuthor(new User(ParseUser.getCurrentUser()));
         List<String> ingredientList = Arrays.asList(ingredients.split("\n"));
         Log.i(TAG, "Ingredient List Uploaded: " + ingredientList);
         recipe.setIngredientList(ingredientList);
