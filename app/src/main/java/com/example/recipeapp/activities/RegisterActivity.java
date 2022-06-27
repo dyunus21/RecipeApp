@@ -30,7 +30,6 @@ import com.parse.SignUpCallback;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
@@ -145,24 +144,12 @@ public class RegisterActivity extends AppCompatActivity {
         File resizedFile = getPhotoFileUri(photoFileName);
         try {
             resizedFile.createNewFile();
-        } catch (IOException e) {
-            Log.e(TAG, "Unable to create new file ", e);
-        }
-        FileOutputStream fos = null;
-        try {
+            FileOutputStream fos = null;
             fos = new FileOutputStream(resizedFile);
-        } catch (FileNotFoundException e) {
-            Log.e(TAG, "File not found ", e);
-        }
-        try {
             fos.write(bytes.toByteArray());
-        } catch (IOException e) {
-            Log.e(TAG, "Unable to write to file ", e);
-        }
-        try {
             fos.close();
         } catch (IOException e) {
-            Log.e(TAG, "Unable to close file ", e);
+            Log.e(TAG, "Unable to create new file ", e);
         }
         Log.i(TAG, "File: " + resizedFile);
         return resizedFile;

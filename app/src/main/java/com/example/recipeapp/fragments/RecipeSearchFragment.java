@@ -93,7 +93,7 @@ public class RecipeSearchFragment extends Fragment {
                 try {
                     jsonArray = json.jsonObject.getJSONArray("results");
                 } catch (JSONException e) {
-                    Log.e(TAG, "Hit JSON exception",e);
+                    Log.e(TAG, "Hit JSON exception", e);
                 }
                 try {
                     recipes = Recipe.getRecipes(jsonArray);

@@ -3,7 +3,6 @@ package com.example.recipeapp.fragments;
 import static android.app.Activity.RESULT_OK;
 
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
@@ -12,13 +11,6 @@ import android.graphics.ImageDecoder;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.core.content.FileProvider;
-import androidx.fragment.app.Fragment;
-import androidx.navigation.fragment.NavHostFragment;
-
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.provider.OpenableColumns;
@@ -28,32 +20,35 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.core.content.FileProvider;
+import androidx.fragment.app.Fragment;
+import androidx.navigation.fragment.NavHostFragment;
+
 import com.example.recipeapp.R;
-import com.example.recipeapp.databinding.FragmentRecipeDetailsBinding;
 import com.example.recipeapp.databinding.FragmentUploadRecipeBinding;
 import com.example.recipeapp.models.BitmapScaler;
 import com.example.recipeapp.models.Recipe;
-import com.example.recipeapp.models.User;
 import com.parse.ParseException;
 import com.parse.ParseFile;
-import com.parse.ParseUser;
 import com.parse.SaveCallback;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 
 public class UploadRecipeFragment extends Fragment {
-    private FragmentUploadRecipeBinding binding;
-    private static final String TAG = "FragmentUploadRecipe";
     public final static int CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE = 42;
     public final static int PICK_PHOTO_CODE = 1046;
+    private static final String TAG = "FragmentUploadRecipe";
     public String photoFileName = "photo.jpg";
     File photoFile;
+    private FragmentUploadRecipeBinding binding;
+
     public UploadRecipeFragment() {
 
     }
@@ -78,6 +73,7 @@ public class UploadRecipeFragment extends Fragment {
         binding.btnTakePic.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Log.i(TAG, "onClick camera");
                 launchCamera();
             }
         });
@@ -103,11 +99,9 @@ public class UploadRecipeFragment extends Fragment {
         String ingredients = binding.etIngredientList.getText().toString();
         String instructions = binding.etInstructions.getText().toString();
 
-        // TODO: Check photofile
-
         //TODO: Later update to TOAST messages regarding specific fields
         if (title.isEmpty() || cuisineType.isEmpty() || cooktime == 0 || ingredients.isEmpty() || instructions.isEmpty()) {
-            Toast.makeText(getContext(),"Field cannot be empty!", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getContext(), "Field cannot be empty!", Toast.LENGTH_SHORT).show();
             return;
         }
 
@@ -115,7 +109,7 @@ public class UploadRecipeFragment extends Fragment {
             Toast.makeText(getContext(), "Post does not contain any image!", Toast.LENGTH_SHORT).show();
             return;
         }
-        publishRecipe(title, cuisineType,cooktime,ingredients,instructions);
+        publishRecipe(title, cuisineType, cooktime, ingredients, instructions);
     }
 
     private void publishRecipe(String title, String cuisineType, int cooktime, String ingredients, String instructions) {
@@ -124,22 +118,22 @@ public class UploadRecipeFragment extends Fragment {
         recipe.setCuisineType(cuisineType);
         recipe.setCooktime(cooktime);
         List<String> ingredientList = Arrays.asList(ingredients.split("\n"));
-        Log.i(TAG, "Ingredient List Uploaded: " + ingredientList.toString());
+        Log.i(TAG, "Ingredient List Uploaded: " + ingredientList);
         recipe.setIngredientList(ingredientList);
         List<String> instructionList = Arrays.asList(instructions.split("\n"));
-        Log.i(TAG, "Instruction List Uploaded: " + instructionList.toString());
+        Log.i(TAG, "Instruction List Uploaded: " + instructionList);
         recipe.setInstructions(instructionList);
         Log.i(TAG, "Finished inputing recipe details");
         recipe.setImage(new ParseFile(photoFile));
         recipe.saveInBackground(new SaveCallback() {
             @Override
             public void done(ParseException e) {
-                if(e != null) {
-                    Log.e(TAG, "Error with saving recipe",e);
+                if (e != null) {
+                    Log.e(TAG, "Error with saving recipe", e);
                     Toast.makeText(getContext(), "Unable to save recipe!", Toast.LENGTH_SHORT).show();
                     return;
                 }
-                Log.i(TAG,"Successfully saved recipe: " + recipe.getTitle());
+                Log.i(TAG, "Successfully saved recipe: " + recipe.getTitle());
                 binding.etRecipeName.setText("");
                 binding.etCuisine.setText("");
                 binding.etCooktime.setText("");
@@ -170,24 +164,12 @@ public class UploadRecipeFragment extends Fragment {
         File resizedFile = getPhotoFileUri(photoFileName);
         try {
             resizedFile.createNewFile();
-        } catch (IOException e) {
-            Log.e(TAG, "Unable to create new file ", e);
-        }
-        FileOutputStream fos = null;
-        try {
+            FileOutputStream fos = null;
             fos = new FileOutputStream(resizedFile);
-        } catch (FileNotFoundException e) {
-            Log.e(TAG, "File not found ", e);
-        }
-        try {
             fos.write(bytes.toByteArray());
-        } catch (IOException e) {
-            Log.e(TAG, "Unable to write to file ", e);
-        }
-        try {
             fos.close();
         } catch (IOException e) {
-            Log.e(TAG, "Unable to close file ", e);
+            Log.e(TAG, "Unable to create new file ", e);
         }
         Log.i(TAG, "File: " + resizedFile);
         binding.ivImage.setImageBitmap(resizedBitmap);
@@ -247,20 +229,21 @@ public class UploadRecipeFragment extends Fragment {
         Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         photoFile = getPhotoFileUri(photoFileName);
 
-        Uri fileProvider = FileProvider.getUriForFile(getContext(), "com.example.fileprovider", photoFile);
+        Uri fileProvider = FileProvider.getUriForFile(getContext(), "com.example.provider", photoFile);
         intent.putExtra(MediaStore.EXTRA_OUTPUT, fileProvider);
-
         if (intent.resolveActivity(getContext().getPackageManager()) != null) {
-            startActivityForResult(intent, CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE);
+            this.startActivityForResult(intent, CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE);
         }
     }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         if (requestCode == CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE) {
+            Log.i(TAG, "onActivity result camera");
             if (resultCode == RESULT_OK) {
                 Bitmap takenImage = BitmapFactory.decodeFile(photoFile.getAbsolutePath());
                 photoFile = resizeFile(takenImage);
+                Log.i(TAG, "File: " + photoFile.toString());
             } else {
                 Toast.makeText(getContext(), "Picture wasn't taken!", Toast.LENGTH_SHORT).show();
             }

@@ -1,14 +1,5 @@
 package com.example.recipeapp.activities;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.Fragment;
-import androidx.navigation.NavController;
-import androidx.navigation.Navigation;
-import androidx.navigation.fragment.NavHostFragment;
-import androidx.navigation.ui.NavigationUI;
-
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
@@ -16,8 +7,13 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.Button;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
+import androidx.navigation.ui.NavigationUI;
 
 import com.example.recipeapp.R;
 import com.example.recipeapp.models.ImageClient;
@@ -30,10 +26,9 @@ import java.io.File;
 
 public class MainActivity extends AppCompatActivity {
 
+    public final static int PROFILE_PHOTO_CODE = 0;
     private static final String TAG = "MainActivity";
     public static NavController navController;
-    public final static int PROFILE_PHOTO_CODE = 0;
-    public final static int RECIPE_PHOTO_CODE = 0;
     private final User CURRENT_USER = new User(ParseUser.getCurrentUser());
 
     @Override
@@ -80,14 +75,11 @@ public class MainActivity extends AppCompatActivity {
             photoFile = imageClient.getPhotoFileUri(imageClient.getFileName(photoUri));
             photoFile = imageClient.resizeFile(selectedImage);
             Log.i(TAG, "File: " + photoFile.toString());
-            if(requestCode == PROFILE_PHOTO_CODE) {
+            if (requestCode == PROFILE_PHOTO_CODE) {
                 CURRENT_USER.setProfileImage(new ParseFile(photoFile));
                 CURRENT_USER.getParseUser().saveInBackground();
                 Log.i(TAG, "image: " + CURRENT_USER.getProfileImage().getUrl());
             }
-//            else if(requestCode == RECIPE_PHOTO_CODE) {
-//
-//            }
         }
     }
 }
