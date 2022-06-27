@@ -2,9 +2,7 @@ package com.example.recipeapp.adapters;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
@@ -20,8 +18,8 @@ import java.util.List;
 
 public class RecipeSearchAdapter extends RecyclerView.Adapter<RecipeSearchAdapter.ViewHolder> {
     private static final String TAG = "RecipeSearchAdapter";
-    public List<Recipe> recipesList;
     private final Context context;
+    public List<Recipe> recipesList;
     private ItemRecipeCardBinding item_binding;
 
     public RecipeSearchAdapter(Context context, List<Recipe> recipes) {
@@ -60,7 +58,7 @@ public class RecipeSearchAdapter extends RecyclerView.Adapter<RecipeSearchAdapte
         notifyDataSetChanged();
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder{
+    public class ViewHolder extends RecyclerView.ViewHolder {
         public ItemRecipeCardBinding binding;
         private Recipe currentRecipe;
 

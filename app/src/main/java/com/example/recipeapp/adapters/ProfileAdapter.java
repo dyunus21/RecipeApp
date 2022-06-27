@@ -3,7 +3,6 @@ package com.example.recipeapp.adapters;
 import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
-import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
@@ -19,18 +18,19 @@ import java.util.List;
 
 public class ProfileAdapter extends RecyclerView.Adapter<ProfileAdapter.ViewHolder> {
     private static final String TAG = "ProfileAdapter";
-    private List<Recipe> recipeList;
     private final Context context;
+    private final List<Recipe> recipeList;
     private ItemProfileRecipeBinding item_binding;
 
     public ProfileAdapter(Context context, List<Recipe> recipes) {
         this.context = context;
         this.recipeList = recipes;
     }
+
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        item_binding = ItemProfileRecipeBinding.inflate(LayoutInflater.from(context),parent,false);
+        item_binding = ItemProfileRecipeBinding.inflate(LayoutInflater.from(context), parent, false);
         return new ViewHolder(item_binding);
     }
 
@@ -59,8 +59,9 @@ public class ProfileAdapter extends RecyclerView.Adapter<ProfileAdapter.ViewHold
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
-        private ItemProfileRecipeBinding binding;
+        private final ItemProfileRecipeBinding binding;
         private Recipe currentRecipe;
+
         public ViewHolder(@NonNull ItemProfileRecipeBinding itemView) {
             super(itemView.getRoot());
             this.binding = itemView;

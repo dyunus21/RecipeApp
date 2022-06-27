@@ -47,11 +47,17 @@ public class RecipeSearchFragment extends Fragment {
     }
 
     @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
         client = new RecipeClient(getContext());
         recipes = new ArrayList<>();
         adapter = new RecipeSearchAdapter(getContext(), recipes);
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
         binding.rvRecipes.setAdapter(adapter);
         GridLayoutManager gridLayoutManager = new GridLayoutManager(getContext(), 2);
         binding.rvRecipes.setLayoutManager(gridLayoutManager);

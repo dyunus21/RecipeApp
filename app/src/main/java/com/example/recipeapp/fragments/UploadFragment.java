@@ -1,8 +1,6 @@
 package com.example.recipeapp.fragments;
 
-import android.app.Activity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,8 +15,8 @@ import com.example.recipeapp.databinding.FragmentUploadBinding;
 
 public class UploadFragment extends Fragment {
 
-    private FragmentUploadBinding binding;
     private static final String TAG = "UploadFragment";
+    private FragmentUploadBinding binding;
 
     public UploadFragment() {
 
@@ -55,11 +53,11 @@ public class UploadFragment extends Fragment {
         });
     }
 
-    public void goToUploadPost() {
-        NavHostFragment.findNavController(this).navigate(R.id.uploadPostFragment);
-    }
     public void goToUploadRecipe() {
         NavHostFragment.findNavController(this).navigate(R.id.uploadRecipeFragment);
     }
 
+    public void goToUploadPost() {
+        NavHostFragment.findNavController(this).navigate(R.id.uploadPostFragment);
+    }
 }

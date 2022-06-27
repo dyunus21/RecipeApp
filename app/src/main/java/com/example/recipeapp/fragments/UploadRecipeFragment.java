@@ -71,11 +71,10 @@ public class UploadRecipeFragment extends Fragment {
                 goBackToUpload();
             }
         });
-        //TODO: Fix File provider issue for launch camera
+
         binding.btnTakePic.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.i(TAG, "onClick camera");
                 launchCamera();
             }
         });
@@ -97,7 +96,7 @@ public class UploadRecipeFragment extends Fragment {
     private void validateRecipe() {
         String title = binding.etRecipeName.getText().toString();
         String cuisineType = binding.etCuisine.getText().toString();
-        int cooktime = Integer.parseInt(binding.etCooktime.getText().toString());  // TODO: Inform user if inputted string
+        final int cooktime = Integer.parseInt(binding.etCooktime.getText().toString());  // TODO: Inform user if inputted string
         String ingredients = binding.etIngredientList.getText().toString();
         String instructions = binding.etInstructions.getText().toString();
 
@@ -126,8 +125,8 @@ public class UploadRecipeFragment extends Fragment {
         List<String> instructionList = Arrays.asList(instructions.split("\n"));
         Log.i(TAG, "Instruction List Uploaded: " + instructionList);
         recipe.setInstructions(instructionList);
-        Log.i(TAG, "Finished inputing recipe details");
         recipe.setImage(new ParseFile(photoFile));
+        Log.i(TAG, "Finished inputting recipe details");
         recipe.saveInBackground(new SaveCallback() {
             @Override
             public void done(ParseException e) {
@@ -229,10 +228,10 @@ public class UploadRecipeFragment extends Fragment {
     }
 
     private void launchCamera() {
-        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        final Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         photoFile = getPhotoFileUri(photoFileName);
 
-        Uri fileProvider = FileProvider.getUriForFile(getContext(), "com.example.provider", photoFile);
+        final Uri fileProvider = FileProvider.getUriForFile(getContext(), "com.example.provider", photoFile);
         intent.putExtra(MediaStore.EXTRA_OUTPUT, fileProvider);
         if (intent.resolveActivity(getContext().getPackageManager()) != null) {
             this.startActivityForResult(intent, CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE);
@@ -244,14 +243,14 @@ public class UploadRecipeFragment extends Fragment {
         if (requestCode == CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE) {
             Log.i(TAG, "onActivity result camera");
             if (resultCode == RESULT_OK) {
-                Bitmap takenImage = BitmapFactory.decodeFile(photoFile.getAbsolutePath());
+                final Bitmap takenImage = BitmapFactory.decodeFile(photoFile.getAbsolutePath());
                 photoFile = resizeFile(takenImage);
                 Log.i(TAG, "File: " + photoFile.toString());
             } else {
                 Toast.makeText(getContext(), "Picture wasn't taken!", Toast.LENGTH_SHORT).show();
             }
         } else if ((data != null) && requestCode == PICK_PHOTO_CODE) {
-            Uri photoUri = data.getData();
+            final Uri photoUri = data.getData();
             Bitmap selectedImage = loadFromUri(photoUri);
             photoFile = getPhotoFileUri(getFileName(photoUri));
             photoFile = resizeFile(selectedImage);

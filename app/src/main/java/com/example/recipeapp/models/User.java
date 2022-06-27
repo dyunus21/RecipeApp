@@ -28,7 +28,7 @@ public class User {
     public User(ParseUser user) {
         this.user = user;
     }
-
+    //Create a constructor that sets all fields
     public ParseUser getParseUser() {
         return user;
     }
