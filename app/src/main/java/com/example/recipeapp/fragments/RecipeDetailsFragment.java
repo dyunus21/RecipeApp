@@ -57,14 +57,25 @@ public class RecipeDetailsFragment extends Fragment {
         binding.tvRecipeName.setText(recipe.getTitle());
         binding.tvCookTime.setText("Cooktime: " + recipe.getCooktime() + " mins");
         binding.tvCuisine.setText("Cuisine: " + recipe.getCuisineType());
-        Glide.with(getContext()).load(recipe.getImageUrl()).into(binding.ivImage);
+        if(recipe.getImageUrl() != null) {
+            Glide.with(getContext()).load(recipe.getImageUrl()).into(binding.ivImage);
+        }else {
+            Glide.with(getContext()).load(recipe.getImage().getUrl()).into(binding.ivImage);
+        }
+        if(recipe.getAuthor() == null) {
+            try {
+                getIngredients();
+                Log.i(TAG, "list: " + recipe.getIngredientList().toString());
 
-        try {
-            getIngredients();
-            Log.i(TAG, "list: " + recipe.getIngredientList().toString());
-
-        } catch (IOException e) {
-            Log.e(TAG, "Error with getting ingredients", e);
+            } catch (IOException e) {
+                Log.e(TAG, "Error with getting ingredients", e);
+            }
+        }
+        else {
+            List<String> ingredients = recipe.getIngredientList();
+            for (int i = 0; i < ingredients.size(); i++) {
+                binding.tvIngredientList.append("• " + ingredients.get(i) + "\n");
+            }
         }
 
         List<String> instructions = recipe.getInstructions();

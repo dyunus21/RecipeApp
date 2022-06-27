@@ -77,6 +77,8 @@ public class ProfileFragment extends Fragment {
             query.whereEqualTo(Recipe.KEY_AUTHOR, CURRENT_USER.getParseUser());
         }
         query.include(Recipe.KEY_IMAGE_URL);
+        query.include(Recipe.KEY_IMAGE);
+        query.include(Recipe.KEY_INGREDIENT_LIST);
         query.addDescendingOrder("createdAt");
         query.findInBackground(new FindCallback<Recipe>() {
             @Override
