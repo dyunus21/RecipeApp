@@ -1,15 +1,20 @@
 package com.example.recipeapp.models;
 
+import com.parse.FindCallback;
+import com.parse.GetCallback;
 import com.parse.ParseClassName;
+import com.parse.ParseException;
 import com.parse.ParseFile;
 import com.parse.ParseObject;
+import com.parse.ParseQuery;
 import com.parse.ParseUser;
 
 import java.util.ArrayList;
 import java.util.List;
 
-@ParseClassName("User")
-public class User extends ParseUser {
+
+public class User {
+    private ParseUser user;
     public static final String KEY_FIRSTNAME = "firstName";
     public static final String KEY_LASTNAME = "lastName";
     public static final String KEY_PROFILE_IMAGE = "profileImage";
@@ -20,94 +25,102 @@ public class User extends ParseUser {
     public static final String KEY_RECIPES_MADE = "recipesMade";
     public static final String KEY_POSTS_LIKED = "postsLiked";
 
+    public User(ParseUser user) {
+        this.user = user;
+    }
+
+    public ParseUser getParseUser() {
+        return user;
+    }
+
     public String getFirstName() {
-        return getString(KEY_FIRSTNAME);
+        return user.getString(KEY_FIRSTNAME);
     }
 
     public void setFirstName(String firstName) {
-        put(KEY_FIRSTNAME, firstName);
+        user.put(KEY_FIRSTNAME, firstName);
     }
 
     public String getLastName() {
-        return getString(KEY_LASTNAME);
+        return user.getString(KEY_LASTNAME);
     }
 
     public void setLastName(String lastName) {
-        put(KEY_LASTNAME, lastName);
+        user.put(KEY_LASTNAME, lastName);
     }
 
     public ParseFile getProfileImage() {
-        return getParseFile(KEY_PROFILE_IMAGE);
+        return user.getParseFile(KEY_PROFILE_IMAGE);
     }
 
     public void setProfileImage(ParseFile image) {
-        put(KEY_PROFILE_IMAGE, image);
+        user.put(KEY_PROFILE_IMAGE, image);
     }
 
     public List<User> getFollowerList() {
-        List<User> followerList = getList(KEY_FOLLOWER_LIST);
+        List<User> followerList = user.getList(KEY_FOLLOWER_LIST);
         if (followerList == null)
             return new ArrayList<>();
         return followerList;
     }
 
     public void setFollowerList(List<User> followerList) {
-        put(KEY_FOLLOWER_LIST, followerList);
+        user.put(KEY_FOLLOWER_LIST, followerList);
     }
 
     public List<User> getFollowingList() {
-        List<User> followingList = getList(KEY_FOLLOWING_LIST);
+        List<User> followingList = user.getList(KEY_FOLLOWING_LIST);
         if (followingList == null)
             return new ArrayList<>();
         return followingList;
     }
 
     public void setFollowingList(List<User> followingList) {
-        put(KEY_FOLLOWING_LIST, followingList);
+        user.put(KEY_FOLLOWING_LIST, followingList);
     }
 
     public List<Ingredient> getIngredientList() {
-        List<Ingredient> ingredientList = getList(KEY_INGREDIENT_LIST);
+        List<Ingredient> ingredientList = user.getList(KEY_INGREDIENT_LIST);
         if (ingredientList == null)
             return new ArrayList<>();
         return ingredientList;
     }
 
     public void setIngredientList(List<Ingredient> ingredientList) {
-        put(KEY_INGREDIENT_LIST, ingredientList);
+        user.put(KEY_INGREDIENT_LIST, ingredientList);
     }
 
     public List<Recipe> getRecipesUploaded() {
-        List<Recipe> recipesUploaded = getList(KEY_RECIPES_UPLOADED);
+        List<Recipe> recipesUploaded = user.getList(KEY_RECIPES_UPLOADED);
         if (recipesUploaded == null)
             return new ArrayList<>();
         return recipesUploaded;
     }
 
     public void setRecipesUploaded(List<Recipe> recipesUploaded) {
-        put(KEY_RECIPES_UPLOADED, recipesUploaded);
+        user.put(KEY_RECIPES_UPLOADED, recipesUploaded);
     }
 
     public List<Recipe> getRecipesMade() {
-        List<Recipe> recipesMade = getList(KEY_RECIPES_MADE);
+        List<Recipe> recipesMade = user.getList(KEY_RECIPES_MADE);
         if (recipesMade == null)
             return new ArrayList<>();
         return recipesMade;
     }
 
     public void setRecipesMade(List<Recipe> recipesMade) {
-        put(KEY_RECIPES_MADE, recipesMade);
+        user.put(KEY_RECIPES_MADE, recipesMade);
     }
 
     public List<Post> postsLiked() {
-        List<Post> postsLiked = getList(KEY_POSTS_LIKED);
+        List<Post> postsLiked = user.getList(KEY_POSTS_LIKED);
         if (postsLiked == null)
             return new ArrayList<>();
         return postsLiked;
     }
 
     public void setPostsLiked(List<Post> postsLiked) {
-        put(KEY_POSTS_LIKED, postsLiked);
+        user.put(KEY_POSTS_LIKED, postsLiked);
     }
 
 }

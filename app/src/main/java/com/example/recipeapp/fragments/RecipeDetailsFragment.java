@@ -81,7 +81,6 @@ public class RecipeDetailsFragment extends Fragment {
             }
         });
 
-        // TODO: Setup ingredient list
         // TODO: Set up like and I made this button
 
     }

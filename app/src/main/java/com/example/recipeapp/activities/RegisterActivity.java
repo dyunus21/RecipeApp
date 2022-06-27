@@ -24,6 +24,7 @@ import com.example.recipeapp.models.BitmapScaler;
 import com.example.recipeapp.models.User;
 import com.parse.ParseException;
 import com.parse.ParseFile;
+import com.parse.ParseUser;
 import com.parse.SaveCallback;
 import com.parse.SignUpCallback;
 
@@ -80,13 +81,13 @@ public class RegisterActivity extends AppCompatActivity {
         String lastName = binding.etLastName.getText().toString();
         String username = binding.etUsername.getText().toString();
         String password = binding.etPassword.getText().toString();
-        User user = new User();
-        user.setEmail(email);
+        User user = new User(new ParseUser());
+        user.getParseUser().setEmail(email);
         user.setFirstName(firstName);
         user.setLastName(lastName);
-        user.setUsername(username);
-        user.setPassword(password);
-        user.signUpInBackground(new SignUpCallback() {
+        user.getParseUser().setUsername(username);
+        user.getParseUser().setPassword(password);
+        user.getParseUser().signUpInBackground(new SignUpCallback() {
             @Override
             public void done(ParseException e) {
                 if (e != null) {
@@ -101,7 +102,7 @@ public class RegisterActivity extends AppCompatActivity {
 
     private void setProfileImage(User user) {
         user.setProfileImage(new ParseFile(photoFile));
-        user.saveInBackground(new SaveCallback() {
+        user.getParseUser().saveInBackground(new SaveCallback() {
             @Override
             public void done(ParseException e) {
                 if (e != null) {
@@ -119,6 +120,7 @@ public class RegisterActivity extends AppCompatActivity {
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
         if ((data != null) && requestCode == PICK_PHOTO_CODE) {
             Uri photoUri = data.getData();
             Bitmap selectedImage = loadFromUri(photoUri);
