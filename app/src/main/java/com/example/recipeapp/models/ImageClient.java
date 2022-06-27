@@ -15,8 +15,6 @@ import android.provider.OpenableColumns;
 import android.util.Log;
 import android.view.View;
 
-import androidx.annotation.Nullable;
-
 import com.example.recipeapp.activities.MainActivity;
 
 import java.io.ByteArrayOutputStream;
@@ -26,8 +24,8 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 
 public class ImageClient extends MainActivity {
-    public final static int PICK_PHOTO_CODE = 1046;
     private static final String TAG = "ImageClient";
+    public int photo_code;
     public String photoFileName = "photo.jpg";
     File photoFile;
     Context context;
@@ -37,12 +35,12 @@ public class ImageClient extends MainActivity {
     }
 
 
-    public void onPickPhoto(View view) {
+    public void onPickPhoto(View view, int photo_code) {
         Log.i(TAG, "onPickPhoto!");
         Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
         Log.i(TAG, "start intent for gallery!");
-
-        ((Activity)context).startActivityForResult(intent, PICK_PHOTO_CODE);
+        this.photo_code = photo_code;
+        ((Activity) context).startActivityForResult(intent, photo_code);
 
     }
 

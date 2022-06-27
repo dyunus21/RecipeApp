@@ -11,69 +11,66 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.example.recipeapp.R;
-import com.example.recipeapp.databinding.ItemRecipeCardBinding;
+import com.example.recipeapp.databinding.ItemProfileRecipeBinding;
 import com.example.recipeapp.models.Recipe;
 
 import java.util.List;
 
-public class RecipeSearchAdapter extends RecyclerView.Adapter<RecipeSearchAdapter.ViewHolder> {
-    private static final String TAG = "RecipeSearchAdapter";
+public class ProfileAdapter extends RecyclerView.Adapter<ProfileAdapter.ViewHolder> {
+    private static final String TAG = "ProfileAdapter";
     private final Context context;
-    public List<Recipe> recipesList;
-    private ItemRecipeCardBinding item_binding;
+    private final List<Recipe> recipeList;
+    private ItemProfileRecipeBinding item_binding;
 
-    public RecipeSearchAdapter(Context context, List<Recipe> recipes) {
+    public ProfileAdapter(Context context, List<Recipe> recipes) {
         this.context = context;
-        this.recipesList = recipes;
+        this.recipeList = recipes;
     }
 
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        item_binding = ItemRecipeCardBinding.inflate(LayoutInflater.from(context), parent, false);
+        item_binding = ItemProfileRecipeBinding.inflate(LayoutInflater.from(context), parent, false);
         return new ViewHolder(item_binding);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull final ViewHolder holder, int position) {
-        final Recipe recipe = recipesList.get(position);
+    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+        final Recipe recipe = recipeList.get(position);
         holder.bind(recipe);
         final Bundle bundle = new Bundle();
         bundle.putParcelable(Recipe.class.getSimpleName(), recipe);
-        holder.itemView.setOnClickListener(Navigation.createNavigateOnClickListener(R.id.action_recipeSearchFragment_to_recipeDetailsFragment, bundle));
+        holder.itemView.setOnClickListener(Navigation.createNavigateOnClickListener(R.id.action_profileFragment_to_recipeDetailsFragment, bundle));
     }
 
     @Override
     public int getItemCount() {
-        return recipesList.size();
+        return recipeList.size();
     }
 
     public void clear() {
-        recipesList.clear();
+        recipeList.clear();
         notifyDataSetChanged();
     }
 
     public void addAll(List<Recipe> list) {
-        recipesList.addAll(list);
+        recipeList.addAll(list);
         notifyDataSetChanged();
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
-        public ItemRecipeCardBinding binding;
+        private final ItemProfileRecipeBinding binding;
         private Recipe currentRecipe;
 
-        public ViewHolder(@NonNull ItemRecipeCardBinding itemView) {
+        public ViewHolder(@NonNull ItemProfileRecipeBinding itemView) {
             super(itemView.getRoot());
             this.binding = itemView;
         }
 
         public void bind(Recipe recipe) {
             currentRecipe = recipe;
-            binding.tvTitle.setText(recipe.getTitle());
-            Glide.with(context).load(recipe.getImageUrl()).into(binding.ivImage);
-            binding.tvCookTime.setText(recipe.getCooktime() + "m");
-            binding.tvCuisine.setText(recipe.getCuisineType());
+            binding.tvRecipeName.setText(recipe.getTitle());
+            Glide.with(context).load(recipe.getImage().getUrl()).into(binding.ivRecipeImage);
         }
-
     }
 }

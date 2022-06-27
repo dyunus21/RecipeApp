@@ -20,7 +20,6 @@ import com.example.recipeapp.models.Recipe;
 
 import org.json.JSONArray;
 import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -43,10 +42,10 @@ public class RecipeDetailsFragment extends Fragment {
                              Bundle savedInstanceState) {
         binding = FragmentRecipeDetailsBinding.inflate(getLayoutInflater());
         client = new RecipeClient(getContext());
-        Bundle bundle = this.getArguments();
-        if(bundle != null) {
+        final Bundle bundle = this.getArguments();
+        if (bundle != null) {
             recipe = bundle.getParcelable("Recipe");
-            Log.i(TAG,"Received bundle: " + recipe.getTitle());
+            Log.i(TAG, "Received bundle: " + recipe.getTitle());
         }
 
         return binding.getRoot();
@@ -60,18 +59,18 @@ public class RecipeDetailsFragment extends Fragment {
         binding.tvCuisine.setText("Cuisine: " + recipe.getCuisineType());
         Glide.with(getContext()).load(recipe.getImageUrl()).into(binding.ivImage);
 
-        List<String> instructions = recipe.getInstructions();
-        Log.i(TAG,"instructions: " + instructions.toString());
-        for(int i = 0; i<instructions.size(); i++) {
-            binding.tvInstructionsList.append((i+1) + ". " + instructions.get(i) + "\n");
-        }
-
         try {
             getIngredients();
-            Log.i(TAG, "list: " +recipe.getIngredientList().toString());
+            Log.i(TAG, "list: " + recipe.getIngredientList().toString());
 
         } catch (IOException e) {
-            e.printStackTrace();
+            Log.e(TAG, "Error with getting ingredients", e);
+        }
+
+        List<String> instructions = recipe.getInstructions();
+        Log.i(TAG, "instructions: " + instructions.toString());
+        for (int i = 0; i < instructions.size(); i++) {
+            binding.tvInstructionsList.append((i + 1) + ". " + instructions.get(i) + "\n");
         }
 
         binding.ibBack.setOnClickListener(new View.OnClickListener() {
@@ -97,16 +96,14 @@ public class RecipeDetailsFragment extends Fragment {
                 try {
                     jsonArray = json.jsonObject.getJSONArray("extendedIngredients");
                     for (int i = 0; i < jsonArray.length(); i++) {
-                        ingredients.add(i,jsonArray.getJSONObject(i).getString("original"));
+                        ingredients.add(i, jsonArray.getJSONObject(i).getString("original"));
                     }
-                    Log.i(TAG,"ingredients22: " + ingredients.toString());
-//                    recipe.setIngredientList(ingredients);
-                    Log.i(TAG,"Savedo ingredients " + recipe.getIngredientList().toString());
-                    for(int i = 0; i<ingredients.size(); i++) {
-                        binding.tvIngredientList.append( "• " + ingredients.get(i) + "\n");
+                    Log.i(TAG, "Saved ingredients " + recipe.getIngredientList().toString());
+                    for (int i = 0; i < ingredients.size(); i++) {
+                        binding.tvIngredientList.append("• " + ingredients.get(i) + "\n");
                     }
                 } catch (JSONException e) {
-                    Log.e(TAG, "Hit JSON exception",e);
+                    Log.e(TAG, "Hit JSON exception", e);
                 }
 
             }
@@ -117,7 +114,7 @@ public class RecipeDetailsFragment extends Fragment {
             }
         });
 
-        Log.i(TAG,"ingredients: " + ingredients.toString());
+        Log.i(TAG, "ingredients: " + ingredients);
     }
 
 

@@ -1,14 +1,5 @@
 package com.example.recipeapp.activities;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.Fragment;
-import androidx.navigation.NavController;
-import androidx.navigation.Navigation;
-import androidx.navigation.fragment.NavHostFragment;
-import androidx.navigation.ui.NavigationUI;
-
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
@@ -16,8 +7,13 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.Button;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
+import androidx.navigation.ui.NavigationUI;
 
 import com.example.recipeapp.R;
 import com.example.recipeapp.models.ImageClient;
@@ -30,9 +26,9 @@ import java.io.File;
 
 public class MainActivity extends AppCompatActivity {
 
+    public final static int PROFILE_PHOTO_CODE = 0;
     private static final String TAG = "MainActivity";
     public static NavController navController;
-    public final static int PICK_PHOTO_CODE = 1046;
     private final User CURRENT_USER = new User(ParseUser.getCurrentUser());
 
     @Override
@@ -41,7 +37,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         navController = Navigation.findNavController(this, R.id.nav_host_fragment);
-        BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
+        final BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
         NavigationUI.setupWithNavController(bottomNavigationView, navController);
     }
 
@@ -63,7 +59,7 @@ public class MainActivity extends AppCompatActivity {
     public void logoutUser() {
         Log.i(TAG, "Attempting to logout user!");
         ParseUser.logOut();
-        Intent intent = new Intent(this, LoginActivity.class);
+        final Intent intent = new Intent(this, LoginActivity.class);
         startActivity(intent);
 
     }
@@ -71,17 +67,19 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        ImageClient imageClient = new ImageClient(this);
         File photoFile;
-        if ((data != null) && requestCode == PICK_PHOTO_CODE) {
+        if ((data != null)) {
+            ImageClient imageClient = new ImageClient(this);
             Uri photoUri = data.getData();
             Bitmap selectedImage = imageClient.loadFromUri(photoUri);
             photoFile = imageClient.getPhotoFileUri(imageClient.getFileName(photoUri));
             photoFile = imageClient.resizeFile(selectedImage);
             Log.i(TAG, "File: " + photoFile.toString());
-            CURRENT_USER.setProfileImage(new ParseFile(photoFile));
-            CURRENT_USER.getParseUser().saveInBackground();
-            Log.i(TAG, "image: " + CURRENT_USER.getProfileImage().getUrl());
+            if (requestCode == PROFILE_PHOTO_CODE) {
+                CURRENT_USER.setProfileImage(new ParseFile(photoFile));
+                CURRENT_USER.getParseUser().saveInBackground();
+                Log.i(TAG, "image: " + CURRENT_USER.getProfileImage().getUrl());
+            }
         }
     }
 }

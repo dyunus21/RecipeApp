@@ -30,7 +30,6 @@ import com.parse.SignUpCallback;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
@@ -49,8 +48,7 @@ public class RegisterActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = ActivityRegisterBinding.inflate(getLayoutInflater());
-        View view = binding.getRoot();
-        setContentView(view);
+        setContentView(binding.getRoot());
 
         binding.btnSignup.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -68,7 +66,7 @@ public class RegisterActivity extends AppCompatActivity {
         binding.ivProfileImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                onPickPhoto(view);
+                onPickPhoto(v);
             }
         });
 
@@ -76,17 +74,12 @@ public class RegisterActivity extends AppCompatActivity {
 
     private void registerUser() {
         Log.i(TAG, "Attempting to register user");
-        String email = binding.etEmail.getText().toString();
-        String firstName = binding.etFirstName.getText().toString();
-        String lastName = binding.etLastName.getText().toString();
-        String username = binding.etUsername.getText().toString();
-        String password = binding.etPassword.getText().toString();
         User user = new User(new ParseUser());
-        user.getParseUser().setEmail(email);
-        user.setFirstName(firstName);
-        user.setLastName(lastName);
-        user.getParseUser().setUsername(username);
-        user.getParseUser().setPassword(password);
+        user.getParseUser().setEmail(binding.etEmail.getText().toString());
+        user.setFirstName(binding.etFirstName.getText().toString());
+        user.setLastName(binding.etLastName.getText().toString());
+        user.getParseUser().setUsername(binding.etUsername.getText().toString());
+        user.getParseUser().setPassword(binding.etPassword.getText().toString());
         user.getParseUser().signUpInBackground(new SignUpCallback() {
             @Override
             public void done(ParseException e) {
@@ -145,24 +138,12 @@ public class RegisterActivity extends AppCompatActivity {
         File resizedFile = getPhotoFileUri(photoFileName);
         try {
             resizedFile.createNewFile();
-        } catch (IOException e) {
-            Log.e(TAG, "Unable to create new file ", e);
-        }
-        FileOutputStream fos = null;
-        try {
+            FileOutputStream fos = null;
             fos = new FileOutputStream(resizedFile);
-        } catch (FileNotFoundException e) {
-            Log.e(TAG, "File not found ", e);
-        }
-        try {
             fos.write(bytes.toByteArray());
-        } catch (IOException e) {
-            Log.e(TAG, "Unable to write to file ", e);
-        }
-        try {
             fos.close();
         } catch (IOException e) {
-            Log.e(TAG, "Unable to close file ", e);
+            Log.e(TAG, "Unable to create new file ", e);
         }
         Log.i(TAG, "File: " + resizedFile);
         return resizedFile;
