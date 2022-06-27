@@ -33,21 +33,22 @@ People are commonly faced with a difficult decision to decide what to cook. Part
 
 _Version1_
 * [ ] User can search for recipes based on user preferences using [Spoonacular Nutrition API](https://rapidapi.com/spoonacular/api/recipe-food-nutrition)
-* [ ] User can view details about recipe
+* [x] User can view details about recipe
     * Ingredients, instructions, cook time, images, videos, tags
 * [x] User can create a new account
 * [x] User can login/logout 
 * [ ] User can view/update ingredients inventory
-* [ ] User can upload recipes (including photos/videos) and update recipe database
+* [x] User can upload recipes (including photos/videos) and update recipe database
     * Initialize database with recipes extracted from a Recipe API (Ex: Spoonacular API), then update database with user-uploaded recipes
 * [x] User can switch between Tabs (Recipe Search, Ingredients Inventory, Social Feed, Profile Page)
    
 _Version2_
 * [ ] User can follow other users
-* [ ] User can view/update user profiles
-    * Personal Information
-    * Recipes created
-    * Recipes uploaded
+* [x] User can view/update user profiles
+    * [x] Personal Information
+    * [ ] Recipes saved
+    * [ ] Recipes made
+    * [x] Recipes uploaded
 * [ ] User can post recipes/questions/challenges in the social feed
 * [ ] User can like, share, and reviews recipes/posts
 
