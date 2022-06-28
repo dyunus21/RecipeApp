@@ -7,6 +7,12 @@ import com.parse.ParseObject;
 public class Ingredient extends ParseObject {
     public static final String KEY_NAME = "name";
     public static final String KEY_COUNT = "count";
+    public static final String KEY_UNIT = "unit"
+
+//    public Ingredient(String name, int count) {
+//        this.setName(name);
+//        this.setCount(count);
+//    }
 
     public String getName() {
         return getString(KEY_NAME);
@@ -14,6 +20,14 @@ public class Ingredient extends ParseObject {
 
     public void setName(String name) {
         put(KEY_NAME, name);
+    }
+
+    public String getUnit() {
+        return getString(KEY_UNIT);
+    }
+
+    public void setUnit(String unit) {
+        put(KEY_UNIT, unit);
     }
     public int getCount() {
         return getInt(KEY_COUNT);

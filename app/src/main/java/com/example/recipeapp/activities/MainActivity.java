@@ -29,7 +29,7 @@ public class MainActivity extends AppCompatActivity {
     public final static int PROFILE_PHOTO_CODE = 0;
     private static final String TAG = "MainActivity";
     public static NavController navController;
-    private final User CURRENT_USER = new User(ParseUser.getCurrentUser());
+    public final User CURRENT_USER = new User(ParseUser.getCurrentUser());
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
