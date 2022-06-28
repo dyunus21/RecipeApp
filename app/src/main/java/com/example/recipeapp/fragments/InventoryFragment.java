@@ -17,12 +17,7 @@ import com.example.recipeapp.activities.MainActivity;
 import com.example.recipeapp.adapters.InventoryAdapter;
 import com.example.recipeapp.databinding.FragmentInventoryBinding;
 import com.example.recipeapp.models.Ingredient;
-import com.example.recipeapp.models.Post;
 import com.example.recipeapp.models.User;
-import com.parse.FindCallback;
-import com.parse.ParseException;
-import com.parse.ParseQuery;
-import com.parse.SaveCallback;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -42,7 +37,7 @@ public class InventoryFragment extends Fragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         ingredientList = new ArrayList<>();
-        adapter = new InventoryAdapter(getContext(),ingredientList);
+        adapter = new InventoryAdapter(getContext(), ingredientList);
     }
 
     @Override

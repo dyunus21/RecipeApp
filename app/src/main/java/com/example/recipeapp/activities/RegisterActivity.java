@@ -35,10 +35,10 @@ import java.io.IOException;
 
 public class RegisterActivity extends AppCompatActivity {
 
-    public final static int PICK_PHOTO_CODE = 1046;
+    private final static int PICK_PHOTO_CODE = 1046;
     private static final String TAG = "RegisterActivity";
-    public String photoFileName = "photo.jpg";
-    File photoFile;
+    private final String photoFileName = "photo.jpg";
+    private File photoFile;
     private ActivityRegisterBinding binding;
 
     public RegisterActivity() {
@@ -84,12 +84,12 @@ public class RegisterActivity extends AppCompatActivity {
 
     }
 
-    private void registerUser(User user) {
+    private void registerUser(final User user) {
         user.getParseUser().signUpInBackground(new SignUpCallback() {
             @Override
             public void done(ParseException e) {
                 if (e != null) {
-                    Log.e(TAG, "Issue with registering user!",e);
+                    Log.e(TAG, "Issue with registering user!", e);
                     Toast.makeText(RegisterActivity.this, "Unable to register user!", Toast.LENGTH_SHORT).show();
                     return;
                 }
@@ -103,7 +103,7 @@ public class RegisterActivity extends AppCompatActivity {
         });
     }
 
-    private void setProfileImage(User user) {
+    private void setProfileImage(final User user) {
         user.setProfileImage(new ParseFile(photoFile));
         user.getParseUser().saveInBackground(new SaveCallback() {
             @Override
@@ -140,7 +140,7 @@ public class RegisterActivity extends AppCompatActivity {
         startActivityForResult(intent, PICK_PHOTO_CODE);
     }
 
-    public File resizeFile(Bitmap image) {
+    public File resizeFile(final Bitmap image) {
         Bitmap resizedBitmap = BitmapScaler.scaleToFitWidth(image, 800);
         ByteArrayOutputStream bytes = new ByteArrayOutputStream();
         resizedBitmap.compress(Bitmap.CompressFormat.JPEG, 40, bytes);
@@ -159,7 +159,7 @@ public class RegisterActivity extends AppCompatActivity {
     }
 
     @SuppressLint("Range")
-    public String getFileName(Uri uri) {
+    public String getFileName(final Uri uri) {
         String result = null;
         if (uri.getScheme().equals("content")) {
             Cursor cursor = getContentResolver().query(uri, null, null, null, null);
@@ -181,7 +181,7 @@ public class RegisterActivity extends AppCompatActivity {
         return result;
     }
 
-    public File getPhotoFileUri(String fileName) {
+    public File getPhotoFileUri(final String fileName) {
         File mediaStorageDir = new File(getExternalFilesDir(Environment.DIRECTORY_PICTURES), TAG);
 
         if (!mediaStorageDir.exists() && !mediaStorageDir.mkdirs()) {
@@ -191,7 +191,7 @@ public class RegisterActivity extends AppCompatActivity {
         return new File(mediaStorageDir.getPath() + File.separator + fileName);
     }
 
-    public Bitmap loadFromUri(Uri photoUri) {
+    public Bitmap loadFromUri(final Uri photoUri) {
         Bitmap image = null;
         try {
             // check version of Android on device
