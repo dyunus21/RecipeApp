@@ -80,15 +80,25 @@ public class RegisterActivity extends AppCompatActivity {
         user.setLastName(binding.etLastName.getText().toString());
         user.getParseUser().setUsername(binding.etUsername.getText().toString());
         user.getParseUser().setPassword(binding.etPassword.getText().toString());
+        registerUser(user);
+
+    }
+
+    private void registerUser(User user) {
         user.getParseUser().signUpInBackground(new SignUpCallback() {
             @Override
             public void done(ParseException e) {
                 if (e != null) {
-                    Log.e(TAG, "Issue with registering user!");
+                    Log.e(TAG, "Issue with registering user!",e);
                     Toast.makeText(RegisterActivity.this, "Unable to register user!", Toast.LENGTH_SHORT).show();
+                    return;
                 }
                 Log.i(TAG, "Successfully registered user");
+                if (photoFile != null) {
+                    setProfileImage(user);
+                }
                 goMainActivity();
+                Toast.makeText(RegisterActivity.this, "Welcome " + ParseUser.getCurrentUser().getUsername(), Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -104,7 +114,6 @@ public class RegisterActivity extends AppCompatActivity {
                     return;
                 } else {
                     Toast.makeText(RegisterActivity.this, "Successfully saved profile image!", Toast.LENGTH_SHORT).show();
-                    goMainActivity();
                 }
 
             }
