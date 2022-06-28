@@ -64,22 +64,22 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        File photoFile;
-        if ((data != null)) {
-            ImageClient imageClient = new ImageClient(this);
-            Uri photoUri = data.getData();
-            Bitmap selectedImage = imageClient.loadFromUri(photoUri);
-            photoFile = imageClient.getPhotoFileUri(imageClient.getFileName(photoUri));
-            photoFile = imageClient.resizeFile(selectedImage);
-            Log.i(TAG, "File: " + photoFile.toString());
-            if (requestCode == PROFILE_PHOTO_CODE) {
-                CURRENT_USER.setProfileImage(new ParseFile(photoFile));
-                CURRENT_USER.getParseUser().saveInBackground();
-                Log.i(TAG, "image: " + CURRENT_USER.getProfileImage().getUrl());
-            }
-        }
-    }
+//    @Override
+//    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+//        super.onActivityResult(requestCode, resultCode, data);
+//        File photoFile;
+//        if ((data != null)) {
+//            ImageClient imageClient = new ImageClient(this);
+//            Uri photoUri = data.getData();
+//            Bitmap selectedImage = imageClient.loadFromUri(photoUri);
+//            photoFile = imageClient.getPhotoFileUri(imageClient.getFileName(photoUri));
+//            photoFile = imageClient.resizeFile(selectedImage);
+//            Log.i(TAG, "File: " + photoFile.toString());
+//            if (requestCode == PROFILE_PHOTO_CODE) {
+//                CURRENT_USER.setProfileImage(new ParseFile(photoFile));
+//                CURRENT_USER.getParseUser().saveInBackground();
+//                Log.i(TAG, "image: " + CURRENT_USER.getProfileImage().getUrl());
+//            }
+//        }
+//    }
 }

@@ -9,6 +9,7 @@ import com.parse.ParseException;
 import com.parse.ParseFile;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
+import com.parse.ParseUser;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -86,8 +87,8 @@ public class Recipe extends ParseObject {
         put(KEY_RECIPE_ID, recipeId);
     }
 
-    public User getAuthor() {
-        return new User(getParseUser(KEY_AUTHOR));
+    public ParseUser getAuthor() {
+        return getParseUser(KEY_AUTHOR);
     }
 
     public void setAuthor(User author) {

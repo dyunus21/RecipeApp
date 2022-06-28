@@ -9,7 +9,7 @@
         android:id="@+id/rvComments"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="20dp"
+        android:layout_marginStart="10dp"
         android:layout_marginTop="10dp"
         android:layout_marginEnd="20dp"
         app:layout_constraintEnd_toEndOf="parent"
@@ -32,7 +32,7 @@
         android:id="@+id/ivProfileImage"
         android:layout_width="25dp"
         android:layout_height="25dp"
-        android:layout_marginStart="20dp"
+        android:layout_marginStart="10dp"
         android:layout_marginTop="20dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
@@ -44,6 +44,8 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="10dp"
         android:text="Username"
+        android:textColor="@color/black"
+        android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="@+id/ivProfileImage"
         app:layout_constraintStart_toEndOf="@+id/ivProfileImage"
         app:layout_constraintTop_toTopOf="@+id/ivProfileImage" />
@@ -52,16 +54,18 @@
         android:id="@+id/tvTimestamp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="50dp"
+        android:layout_marginEnd="25dp"
         android:text="Timestamp"
+        android:textColor="@color/black"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@+id/tvUsername" />
 
     <ImageView
         android:id="@+id/ivImage"
-        android:layout_width="305dp"
-        android:layout_height="218dp"
+        android:layout_width="match_parent"
+        android:layout_height="300dp"
         android:layout_marginTop="20dp"
+        android:scaleType="centerCrop"
         app:layout_constraintEnd_toEndOf="@+id/tvTimestamp"
         app:layout_constraintStart_toStartOf="@+id/tvUsername"
         app:layout_constraintTop_toBottomOf="@+id/tvUsername"
@@ -69,8 +73,8 @@
 
     <ImageButton
         android:id="@+id/ibHeart"
-        android:layout_width="30dp"
-        android:layout_height="31dp"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
         android:layout_marginStart="75dp"
         android:layout_marginTop="5dp"
         android:background="@drawable/heart"
@@ -79,8 +83,8 @@
 
     <ImageButton
         android:id="@+id/ibShare"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
         android:layout_marginTop="5dp"
         android:layout_marginEnd="75dp"
         android:background="@android:drawable/ic_menu_share"

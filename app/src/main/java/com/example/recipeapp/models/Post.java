@@ -17,6 +17,7 @@ public class Post extends ParseObject {
     public static final String KEY_AUTHOR = "author";
     public static final String KEY_IMAGE = "image";
     public static final String KEY_DESCRIPTION = "description";
+    public static final String KEY_TITLE = "title";
     public static final String KEY_LIKED_BY = "likedby";
     public static final String KEY_COMMENTS = "comments";
 
@@ -26,6 +27,14 @@ public class Post extends ParseObject {
 
     public void setDescription(String description) {
         put(KEY_DESCRIPTION, description);
+    }
+
+    public String getTitle() {
+        return getString(KEY_TITLE);
+    }
+
+    public void setTitle(String title) {
+        put(KEY_TITLE, title);
     }
 
     public ParseFile getImage() {
@@ -41,7 +50,7 @@ public class Post extends ParseObject {
     }
 
     public void setAuthor(User author) {
-        put(KEY_AUTHOR, author);
+        put(KEY_AUTHOR, author.getParseUser());
     }
 
     public List<ParseUser> getLikedBy() {
