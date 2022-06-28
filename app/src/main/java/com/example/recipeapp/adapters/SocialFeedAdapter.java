@@ -68,7 +68,7 @@ public class SocialFeedAdapter extends RecyclerView.Adapter<SocialFeedAdapter.Vi
             User user = new User(post.getAuthor());
             binding.tvUsername.setText("@" + post.getAuthor().getUsername());
             Glide.with(context).load(post.getImage().getUrl()).into(binding.ivImage);
-            Glide.with(context).load(user.getProfileImage().getUrl()).into(binding.ivProfileImage);
+            Glide.with(context).load(user.getProfileImage().getUrl()).circleCrop().into(binding.ivProfileImage);
             binding.tvTimestamp.setText(Post.calculateTimeAgo(post.getCreatedAt()));
             String sourceString = "<b>" + post.getAuthor().getUsername() + "</b> " + post.getDescription();
             binding.tvDescription.setText(Html.fromHtml(sourceString));

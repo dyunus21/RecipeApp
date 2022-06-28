@@ -27,7 +27,11 @@
         android:id="@+id/recipeDetailsFragment"
         android:name="com.example.recipeapp.fragments.RecipeDetailsFragment"
         android:label="fragment_recipe_details"
-        tools:layout="@layout/fragment_recipe_details" />
+        tools:layout="@layout/fragment_recipe_details" >
+        <action
+            android:id="@+id/action_recipeDetailsFragment_to_recipeSearchFragment"
+            app:destination="@id/recipeSearchFragment" />
+    </fragment>
     <fragment
         android:id="@+id/socialFeedFragment"
         android:name="com.example.recipeapp.fragments.SocialFeedFragment"
@@ -53,7 +57,11 @@
         android:id="@+id/inventoryFragment"
         android:name="com.example.recipeapp.fragments.InventoryFragment"
         android:label="fragment_inventory"
-        tools:layout="@layout/fragment_inventory" />
+        tools:layout="@layout/fragment_inventory" >
+        <action
+            android:id="@+id/action_inventoryFragment_to_addIngredientFragment"
+            app:destination="@id/addIngredientFragment" />
+    </fragment>
     <fragment
         android:id="@+id/uploadRecipeFragment"
         android:name="com.example.recipeapp.fragments.UploadRecipeFragment"
@@ -64,4 +72,13 @@
         android:name="com.example.recipeapp.fragments.UploadPostFragment"
         android:label="fragment_upload_post"
         tools:layout="@layout/fragment_upload_post" />
+    <fragment
+        android:id="@+id/addIngredientFragment"
+        android:name="com.example.recipeapp.fragments.AddIngredientFragment"
+        android:label="fragment_add_ingredient"
+        tools:layout="@layout/fragment_add_ingredient" >
+        <action
+            android:id="@+id/action_addIngredientFragment_to_inventoryFragment"
+            app:destination="@id/inventoryFragment" />
+    </fragment>
 </navigation>

@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.example.recipeapp.R;
@@ -64,9 +65,18 @@ public class InventoryFragment extends Fragment {
         adapter.notifyDataSetChanged();
         Log.i(TAG, ingredientList.toString());
 
+        binding.ibAdd.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                goToAddIngredient();
+            }
+        });
+
     }
 
-
+    private void goToAddIngredient() {
+        NavHostFragment.findNavController(this).navigate(R.id.addIngredientFragment);
+    }
 
 
 }
