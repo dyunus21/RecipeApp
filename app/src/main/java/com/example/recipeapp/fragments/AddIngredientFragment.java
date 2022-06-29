@@ -25,7 +25,8 @@ import java.util.List;
 
 public class AddIngredientFragment extends Fragment {
     private static final String TAG = "AddIngredientFragment";
-    public User CURRENT_USER = new User(ParseUser.getCurrentUser());
+
+    private final User CURRENT_USER = new User(ParseUser.getCurrentUser());
     private FragmentAddIngredientBinding binding;
 
     public AddIngredientFragment() {
@@ -68,7 +69,7 @@ public class AddIngredientFragment extends Fragment {
         addIngredient(name, count, unit);
     }
 
-    private void addIngredient(String name, String count, String unit) {
+    private void addIngredient(final String name, final String count, final String unit) {
         Ingredient ingredient = new Ingredient();
         ingredient.initialize(name, Integer.parseInt(count), unit);
         ingredient.saveInBackground(new SaveCallback() {
@@ -80,6 +81,7 @@ public class AddIngredientFragment extends Fragment {
                 }
                 List<Ingredient> ingredientList = CURRENT_USER.getIngredientArray();
                 ingredientList.add(ingredient);
+
                 CURRENT_USER.setIngredientArray(ingredientList);
                 CURRENT_USER.getParseUser().saveInBackground(new SaveCallback() {
                     @Override

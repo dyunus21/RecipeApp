@@ -1,28 +1,21 @@
 package com.example.recipeapp.activities;
 
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.NavigationUI;
 
 import com.example.recipeapp.R;
-import com.example.recipeapp.models.ImageClient;
 import com.example.recipeapp.models.User;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
-import com.parse.ParseFile;
 import com.parse.ParseUser;
-
-import java.io.File;
 
 public class MainActivity extends AppCompatActivity {
 
