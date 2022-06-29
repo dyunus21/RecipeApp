@@ -120,8 +120,10 @@ public class User extends ParseObject {
         return ingredientList;
     }
 
+
     public void setIngredientArray(List<Ingredient> ingredientList) {
         parseUser.put(KEY_INGREDIENT_ARRAY, ingredientList);
+
     }
 
     public List<Recipe> getRecipesUploaded() {

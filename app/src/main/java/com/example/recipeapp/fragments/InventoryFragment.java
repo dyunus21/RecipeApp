@@ -17,9 +17,11 @@ import com.example.recipeapp.adapters.InventoryAdapter;
 import com.example.recipeapp.databinding.FragmentInventoryBinding;
 import com.example.recipeapp.models.Ingredient;
 import com.example.recipeapp.models.User;
+
 import com.parse.ParseException;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
+
 
 
 import java.util.ArrayList;
@@ -56,6 +58,7 @@ public class InventoryFragment extends Fragment {
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
         binding.rvIngredients.setAdapter(adapter);
         binding.rvIngredients.setLayoutManager(linearLayoutManager);
+
         ParseQuery<ParseUser> query = ParseQuery.getQuery(ParseUser.class);
         query.whereEqualTo(User.KEY_OBJECT_ID, ParseUser.getCurrentUser().getObjectId());
         query.include(User.KEY_INGREDIENT_ARRAY);

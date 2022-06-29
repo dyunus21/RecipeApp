@@ -26,8 +26,12 @@ import java.util.List;
 public class AddIngredientFragment extends Fragment {
     private static final String TAG = "AddIngredientFragment";
 
+
     private final User CURRENT_USER = new User(ParseUser.getCurrentUser());
+
     private FragmentAddIngredientBinding binding;
+
+    public User CURRENT_USER = new User(ParseUser.getCurrentUser());
 
     public AddIngredientFragment() {
 
@@ -82,6 +86,7 @@ public class AddIngredientFragment extends Fragment {
                 List<Ingredient> ingredientList = CURRENT_USER.getIngredientArray();
                 ingredientList.add(ingredient);
 
+
                 CURRENT_USER.setIngredientArray(ingredientList);
                 CURRENT_USER.getParseUser().saveInBackground(new SaveCallback() {
                     @Override
@@ -94,6 +99,7 @@ public class AddIngredientFragment extends Fragment {
                         binding.etName.setText("");
                         binding.etCount.setText("");
                         binding.etUnit.setText("");
+
                     }
                 });
             }
