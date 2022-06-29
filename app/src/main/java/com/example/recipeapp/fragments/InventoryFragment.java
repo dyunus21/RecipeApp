@@ -13,6 +13,7 @@ import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.example.recipeapp.R;
+import com.example.recipeapp.activities.MainActivity;
 import com.example.recipeapp.adapters.InventoryAdapter;
 import com.example.recipeapp.databinding.FragmentInventoryBinding;
 import com.example.recipeapp.models.Ingredient;
@@ -23,9 +24,9 @@ import com.parse.ParseQuery;
 import com.parse.ParseUser;
 
 
-
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class InventoryFragment extends Fragment {
     private static final String TAG = "InventoryFragment";
@@ -62,7 +63,6 @@ public class InventoryFragment extends Fragment {
         ParseQuery<ParseUser> query = ParseQuery.getQuery(ParseUser.class);
         query.whereEqualTo(User.KEY_OBJECT_ID, ParseUser.getCurrentUser().getObjectId());
         query.include(User.KEY_INGREDIENT_ARRAY);
-        query.include(User.KEY_INGREDIENTS_STRING);
         query.include(User.KEY_PROFILE_IMAGE);
 
         Log.i(TAG, "User id: " + ParseUser.getCurrentUser().getObjectId());

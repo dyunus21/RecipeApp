@@ -31,7 +31,6 @@ public class AddIngredientFragment extends Fragment {
 
     private FragmentAddIngredientBinding binding;
 
-    public User CURRENT_USER = new User(ParseUser.getCurrentUser());
 
     public AddIngredientFragment() {
 

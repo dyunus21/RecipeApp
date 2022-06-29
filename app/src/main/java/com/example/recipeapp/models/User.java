@@ -106,11 +106,14 @@ public class User extends ParseObject {
     }
 
     public String getIngredientsString() {
-        return parseUser.getString(KEY_INGREDIENTS_STRING);
-    }
-
-    public void setIngredientsString(String ingredients) {
-        parseUser.put(KEY_INGREDIENTS_STRING, ingredients);
+        String ingredients = "";
+        List<Ingredient> ingredientList = this.getIngredientArray();
+        for (int i = 0; i < ingredientList.size(); i++) {
+            ingredients += ingredientList.get(0).getName();
+            if (i != ingredientList.size() - 1)
+                ingredients += ",";
+        }
+        return ingredients;
     }
 
     public List<Ingredient> getIngredientArray() {
