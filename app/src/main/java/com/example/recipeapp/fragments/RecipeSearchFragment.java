@@ -17,6 +17,8 @@ import com.example.recipeapp.RecipeClient;
 import com.example.recipeapp.adapters.RecipeSearchAdapter;
 import com.example.recipeapp.databinding.FragmentRecipeSearchBinding;
 import com.example.recipeapp.models.Recipe;
+import com.example.recipeapp.models.User;
+import com.parse.ParseUser;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -90,7 +92,8 @@ public class RecipeSearchFragment extends Fragment {
     }
 
     public void populateRecipes(String query) throws IOException {
-        client.getRecipes(query, new JsonHttpResponseHandler() {
+        User user = new User(ParseUser.getCurrentUser());
+        client.getRecipes(query,user.getIngredientStringList(), new JsonHttpResponseHandler() {
 
             @Override
             public void onSuccess(int statusCode, Headers headers, JSON json) {
