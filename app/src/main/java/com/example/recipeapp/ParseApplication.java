@@ -14,7 +14,7 @@ import com.parse.ParseObject;
 public class ParseApplication extends Application {
     public void onCreate() {
         super.onCreate();
-//        ParseObject.registerSubclass(User.class);
+        ParseObject.registerSubclass(User.class);
         ParseObject.registerSubclass(Recipe.class);
         ParseObject.registerSubclass(Post.class);
         ParseObject.registerSubclass(Ingredient.class);

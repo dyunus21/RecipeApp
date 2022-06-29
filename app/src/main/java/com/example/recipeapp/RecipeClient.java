@@ -31,7 +31,7 @@ public class RecipeClient {
         headers.put("X-RapidAPI-Host", HOST);
     }
 
-    public void getRecipes(String query,String ingredients, JsonHttpResponseHandler handler) throws IOException {
+    public void getRecipes(String query, JsonHttpResponseHandler handler) throws IOException {
         AsyncHttpClient client = new AsyncHttpClient();
 
         RequestParams params = new RequestParams();
@@ -39,7 +39,7 @@ public class RecipeClient {
         params.put("addRecipeInformation", "true");
         params.put("instructionsRequired", "true");
         params.put("sortDirection", "asc");
-        params.put("includeIngredients",ingredients);
+//        params.put("includeIngredients",ingredients);
 
         client.get(BASE_URL + "/recipes/complexSearch", headers, params, handler);
     }

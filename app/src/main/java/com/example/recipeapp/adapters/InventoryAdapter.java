@@ -2,7 +2,6 @@ package com.example.recipeapp.adapters;
 
 import android.content.Context;
 import android.view.LayoutInflater;
-import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
@@ -10,7 +9,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.recipeapp.databinding.ItemIngredientBinding;
 import com.example.recipeapp.models.Ingredient;
-import com.example.recipeapp.models.Post;
 
 import java.util.List;
 
@@ -28,7 +26,7 @@ public class InventoryAdapter extends RecyclerView.Adapter<InventoryAdapter.View
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        item_binding = ItemIngredientBinding.inflate(LayoutInflater.from(context),parent,false);
+        item_binding = ItemIngredientBinding.inflate(LayoutInflater.from(context), parent, false);
         return new ViewHolder(item_binding);
     }
 
@@ -57,6 +55,7 @@ public class InventoryAdapter extends RecyclerView.Adapter<InventoryAdapter.View
     public class ViewHolder extends RecyclerView.ViewHolder {
         private final ItemIngredientBinding binding;
         private Ingredient currentIngredient;
+
         public ViewHolder(@NonNull ItemIngredientBinding itemView) {
             super(itemView.getRoot());
             this.binding = itemView;

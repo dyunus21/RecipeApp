@@ -18,6 +18,9 @@ import com.example.recipeapp.adapters.RecipeSearchAdapter;
 import com.example.recipeapp.databinding.FragmentRecipeSearchBinding;
 import com.example.recipeapp.models.Recipe;
 import com.example.recipeapp.models.User;
+import com.parse.FindCallback;
+import com.parse.ParseException;
+import com.parse.ParseQuery;
 import com.parse.ParseUser;
 
 import org.json.JSONArray;
@@ -93,7 +96,20 @@ public class RecipeSearchFragment extends Fragment {
 
     public void populateRecipes(String query) throws IOException {
         User user = new User(ParseUser.getCurrentUser());
-        client.getRecipes(query,user.getIngredientStringList(), new JsonHttpResponseHandler() {
+        ParseQuery<Recipe> parseQuery = ParseQuery.getQuery(Recipe.class);
+        parseQuery.whereContains(Recipe.KEY_TITLE, query);
+        parseQuery.include(Recipe.KEY_IMAGE);
+        parseQuery.addAscendingOrder(Recipe.KEY_TITLE);
+        parseQuery.findInBackground(new FindCallback<Recipe>() {
+            @Override
+            public void done(List<Recipe> objects, ParseException e) {
+                adapter.clear();
+                recipes.addAll(objects);
+                adapter.notifyDataSetChanged();
+                adapter.addAll(recipes);
+            }
+        });
+        client.getRecipes(query, new JsonHttpResponseHandler() {
 
             @Override
             public void onSuccess(int statusCode, Headers headers, JSON json) {
@@ -105,8 +121,8 @@ public class RecipeSearchFragment extends Fragment {
                     Log.e(TAG, "Hit JSON exception", e);
                 }
                 try {
-                    recipes = Recipe.getRecipes(jsonArray);
                     adapter.clear();
+                    recipes.addAll(Recipe.getRecipes(jsonArray));
                     adapter.addAll(recipes);
                 } catch (JSONException e) {
                     Log.e(TAG, "Hit JSON exception");
