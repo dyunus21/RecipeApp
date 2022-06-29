@@ -87,12 +87,12 @@ public class Recipe extends ParseObject {
         put(KEY_RECIPE_ID, recipeId);
     }
 
-    public ParseUser getAuthor() {
-        return getParseUser(KEY_AUTHOR);
+    public User getAuthor() {
+        return new User(getParseUser(KEY_AUTHOR));
     }
 
     public void setAuthor(User author) {
-        put(KEY_AUTHOR, author);
+        put(KEY_AUTHOR, author.getParseUser());
     }
 
     public String getTitle() {
