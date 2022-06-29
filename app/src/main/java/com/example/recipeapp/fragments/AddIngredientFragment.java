@@ -28,7 +28,7 @@ import java.util.List;
 public class AddIngredientFragment extends Fragment {
     private static final String TAG = "AddIngredientFragment";
     private FragmentAddIngredientBinding binding;
-    private User CURRENT_USER = new User(ParseUser.getCurrentUser());
+    public User CURRENT_USER = new User(ParseUser.getCurrentUser());
 
     public AddIngredientFragment() {
 
@@ -83,22 +83,23 @@ public class AddIngredientFragment extends Fragment {
                 List<Ingredient> ingredientList = CURRENT_USER.getIngredientList();
                 ingredientList.add(ingredient);
                 CURRENT_USER.setIngredientList(ingredientList);
-
-            }
-        });
-        CURRENT_USER.getParseUser().saveInBackground(new SaveCallback() {
-            @Override
-            public void done(ParseException e) {
-                if(e!=null) {
-                    Log.e(TAG, "Error in adding ingredient to user!",e);
-                    return;
-                }
-                binding.etName.setText("");
-                binding.etCount.setText("");
-                binding.etUnit.setText("");
+                CURRENT_USER.getParseUser().saveInBackground(new SaveCallback() {
+                    @Override
+                    public void done(ParseException e) {
+                        if(e!=null) {
+                            Log.e(TAG, "Error in adding ingredient to user!",e);
+                            return;
+                        }
+                        Log.i(TAG, "Saved ingredient to user's ingredient list!");
+                        binding.etName.setText("");
+                        binding.etCount.setText("");
+                        binding.etUnit.setText("");
                 goToInventory();
+                    }
+                });
             }
         });
+
     }
 
     private void goToInventory() {

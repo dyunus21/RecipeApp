@@ -86,6 +86,18 @@ public class User {
         return ingredientList;
     }
 
+    public String getIngredientStringList() {
+        List<Ingredient> ingredientList = this.getIngredientList();
+        String ingredients = "";
+        for(int i = 0; i<ingredientList.size();i++) {
+            ingredients += ingredientList.get(i).getName();
+            if(i != ingredientList.size()-1) {
+                ingredients+=",";
+            }
+        }
+        return ingredients;
+    }
+
     public void setIngredientList(List<Ingredient> ingredientList) {
         user.put(KEY_INGREDIENT_LIST, ingredientList);
     }

@@ -20,8 +20,11 @@ import com.example.recipeapp.models.Ingredient;
 import com.example.recipeapp.models.Post;
 import com.example.recipeapp.models.User;
 import com.parse.FindCallback;
+import com.parse.GetCallback;
 import com.parse.ParseException;
+import com.parse.ParseObject;
 import com.parse.ParseQuery;
+import com.parse.ParseUser;
 import com.parse.SaveCallback;
 
 import java.util.ArrayList;
@@ -59,11 +62,19 @@ public class InventoryFragment extends Fragment {
         binding.rvIngredients.setAdapter(adapter);
         binding.rvIngredients.setLayoutManager(linearLayoutManager);
         User user = ((MainActivity) getActivity()).CURRENT_USER;
+        user.getParseUser().fetchIfNeededInBackground(new GetCallback<ParseObject>() {
+            @Override
+            public void done(ParseObject object, ParseException e) {
+                if( e== null) {
+                    Log.i(TAG, user.getIngredientList().toString());
+                    adapter.clear();
+                    ingredientList = user.getIngredientList();
+                    adapter.notifyDataSetChanged();
+                }
 
-        adapter.clear();
-        ingredientList = user.getIngredientList();
-        adapter.notifyDataSetChanged();
-        Log.i(TAG, ingredientList.toString());
+            }
+        });
+//        Log.i(TAG, user.getIngredientList().toString());
 
         binding.ibAdd.setOnClickListener(new View.OnClickListener() {
             @Override
