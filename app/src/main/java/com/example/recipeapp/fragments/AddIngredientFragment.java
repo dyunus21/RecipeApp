@@ -98,7 +98,7 @@ public class AddIngredientFragment extends Fragment {
                         binding.etName.setText("");
                         binding.etCount.setText("");
                         binding.etUnit.setText("");
-
+                        goToInventory();
                     }
                 });
             }
