@@ -41,7 +41,6 @@ public class RecipeClient {
         params.put("sortDirection", "asc");
         params.put("fillIngredients","true");
         params.put("includeIngredients",ingredients);
-        params.put("sort","min-missing-ingredients");
 
 
         client.get(BASE_URL + "/recipes/complexSearch", headers, params, handler);

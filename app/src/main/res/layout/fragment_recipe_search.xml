@@ -4,25 +4,29 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#D7ECE9"
     tools:context=".fragments.RecipeSearchFragment">
 
     <ImageButton
-        android:id="@+id/imageButton"
+        android:id="@+id/ibFilter"
         android:layout_width="35dp"
         android:layout_height="34dp"
-        android:layout_marginTop="8dp"
         android:layout_marginEnd="15dp"
         android:background="@drawable/filter"
+        app:layout_constraintBottom_toBottomOf="@+id/svSearch"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="@+id/svSearch" />
 
     <SearchView
         android:id="@+id/svSearch"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="10dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginEnd="5dp"
+        android:background="#C3CDCC"
         android:queryHint="Search for a recipe"
-        app:layout_constraintEnd_toStartOf="@+id/imageButton"
+        app:layout_constraintEnd_toStartOf="@+id/ibFilter"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
