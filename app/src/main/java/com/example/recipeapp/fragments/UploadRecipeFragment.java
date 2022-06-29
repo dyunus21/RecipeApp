@@ -48,7 +48,7 @@ public class UploadRecipeFragment extends Fragment {
     public final static int PICK_PHOTO_CODE = 1046;
     private static final String TAG = "FragmentUploadRecipe";
     public String photoFileName = "photo.jpg";
-    File photoFile;
+    private File photoFile;
     private FragmentUploadRecipeBinding binding;
 
     public UploadRecipeFragment() {
@@ -94,11 +94,11 @@ public class UploadRecipeFragment extends Fragment {
     }
 
     private void validateRecipe() {
-        String title = binding.etRecipeName.getText().toString();
-        String cuisineType = binding.etCuisine.getText().toString();
+        final String title = binding.etRecipeName.getText().toString();
+        final String cuisineType = binding.etCuisine.getText().toString();
         final int cooktime = Integer.parseInt(binding.etCooktime.getText().toString());  // TODO: Inform user if inputted string
-        String ingredients = binding.etIngredientList.getText().toString();
-        String instructions = binding.etInstructions.getText().toString();
+        final String ingredients = binding.etIngredientList.getText().toString();
+        final String instructions = binding.etInstructions.getText().toString();
 
         //TODO: Later update to TOAST messages regarding specific fields
         if (title.isEmpty() || cuisineType.isEmpty() || cooktime == 0 || ingredients.isEmpty() || instructions.isEmpty()) {
@@ -113,7 +113,7 @@ public class UploadRecipeFragment extends Fragment {
         publishRecipe(title, cuisineType, cooktime, ingredients, instructions);
     }
 
-    private void publishRecipe(String title, String cuisineType, int cooktime, String ingredients, String instructions) {
+    private void publishRecipe(final String title, final String cuisineType, final int cooktime, final String ingredients, final String instructions) {
         Recipe recipe = new Recipe();
         recipe.setTitle(title);
         recipe.setCuisineType(cuisineType);
@@ -159,7 +159,7 @@ public class UploadRecipeFragment extends Fragment {
 
     }
 
-    public File resizeFile(Bitmap image) {
+    public File resizeFile(final Bitmap image) {
         Bitmap resizedBitmap = BitmapScaler.scaleToFitWidth(image, 800);
         ByteArrayOutputStream bytes = new ByteArrayOutputStream();
         resizedBitmap.compress(Bitmap.CompressFormat.JPEG, 40, bytes);
@@ -179,7 +179,7 @@ public class UploadRecipeFragment extends Fragment {
     }
 
     @SuppressLint("Range")
-    public String getFileName(Uri uri) {
+    public String getFileName(final Uri uri) {
         String result = null;
         if (uri.getScheme().equals("content")) {
             Cursor cursor = getContext().getContentResolver().query(uri, null, null, null, null);
@@ -201,7 +201,7 @@ public class UploadRecipeFragment extends Fragment {
         return result;
     }
 
-    public File getPhotoFileUri(String fileName) {
+    public File getPhotoFileUri(final String fileName) {
         File mediaStorageDir = new File(getContext().getExternalFilesDir(Environment.DIRECTORY_PICTURES), TAG);
 
         if (!mediaStorageDir.exists() && !mediaStorageDir.mkdirs()) {
@@ -211,7 +211,7 @@ public class UploadRecipeFragment extends Fragment {
         return new File(mediaStorageDir.getPath() + File.separator + fileName);
     }
 
-    public Bitmap loadFromUri(Uri photoUri) {
+    public Bitmap loadFromUri(final Uri photoUri) {
         Bitmap image = null;
         try {
             // check version of Android on device

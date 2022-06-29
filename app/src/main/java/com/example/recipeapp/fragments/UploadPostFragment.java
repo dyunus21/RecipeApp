@@ -44,11 +44,11 @@ import java.io.IOException;
 public class UploadPostFragment extends Fragment {
 
     private static final String TAG = "FragmentUploadPost";
-    private FragmentUploadPostBinding binding;
     private final static int CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE = 42;
     private final static int PICK_PHOTO_CODE = 1046;
-    private String photoFileName = "photo.jpg";
-    File photoFile;
+    private File photoFile;
+    private FragmentUploadPostBinding binding;
+    private final String photoFileName = "photo.jpg";
 
     public UploadPostFragment() {
 
@@ -94,7 +94,7 @@ public class UploadPostFragment extends Fragment {
         String title = binding.etTitle.getText().toString();
         String description = binding.etDescription.getText().toString();
         //TODO: Later update to TOAST messages regarding specific fields
-        if (title.isEmpty() || description.isEmpty()){
+        if (title.isEmpty() || description.isEmpty()) {
             Toast.makeText(getContext(), "Field cannot be empty!", Toast.LENGTH_SHORT).show();
             return;
         }
@@ -103,10 +103,10 @@ public class UploadPostFragment extends Fragment {
             Toast.makeText(getContext(), "Post does not contain any image!", Toast.LENGTH_SHORT).show();
             return;
         }
-        postRecipe(title,description);
+        postRecipe(title, description);
     }
 
-    private void postRecipe(String title, String description) {
+    private void postRecipe(final String title, final String description) {
         Post post = new Post();
         post.setAuthor(new User(ParseUser.getCurrentUser()));
         post.setImage(new ParseFile(photoFile));
@@ -115,9 +115,9 @@ public class UploadPostFragment extends Fragment {
         post.saveInBackground(new SaveCallback() {
             @Override
             public void done(ParseException e) {
-                if(e!=null) {
-                    Log.e(TAG, "Error in saving post",e);
-                    Toast.makeText(getContext(),"Unable to save post!", Toast.LENGTH_SHORT).show();
+                if (e != null) {
+                    Log.e(TAG, "Error in saving post", e);
+                    Toast.makeText(getContext(), "Unable to save post!", Toast.LENGTH_SHORT).show();
                     return;
                 }
                 Log.i(TAG, "Successfully saved post: " + post.getTitle());

@@ -13,7 +13,6 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
-import com.example.recipeapp.R;
 import com.example.recipeapp.adapters.SocialFeedAdapter;
 import com.example.recipeapp.databinding.FragmentSocialFeedBinding;
 import com.example.recipeapp.models.EndlessRecyclerViewScrollListener;
@@ -32,7 +31,6 @@ public class SocialFeedFragment extends Fragment {
     private FragmentSocialFeedBinding binding;
     private SocialFeedAdapter adapter;
     private List<Post> postList;
-    private SwipeRefreshLayout swipeContainer;
     private EndlessRecyclerViewScrollListener scrollListener;
 
     public SocialFeedFragment() {
@@ -60,15 +58,14 @@ public class SocialFeedFragment extends Fragment {
         final LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
         binding.rvPosts.setLayoutManager(linearLayoutManager);
 
-        swipeContainer = (SwipeRefreshLayout) view.findViewById(R.id.swipeContainer);
-        swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+        binding.swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
                 queryPosts(null);
             }
         });
         queryPosts(null);
-        swipeContainer.setColorSchemeResources(android.R.color.holo_blue_bright,
+        binding.swipeContainer.setColorSchemeResources(android.R.color.holo_blue_bright,
                 android.R.color.holo_green_light,
                 android.R.color.holo_orange_light,
                 android.R.color.holo_red_light);
@@ -103,7 +100,7 @@ public class SocialFeedFragment extends Fragment {
                 postList.addAll(objects);
                 adapter.notifyDataSetChanged();
                 binding.rvPosts.scrollToPosition(0);
-                swipeContainer.setRefreshing(false);
+                binding.swipeContainer.setRefreshing(false);
             }
         });
     }

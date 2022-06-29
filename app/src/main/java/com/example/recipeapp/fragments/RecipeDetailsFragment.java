@@ -57,12 +57,12 @@ public class RecipeDetailsFragment extends Fragment {
         binding.tvRecipeName.setText(recipe.getTitle());
         binding.tvCookTime.setText("Cooktime: " + recipe.getCooktime() + " mins");
         binding.tvCuisine.setText("Cuisine: " + recipe.getCuisineType());
-        if(recipe.getImageUrl() != null) {
+        if (recipe.getImageUrl() != null) {
             Glide.with(getContext()).load(recipe.getImageUrl()).into(binding.ivImage);
-        }else {
+        } else {
             Glide.with(getContext()).load(recipe.getImage().getUrl()).into(binding.ivImage);
         }
-        if(recipe.getAuthor() == null) {
+        if (recipe.getAuthor() == null) {
             try {
                 getIngredients();
                 Log.i(TAG, "list: " + recipe.getIngredientList().toString());
@@ -70,8 +70,7 @@ public class RecipeDetailsFragment extends Fragment {
             } catch (IOException e) {
                 Log.e(TAG, "Error with getting ingredients", e);
             }
-        }
-        else {
+        } else {
             List<String> ingredients = recipe.getIngredientList();
             for (int i = 0; i < ingredients.size(); i++) {
                 binding.tvIngredientList.append("• " + ingredients.get(i) + "\n");
