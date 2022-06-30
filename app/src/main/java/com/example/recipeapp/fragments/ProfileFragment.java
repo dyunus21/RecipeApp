@@ -55,7 +55,7 @@ public class ProfileFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        binding.tvUsername.setText(CURRENT_USER.getParseUser().getUsername());
+        binding.tvUsername.setText("@" + CURRENT_USER.getParseUser().getUsername());
         binding.tvFullname.setText(CURRENT_USER.getFirstName() + " " + CURRENT_USER.getLastName());
         setProfileImage();
         binding.tvChangeProfileImage.setOnClickListener(new View.OnClickListener() {

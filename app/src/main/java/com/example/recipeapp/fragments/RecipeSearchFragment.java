@@ -107,6 +107,8 @@ public class RecipeSearchFragment extends Fragment {
         ParseQuery<Recipe> parseQuery = ParseQuery.getQuery(Recipe.class);
         parseQuery.whereContains(Recipe.KEY_TITLE, query);
         parseQuery.include(Recipe.KEY_IMAGE);
+        parseQuery.include(Recipe.KEY_INGREDIENT_LIST);
+        parseQuery.include(Recipe.KEY_AUTHOR);
         parseQuery.addAscendingOrder(Recipe.KEY_TITLE);
         parseQuery.findInBackground(new FindCallback<Recipe>() {
             @Override
