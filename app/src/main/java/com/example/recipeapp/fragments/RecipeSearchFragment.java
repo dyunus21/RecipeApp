@@ -80,6 +80,7 @@ public class RecipeSearchFragment extends Fragment {
             public boolean onQueryTextSubmit(String query) {
                 Log.i(TAG, query);
                 try {
+                    adapter.clear();
                     populateRecipes(query);
                 } catch (IOException e) {
                     e.printStackTrace();

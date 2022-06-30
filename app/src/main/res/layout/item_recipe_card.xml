@@ -17,8 +17,8 @@
 
     <ImageView
         android:id="@+id/ivImage"
-        android:layout_width="122dp"
-        android:layout_height="105dp"
+        android:layout_width="145dp"
+        android:layout_height="137dp"
         android:layout_marginTop="10dp"
         android:scaleType="centerCrop"
         app:layout_constraintEnd_toEndOf="@+id/tvTitle"
@@ -30,6 +30,7 @@
         android:id="@+id/tvCookTime"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
         android:text="Cooktime"
         android:textAlignment="center"
         app:layout_constraintStart_toStartOf="@+id/ivImage"
@@ -39,6 +40,7 @@
         android:id="@+id/tvCuisine"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
         android:text="Cuisine"
         android:textAlignment="center"
         app:layout_constraintEnd_toEndOf="@+id/ivImage"
