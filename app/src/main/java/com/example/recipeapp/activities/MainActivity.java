@@ -15,6 +15,8 @@ import androidx.navigation.ui.NavigationUI;
 import com.example.recipeapp.R;
 import com.example.recipeapp.models.User;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.parse.ParseException;
+import com.parse.ParseQuery;
 import com.parse.ParseUser;
 
 public class MainActivity extends AppCompatActivity {
@@ -22,7 +24,7 @@ public class MainActivity extends AppCompatActivity {
     public final static int PROFILE_PHOTO_CODE = 0;
     private static final String TAG = "MainActivity";
     public static NavController navController;
-    public final User CURRENT_USER = new User(ParseUser.getCurrentUser());
+    public User CURRENT_USER = new User(ParseUser.getCurrentUser());
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,22 +59,4 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-//    @Override
-//    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-//        super.onActivityResult(requestCode, resultCode, data);
-//        File photoFile;
-//        if ((data != null)) {
-//            ImageClient imageClient = new ImageClient(this);
-//            Uri photoUri = data.getData();
-//            Bitmap selectedImage = imageClient.loadFromUri(photoUri);
-//            photoFile = imageClient.getPhotoFileUri(imageClient.getFileName(photoUri));
-//            photoFile = imageClient.resizeFile(selectedImage);
-//            Log.i(TAG, "File: " + photoFile.toString());
-//            if (requestCode == PROFILE_PHOTO_CODE) {
-//                CURRENT_USER.setProfileImage(new ParseFile(photoFile));
-//                CURRENT_USER.getParseUser().saveInBackground();
-//                Log.i(TAG, "image: " + CURRENT_USER.getProfileImage().getUrl());
-//            }
-//        }
-//    }
 }

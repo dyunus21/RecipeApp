@@ -18,6 +18,11 @@ import com.example.recipeapp.adapters.RecipeSearchAdapter;
 import com.example.recipeapp.databinding.FragmentRecipeSearchBinding;
 import com.example.recipeapp.models.Recipe;
 import com.example.recipeapp.models.User;
+
+import com.parse.FindCallback;
+import com.parse.ParseException;
+import com.parse.ParseQuery;
+
 import com.parse.ParseUser;
 
 import org.json.JSONArray;
@@ -35,6 +40,7 @@ public class RecipeSearchFragment extends Fragment {
     protected RecipeSearchAdapter adapter;
     private FragmentRecipeSearchBinding binding;
     private RecipeClient client;
+    private User currentUser;
 
 
     public RecipeSearchFragment() {
@@ -54,6 +60,7 @@ public class RecipeSearchFragment extends Fragment {
         client = new RecipeClient(getContext());
         recipes = new ArrayList<>();
         adapter = new RecipeSearchAdapter(getContext(), recipes);
+        getUser();
     }
 
     @Override
@@ -92,8 +99,21 @@ public class RecipeSearchFragment extends Fragment {
     }
 
     public void populateRecipes(String query) throws IOException {
-        User user = new User(ParseUser.getCurrentUser());
-        client.getRecipes(query,user.getIngredientStringList(), new JsonHttpResponseHandler() {
+
+        ParseQuery<Recipe> parseQuery = ParseQuery.getQuery(Recipe.class);
+        parseQuery.whereContains(Recipe.KEY_TITLE, query);
+        parseQuery.include(Recipe.KEY_IMAGE);
+        parseQuery.addAscendingOrder(Recipe.KEY_TITLE);
+        adapter.clear();
+        parseQuery.findInBackground(new FindCallback<Recipe>() {
+            @Override
+            public void done(List<Recipe> objects, ParseException e) {
+                Log.i(TAG, "Recipes uploaded: " + objects.toString());
+                recipes = objects;
+                adapter.notifyDataSetChanged();
+            }
+        });
+        client.getRecipes(query, currentUser.getIngredientsString(), new JsonHttpResponseHandler() {
 
             @Override
             public void onSuccess(int statusCode, Headers headers, JSON json) {
@@ -105,8 +125,7 @@ public class RecipeSearchFragment extends Fragment {
                     Log.e(TAG, "Hit JSON exception", e);
                 }
                 try {
-                    recipes = Recipe.getRecipes(jsonArray);
-                    adapter.clear();
+                    recipes.addAll(Recipe.getRecipes(jsonArray));
                     adapter.addAll(recipes);
                 } catch (JSONException e) {
                     Log.e(TAG, "Hit JSON exception");
@@ -118,5 +137,21 @@ public class RecipeSearchFragment extends Fragment {
                 Log.e(TAG, "onFailure" + response, throwable);
             }
         });
+    }
+
+    private void getUser() {
+        ParseQuery<ParseUser> query = ParseQuery.getQuery(ParseUser.class);
+        query.whereEqualTo(User.KEY_OBJECT_ID, ParseUser.getCurrentUser().getObjectId());
+        query.include(User.KEY_INGREDIENT_ARRAY);
+        query.include(User.KEY_PROFILE_IMAGE);
+
+        Log.i(TAG, "User id: " + ParseUser.getCurrentUser().getObjectId());
+        try {
+            ParseUser parseUser = query.get(ParseUser.getCurrentUser().getObjectId());
+            currentUser = new User(parseUser);
+            return;
+        } catch (ParseException e) {
+            Log.e(TAG, "Unable to fetch user!", e);
+        }
     }
 }

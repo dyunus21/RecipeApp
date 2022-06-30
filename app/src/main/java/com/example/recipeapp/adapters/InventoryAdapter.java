@@ -1,7 +1,9 @@
 package com.example.recipeapp.adapters;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
@@ -9,6 +11,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.recipeapp.databinding.ItemIngredientBinding;
 import com.example.recipeapp.models.Ingredient;
+import com.parse.ParseException;
+import com.parse.SaveCallback;
 
 import java.util.List;
 
@@ -66,6 +70,52 @@ public class InventoryAdapter extends RecyclerView.Adapter<InventoryAdapter.View
             binding.tvName.setText(ingredient.getName());
             binding.tvCount.setText(String.valueOf(ingredient.getCount()));
             binding.tvUnit.setText(ingredient.getUnit());
+            binding.ibAdd.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    add(ingredient);
+                }
+            });
+            binding.ibSubtract.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    remove(ingredient);
+                }
+            });
+        }
+
+        private void add(Ingredient ingredient) {
+            int count = ingredient.getCount() + 1;
+            ingredient.setCount(count);
+            binding.tvCount.setText(String.valueOf(count));
+            ingredient.saveInBackground(new SaveCallback() {
+                @Override
+                public void done(ParseException e) {
+                    if (e != null) {
+                        Log.e(TAG, "Error in updating ingredient");
+                        return;
+                    }
+                    Log.i(TAG, "Ingredient count: " + ingredient.getCount());
+                }
+            });
+        }
+
+        private void remove(Ingredient ingredient) {
+            int count = ingredient.getCount() > 0 ? ingredient.getCount() - 1 : 0;
+            ingredient.setCount(count);
+            binding.tvCount.setText(String.valueOf(count));
+            ingredient.saveInBackground(new SaveCallback() {
+                @Override
+                public void done(ParseException e) {
+                    if (e != null) {
+                        Log.e(TAG, "Error in updating ingredient");
+                        return;
+                    }
+                    Log.i(TAG, "Ingredient count: " + ingredient.getCount());
+                }
+            });
         }
     }
+
+
 }

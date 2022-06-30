@@ -18,24 +18,22 @@ import com.example.recipeapp.adapters.InventoryAdapter;
 import com.example.recipeapp.databinding.FragmentInventoryBinding;
 import com.example.recipeapp.models.Ingredient;
 import com.example.recipeapp.models.User;
-import com.parse.FindCallback;
-import com.parse.GetCallback;
+
 import com.parse.ParseException;
-import com.parse.ParseObject;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
-import com.parse.SaveCallback;
 
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class InventoryFragment extends Fragment {
     private static final String TAG = "InventoryFragment";
     private FragmentInventoryBinding binding;
     private List<Ingredient> ingredientList;
     private InventoryAdapter adapter;
-
+    private User currentUser;
 
     public InventoryFragment() {
 
@@ -61,20 +59,23 @@ public class InventoryFragment extends Fragment {
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
         binding.rvIngredients.setAdapter(adapter);
         binding.rvIngredients.setLayoutManager(linearLayoutManager);
-        User user = ((MainActivity) getActivity()).CURRENT_USER;
-        user.getParseUser().fetchIfNeededInBackground(new GetCallback<ParseObject>() {
-            @Override
-            public void done(ParseObject object, ParseException e) {
-                if( e== null) {
-                    Log.i(TAG, user.getIngredientList().toString());
-                    adapter.clear();
-                    ingredientList = user.getIngredientList();
-                    adapter.notifyDataSetChanged();
-                }
 
-            }
-        });
-//        Log.i(TAG, user.getIngredientList().toString());
+        ParseQuery<ParseUser> query = ParseQuery.getQuery(ParseUser.class);
+        query.whereEqualTo(User.KEY_OBJECT_ID, ParseUser.getCurrentUser().getObjectId());
+        query.include(User.KEY_INGREDIENT_ARRAY);
+        query.include(User.KEY_PROFILE_IMAGE);
+
+        Log.i(TAG, "User id: " + ParseUser.getCurrentUser().getObjectId());
+        try {
+            ParseUser parseUser = query.get(ParseUser.getCurrentUser().getObjectId());
+            currentUser = new User(parseUser);
+            Log.i(TAG, "done " + parseUser.getUsername());
+            adapter.clear();
+            ingredientList = currentUser.getIngredientArray();
+            adapter.addAll(ingredientList);
+        } catch (ParseException e) {
+            Log.e(TAG, "No user found");
+        }
 
         binding.ibAdd.setOnClickListener(new View.OnClickListener() {
             @Override
