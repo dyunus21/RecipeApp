@@ -21,6 +21,7 @@
             android:inputType="textMultiLine"
             android:textAlignment="textStart"
             android:textColor="@color/black"
+            android:textSize="14sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/tvInstructionsText" />
@@ -93,7 +94,7 @@
             android:layout_height="40dp"
             android:layout_marginTop="8dp"
             android:layout_marginEnd="10dp"
-            android:background="@drawable/edit"
+            android:background="@drawable/ic_baseline_edit_24"
             android:visibility="gone"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
@@ -194,7 +195,7 @@
                 android:id="@+id/ivProfileImage"
                 android:layout_width="27dp"
                 android:layout_height="27dp"
-                android:src="@drawable/profile"
+                android:src="@drawable/ic_baseline_account_circle_24"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 

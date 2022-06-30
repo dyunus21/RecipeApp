@@ -7,11 +7,11 @@
     android:padding="5dp">
 
     <ImageView
-        android:id="@+id/imageView"
+        android:id="@+id/ivCheckbox"
         android:layout_width="16dp"
         android:layout_height="0dp"
         android:layout_marginStart="10dp"
-        android:src="@drawable/checkbox"
+        android:src="@drawable/ic_baseline_check_box_outline_blank_24"
         app:layout_constraintBottom_toBottomOf="@+id/tvName"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/tvName" />
@@ -24,7 +24,7 @@
         android:text="Ingredient name"
         android:textSize="18sp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/imageView"
+        app:layout_constraintStart_toEndOf="@+id/ivCheckbox"
         app:layout_constraintTop_toTopOf="parent" />
 
     <ImageButton

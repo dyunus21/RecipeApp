@@ -1,14 +1,16 @@
 package com.example.recipeapp.fragments;
 
-import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
+import android.widget.EditText;
 import android.widget.SearchView;
-import android.widget.Toast;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -19,10 +21,12 @@ import com.codepath.asynchttpclient.callback.JsonHttpResponseHandler;
 import com.example.recipeapp.R;
 import com.example.recipeapp.RecipeClient;
 import com.example.recipeapp.adapters.RecipeSearchAdapter;
+import com.example.recipeapp.databinding.FilterDialogBinding;
 import com.example.recipeapp.databinding.FragmentRecipeSearchBinding;
 import com.example.recipeapp.models.Recipe;
 import com.example.recipeapp.models.User;
 
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.parse.FindCallback;
 import com.parse.ParseException;
 import com.parse.ParseQuery;
@@ -34,7 +38,9 @@ import org.json.JSONException;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import okhttp3.Headers;
 
@@ -45,6 +51,7 @@ public class RecipeSearchFragment extends Fragment {
     private FragmentRecipeSearchBinding binding;
     private RecipeClient client;
     private User currentUser;
+    private final Map<String, String> params = new HashMap<>();
 
 
     public RecipeSearchFragment() {
@@ -75,11 +82,53 @@ public class RecipeSearchFragment extends Fragment {
         GridLayoutManager gridLayoutManager = new GridLayoutManager(getContext(), 2);
         binding.rvRecipes.setLayoutManager(gridLayoutManager);
         // TODO: Implement Endless Scrolling and Refresh
+
+        binding.ibFilter.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                View view = getLayoutInflater().inflate(R.layout.filter_dialog, null);
+                MaterialAlertDialogBuilder alertDialog = new MaterialAlertDialogBuilder(getContext());
+                final AutoCompleteTextView actvCuisine = view.findViewById(R.id.actvCuisine);
+                ArrayAdapter cuisineAdapter = new ArrayAdapter(getContext(), android.R.layout.simple_dropdown_item_1line, getResources().getStringArray(R.array.cuisine));
+                actvCuisine.setAdapter(cuisineAdapter);
+
+                final AutoCompleteTextView actvMealType = view.findViewById(R.id.actvMealType);
+                ArrayAdapter mealAdapter = new ArrayAdapter(getContext(), android.R.layout.simple_dropdown_item_1line, getResources().getStringArray(R.array.meal));
+                actvMealType.setAdapter(mealAdapter);
+
+                final EditText etCooktime = view.findViewById(R.id.etCooktime);
+                alertDialog.setTitle("Choose your preferences");
+
+                alertDialog.setPositiveButton("Set Filter", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        params.put("Cooktime", etCooktime.getText().toString());
+                        params.put("Cuisine", actvCuisine.getText().toString());
+                        params.put("MealType", actvMealType.getText().toString());
+
+                        Log.i(TAG, "Max Cooktime: " + etCooktime.getText().toString());
+                        Log.i(TAG, "Cuisine text: " + actvCuisine.getText());
+                        Log.i(TAG, "Meal type text: " + actvMealType.getText());
+                        Log.i(TAG, params.toString());
+                    }
+                }).setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        Log.i(TAG, "Cancelled filter");
+                    }
+                });
+                alertDialog.setView(view);
+                alertDialog.show();
+
+
+            }
+        });
         binding.svSearch.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
                 Log.i(TAG, query);
                 try {
+                    adapter.clear();
                     populateRecipes(query);
                 } catch (IOException e) {
                     e.printStackTrace();
@@ -118,7 +167,8 @@ public class RecipeSearchFragment extends Fragment {
                 adapter.notifyDataSetChanged();
             }
         });
-        client.getRecipes(query, currentUser.getIngredientsString(), new JsonHttpResponseHandler() {
+        params.put("Ingredients", currentUser.getIngredientsString());
+        client.getRecipes(query, params, new JsonHttpResponseHandler() {
 
             @Override
             public void onSuccess(int statusCode, Headers headers, JSON json) {
