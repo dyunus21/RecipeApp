@@ -62,7 +62,7 @@ public class RecipeDetailsFragment extends Fragment {
         } else {
             Glide.with(getContext()).load(recipe.getImage().getUrl()).into(binding.ivImage);
         }
-        if (recipe.getAuthor() == null) {
+        if (recipe.getRecipeId()!= 0) {
             try {
                 getIngredients();
                 Log.i(TAG, "list: " + recipe.getIngredientList().toString());
@@ -72,6 +72,7 @@ public class RecipeDetailsFragment extends Fragment {
             }
         } else {
             List<String> ingredients = recipe.getIngredientList();
+            Log.i(TAG,"Ingredients: " + ingredients.toString());
             for (int i = 0; i < ingredients.size(); i++) {
                 binding.tvIngredientList.append("• " + ingredients.get(i) + "\n");
             }

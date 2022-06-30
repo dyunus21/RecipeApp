@@ -1,11 +1,14 @@
 package com.example.recipeapp.fragments;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.SearchView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -13,6 +16,7 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 
 import com.codepath.asynchttpclient.callback.JsonHttpResponseHandler;
+import com.example.recipeapp.R;
 import com.example.recipeapp.RecipeClient;
 import com.example.recipeapp.adapters.RecipeSearchAdapter;
 import com.example.recipeapp.databinding.FragmentRecipeSearchBinding;
@@ -76,6 +80,7 @@ public class RecipeSearchFragment extends Fragment {
             public boolean onQueryTextSubmit(String query) {
                 Log.i(TAG, query);
                 try {
+                    adapter.clear();
                     populateRecipes(query);
                 } catch (IOException e) {
                     e.printStackTrace();
@@ -103,8 +108,9 @@ public class RecipeSearchFragment extends Fragment {
         ParseQuery<Recipe> parseQuery = ParseQuery.getQuery(Recipe.class);
         parseQuery.whereContains(Recipe.KEY_TITLE, query);
         parseQuery.include(Recipe.KEY_IMAGE);
+        parseQuery.include(Recipe.KEY_INGREDIENT_LIST);
+        parseQuery.include(Recipe.KEY_AUTHOR);
         parseQuery.addAscendingOrder(Recipe.KEY_TITLE);
-        adapter.clear();
         parseQuery.findInBackground(new FindCallback<Recipe>() {
             @Override
             public void done(List<Recipe> objects, ParseException e) {
