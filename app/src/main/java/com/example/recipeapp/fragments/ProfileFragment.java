@@ -50,8 +50,8 @@ public class ProfileFragment extends Fragment {
     private static final int PROFILE_PHOTO_CODE = 0;
     private final static int PICK_PHOTO_CODE = 1046;
     private final String photoFileName = "photo.jpg";
-    private File photoFile;
     private final User CURRENT_USER = new User(ParseUser.getCurrentUser()); // TODO: FIX THIS
+    private File photoFile;
     private FragmentProfileBinding binding;
     private ProfileAdapter adapter;
     private List<Recipe> recipes;
@@ -114,7 +114,6 @@ public class ProfileFragment extends Fragment {
             }
         });
     }
-
 
     private void setProfileImage() {
         CURRENT_USER.setProfileImage(new ParseFile(photoFile));
