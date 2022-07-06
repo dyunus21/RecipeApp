@@ -34,6 +34,8 @@ public class Recipe extends ParseObject {
     public static final String KEY_COOKTIME = "cooktime";
     public static final String KEY_CUISINE_TYPE = "cuisineType";
     public static final String KEY_REVIEWS = "reviews";
+    public static final String KEY_LIKED_BY = "likedBy";
+    public static final String KEY_MADE_BY = "madeBy";
     private static final String TAG = "Recipe";
 
     public static List<Recipe> getRecipes(JSONArray results) throws JSONException {
@@ -211,6 +213,43 @@ public class Recipe extends ParseObject {
             }
         });
         return result[0];
+    }
+
+    public List<ParseUser> getLikedBy() {
+        List<ParseUser> likedBy = getList(KEY_LIKED_BY);
+        if (likedBy == null)
+            return new ArrayList<>();
+        return likedBy;
+    }
+
+    public void setLikedBy(List<ParseUser> likedBy) {
+        put(KEY_LIKED_BY, likedBy);
+    }
+
+    public boolean isLikedbyCurrentUser(ParseUser currentUser) {
+        for (ParseUser user : getLikedBy()) {
+            if (currentUser.hasSameId(user)) {
+                Log.i(TAG, "Post is already liked by " + currentUser.getUsername());
+                return true;
+            }
+        }
+        Log.i(TAG, "Post has not been liked by " + currentUser.getUsername());
+        return false;
+    }
+
+    public void likeRecipe(ParseUser currentUser) {
+        List<ParseUser> likedBy = getLikedBy();
+        for (int i = 0; i < likedBy.size(); i++) {
+            if (likedBy.get(i).hasSameId(currentUser)) {
+                likedBy.remove(i);
+                Log.i("Post", "Size: " + likedBy.size());
+                setLikedBy(likedBy);
+                return;
+            }
+        }
+        likedBy.add(currentUser);
+        setLikedBy(likedBy);
+        return;
     }
 
 }

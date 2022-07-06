@@ -17,6 +17,9 @@ import com.example.recipeapp.R;
 import com.example.recipeapp.RecipeClient;
 import com.example.recipeapp.databinding.FragmentRecipeDetailsBinding;
 import com.example.recipeapp.models.Recipe;
+import com.parse.ParseException;
+import com.parse.ParseUser;
+import com.parse.SaveCallback;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -92,7 +95,39 @@ public class RecipeDetailsFragment extends Fragment {
         });
 
         // TODO: Set up like and I made this button
+        if (recipe.isLikedbyCurrentUser(ParseUser.getCurrentUser())) {
+            binding.ibHeart.setBackgroundResource(R.drawable.heart_filled);
+        } else {
+            binding.ibHeart.setBackgroundResource(R.drawable.heart);
+        }
+        binding.ibHeart.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                likeRecipe();
+            }
+        });
 
+
+
+    private void likeRecipe() {
+        if (recipe.isLikedbyCurrentUser(ParseUser.getCurrentUser())) {
+            binding.ibHeart.setBackgroundResource(R.drawable.heart);
+        } else {
+            binding.ibHeart.setBackgroundResource(R.drawable.heart_filled);
+        }
+        recipe.likeRecipe(ParseUser.getCurrentUser());
+
+        recipe.saveInBackground(new SaveCallback() {
+            @Override
+            public void done(ParseException e) {
+                if (e != null) {
+                    Log.e(TAG, "Error in liking recipe" + e);
+                    return;
+                }
+                Log.i(TAG, "Recipe is liked by: " + recipe.getLikedBy().toString());
+            }
+        });
+//        binding.tvLikes.setText(post.getLikeCount());
     }
 
     public void getIngredients() throws IOException {
