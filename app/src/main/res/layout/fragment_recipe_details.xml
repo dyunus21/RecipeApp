@@ -109,7 +109,7 @@
             android:text="I made this"
             android:textSize="12sp"
             app:layout_constraintStart_toEndOf="@+id/ibHeart"
-            app:layout_constraintTop_toBottomOf="@+id/textView"
+            app:layout_constraintTop_toBottomOf="@+id/tvUploadedBy"
             tools:ignore="TouchTargetSizeCheck" />
 
         <ImageButton
@@ -121,7 +121,7 @@
             android:background="@drawable/heart"
             app:layout_constraintBottom_toBottomOf="@+id/btnMade"
             app:layout_constraintStart_toStartOf="@+id/ivImage"
-            app:layout_constraintTop_toBottomOf="@+id/textView"
+            app:layout_constraintTop_toBottomOf="@+id/tvUploadedBy"
             tools:ignore="SpeakableTextPresentCheck,TouchTargetSizeCheck" />
 
         <TextView
@@ -172,7 +172,7 @@
             app:layout_constraintTop_toBottomOf="@+id/tvInstructionsList" />
 
         <TextView
-            android:id="@+id/textView"
+            android:id="@+id/tvUploadedBy"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="2dp"

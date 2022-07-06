@@ -5,6 +5,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -17,7 +18,10 @@ import com.example.recipeapp.R;
 import com.example.recipeapp.RecipeClient;
 import com.example.recipeapp.databinding.FragmentRecipeDetailsBinding;
 import com.example.recipeapp.models.Recipe;
+import com.example.recipeapp.models.User;
+import com.parse.FindCallback;
 import com.parse.ParseException;
+import com.parse.ParseQuery;
 import com.parse.ParseUser;
 import com.parse.SaveCallback;
 
@@ -65,7 +69,7 @@ public class RecipeDetailsFragment extends Fragment {
         } else {
             Glide.with(getContext()).load(recipe.getImage().getUrl()).into(binding.ivImage);
         }
-        if (recipe.getRecipeId()!= 0) {
+        if (recipe.getRecipeId() != 0) {
             try {
                 getIngredients();
                 Log.i(TAG, "list: " + recipe.getIngredientList().toString());
@@ -75,7 +79,7 @@ public class RecipeDetailsFragment extends Fragment {
             }
         } else {
             List<String> ingredients = recipe.getIngredientList();
-            Log.i(TAG,"Ingredients: " + ingredients.toString());
+            Log.i(TAG, "Ingredients: " + ingredients.toString());
             for (int i = 0; i < ingredients.size(); i++) {
                 binding.tvIngredientList.append("• " + ingredients.get(i) + "\n");
             }
@@ -85,6 +89,14 @@ public class RecipeDetailsFragment extends Fragment {
         Log.i(TAG, "instructions: " + instructions.toString());
         for (int i = 0; i < instructions.size(); i++) {
             binding.tvInstructionsList.append((i + 1) + ". " + instructions.get(i) + "\n");
+        }
+
+        if(recipe.getRecipeId() != 0) {
+            binding.tvUploadedBy.setText("");
+        }
+        else {
+            User.getUser(recipe.getAuthor());
+            binding.tvUploadedBy.setText("Uploaded by: @username");
         }
 
         binding.ibBack.setOnClickListener(new View.OnClickListener() {
@@ -103,10 +115,33 @@ public class RecipeDetailsFragment extends Fragment {
         binding.ibHeart.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                likeRecipe();
+                findRecipe();
             }
         });
+    }
 
+    private void findRecipe() {
+        ParseQuery<Recipe> query = ParseQuery.getQuery(Recipe.class);
+        query.include(Recipe.KEY_RECIPE_ID);
+        query.include(Recipe.KEY_AUTHOR);
+        query.include(Recipe.KEY_LIKED_BY);
+        query.whereEqualTo(Recipe.KEY_RECIPE_ID, recipe.getRecipeId());
+        query.findInBackground(new FindCallback<Recipe>() {
+            @Override
+            public void done(List<Recipe> objects, ParseException e) {
+                if (e != null) {
+                    Log.e(TAG, "Error in finding recipe!");
+                    return;
+                }
+                if(objects.size() == 0) {
+                    addRecipeToDatabase();
+                }
+                else {
+                    likeRecipe();
+                }
+            }
+        });
+    }
 
 
     private void likeRecipe() {
@@ -130,6 +165,22 @@ public class RecipeDetailsFragment extends Fragment {
 //        binding.tvLikes.setText(post.getLikeCount());
     }
 
+    private void addRecipeToDatabase() {
+        recipe.put("uploaded", true);
+        recipe.saveInBackground(new SaveCallback() {
+            @Override
+            public void done(ParseException e) {
+                if (e != null) {
+                    Log.e(TAG, "Error in saving current recipe");
+                    Toast.makeText(getContext(), "Unable to like recipe!", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                Log.i(TAG, "New Recipe saved in database!");
+                likeRecipe();
+            }
+        });
+    }
+
     public void getIngredients() throws IOException {
         List<String> ingredients = new ArrayList<>();
 
@@ -148,6 +199,7 @@ public class RecipeDetailsFragment extends Fragment {
                     for (int i = 0; i < ingredients.size(); i++) {
                         binding.tvIngredientList.append("• " + ingredients.get(i) + "\n");
                     }
+                    recipe.setIngredientList(ingredients);
                 } catch (JSONException e) {
                     Log.e(TAG, "Hit JSON exception", e);
                 }

@@ -45,6 +45,7 @@ public class Recipe extends ParseObject {
             recipe.setRecipeId(results.getJSONObject(i).getInt("id"));
             recipe.setTitle(results.getJSONObject(i).getString("title"));
             recipe.setCooktime(results.getJSONObject(i).getInt("readyInMinutes"));
+            recipe.put("uploaded", false);
             JSONArray cuisineType = results.getJSONObject(i).getJSONArray("cuisines");
             if (cuisineType.length() > 0)
                 recipe.setCuisineType(cuisineType.getString(0));
