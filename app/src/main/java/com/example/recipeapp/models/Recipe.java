@@ -45,7 +45,6 @@ public class Recipe extends ParseObject {
             recipe.setRecipeId(results.getJSONObject(i).getInt("id"));
             recipe.setTitle(results.getJSONObject(i).getString("title"));
             recipe.setCooktime(results.getJSONObject(i).getInt("readyInMinutes"));
-            recipe.put("uploaded", false);
             JSONArray cuisineType = results.getJSONObject(i).getJSONArray("cuisines");
             if (cuisineType.length() > 0)
                 recipe.setCuisineType(cuisineType.getString(0));
@@ -230,11 +229,11 @@ public class Recipe extends ParseObject {
     public boolean isLikedbyCurrentUser(ParseUser currentUser) {
         for (ParseUser user : getLikedBy()) {
             if (currentUser.hasSameId(user)) {
-                Log.i(TAG, "Post is already liked by " + currentUser.getUsername());
+                Log.i(TAG, "Recipe is already liked by " + currentUser.getUsername());
                 return true;
             }
         }
-        Log.i(TAG, "Post has not been liked by " + currentUser.getUsername());
+        Log.i(TAG, "Recipe has not been liked by " + currentUser.getUsername());
         return false;
     }
 
@@ -243,7 +242,7 @@ public class Recipe extends ParseObject {
         for (int i = 0; i < likedBy.size(); i++) {
             if (likedBy.get(i).hasSameId(currentUser)) {
                 likedBy.remove(i);
-                Log.i("Post", "Size: " + likedBy.size());
+                Log.i(TAG, "Size: " + likedBy.size());
                 setLikedBy(likedBy);
                 return;
             }
@@ -253,4 +252,42 @@ public class Recipe extends ParseObject {
         return;
     }
 
+    public List<ParseUser> getMadeBy() {
+        List<ParseUser> madeBy = getList(KEY_MADE_BY);
+        if (madeBy == null)
+            return new ArrayList<>();
+        return madeBy;
+    }
+
+    public void setMadeBy(List<ParseUser> madeBy) {
+        put(KEY_MADE_BY, madeBy);
+    }
+
+    public boolean isMadebyCurrentUser(ParseUser currentUser) {
+        for (ParseUser user : getMadeBy()) {
+            if (currentUser.hasSameId(user)) {
+                Log.i(TAG, "Recipe is already made by " + currentUser.getUsername());
+                return true;
+            }
+        }
+        Log.i(TAG, "Recipe has not been made by " + currentUser.getUsername());
+        return false;
+    }
+
+    public void madeRecipe(ParseUser currentUser) {
+        List<ParseUser> madeBy = getMadeBy();
+        for (int i = 0; i < madeBy.size(); i++) {
+            if (madeBy.get(i).hasSameId(currentUser)) {
+                madeBy.remove(i);
+                Log.i(TAG, "Size: " + madeBy.size());
+                setMadeBy(madeBy);
+                return;
+            }
+        }
+        madeBy.add(currentUser);
+        setMadeBy(madeBy);
+        return;
+    }
+
 }
+

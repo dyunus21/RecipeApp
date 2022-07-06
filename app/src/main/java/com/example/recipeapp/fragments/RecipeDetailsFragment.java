@@ -1,5 +1,6 @@
 package com.example.recipeapp.fragments;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -38,6 +39,7 @@ public class RecipeDetailsFragment extends Fragment {
     private static final String TAG = "RecipeDetailsFragment";
     private FragmentRecipeDetailsBinding binding;
     private Recipe recipe;
+    private final boolean recipeInDatabase = false;
     private RecipeClient client;
 
     public RecipeDetailsFragment() {
@@ -91,10 +93,9 @@ public class RecipeDetailsFragment extends Fragment {
             binding.tvInstructionsList.append((i + 1) + ". " + instructions.get(i) + "\n");
         }
 
-        if(recipe.getRecipeId() != 0) {
+        if (recipe.getRecipeId() != 0) {
             binding.tvUploadedBy.setText("");
-        }
-        else {
+        } else {
             User.getUser(recipe.getAuthor());
             binding.tvUploadedBy.setText("Uploaded by: @username");
         }
@@ -106,7 +107,6 @@ public class RecipeDetailsFragment extends Fragment {
             }
         });
 
-        // TODO: Set up like and I made this button
         if (recipe.isLikedbyCurrentUser(ParseUser.getCurrentUser())) {
             binding.ibHeart.setBackgroundResource(R.drawable.heart_filled);
         } else {
@@ -115,16 +115,30 @@ public class RecipeDetailsFragment extends Fragment {
         binding.ibHeart.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                findRecipe();
+                findRecipe("like");
+            }
+        });
+
+        if (recipe.isMadebyCurrentUser(ParseUser.getCurrentUser())) {
+            // TODO Change Image button color to gray
+            binding.btnMade.setText("I Made it!");
+        } else {
+            binding.btnMade.setText("Make it!");
+        }
+        binding.btnMade.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                findRecipe("made");
             }
         });
     }
 
-    private void findRecipe() {
+    private void findRecipe(String action) {
         ParseQuery<Recipe> query = ParseQuery.getQuery(Recipe.class);
         query.include(Recipe.KEY_RECIPE_ID);
         query.include(Recipe.KEY_AUTHOR);
         query.include(Recipe.KEY_LIKED_BY);
+        query.include(Recipe.KEY_MADE_BY);
         query.whereEqualTo(Recipe.KEY_RECIPE_ID, recipe.getRecipeId());
         query.findInBackground(new FindCallback<Recipe>() {
             @Override
@@ -133,12 +147,35 @@ public class RecipeDetailsFragment extends Fragment {
                     Log.e(TAG, "Error in finding recipe!");
                     return;
                 }
-                if(objects.size() == 0) {
-                    addRecipeToDatabase();
-                }
-                else {
+                if (objects.size() == 0) {
+                    addRecipeToDatabase(action);
+                } else if (action == "like") {
                     likeRecipe();
+                } else {
+                    madeRecipe();
                 }
+            }
+        });
+    }
+
+    private void madeRecipe() {
+        if (recipe.isMadebyCurrentUser(ParseUser.getCurrentUser())) {
+            // TODO Change Image button color to gray
+            binding.btnMade.setText("Make it!");
+        } else {
+            binding.btnMade.setText("I Made it");
+        }
+
+        recipe.madeRecipe(ParseUser.getCurrentUser());
+
+        recipe.saveInBackground(new SaveCallback() {
+            @Override
+            public void done(ParseException e) {
+                if (e != null) {
+                    Log.e(TAG, "Error in setting recipe to made" + e);
+                    return;
+                }
+                Log.i(TAG, "Recipe is made by: " + recipe.getMadeBy().toString());
             }
         });
     }
@@ -165,18 +202,21 @@ public class RecipeDetailsFragment extends Fragment {
 //        binding.tvLikes.setText(post.getLikeCount());
     }
 
-    private void addRecipeToDatabase() {
+    private void addRecipeToDatabase(String action) {
         recipe.put("uploaded", true);
         recipe.saveInBackground(new SaveCallback() {
             @Override
             public void done(ParseException e) {
                 if (e != null) {
                     Log.e(TAG, "Error in saving current recipe");
-                    Toast.makeText(getContext(), "Unable to like recipe!", Toast.LENGTH_SHORT).show();
                     return;
                 }
                 Log.i(TAG, "New Recipe saved in database!");
-                likeRecipe();
+                if (action == "like") {
+                    likeRecipe();
+                } else {
+                    madeRecipe();
+                }
             }
         });
     }
