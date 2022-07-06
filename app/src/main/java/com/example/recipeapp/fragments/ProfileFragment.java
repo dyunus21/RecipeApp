@@ -111,6 +111,7 @@ public class ProfileFragment extends Fragment {
                 recipes.addAll(objects);
                 adapter.notifyDataSetChanged();
                 binding.tvRecipeCount.setText(String.valueOf(recipes.size()));
+
             }
         });
     }
