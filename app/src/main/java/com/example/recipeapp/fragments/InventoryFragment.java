@@ -77,7 +77,7 @@ public class InventoryFragment extends Fragment {
             Log.e(TAG, "No user found");
         }
 
-        binding.ibAdd.setOnClickListener(new View.OnClickListener() {
+        binding.fabAdd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 goToAddIngredient();
