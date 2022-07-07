@@ -88,6 +88,8 @@ public class ProfileFragment extends Fragment {
                 onPickPhoto(v);
             }
         });
+        binding.tvRecipeCount.setText(String.valueOf(CURRENT_USER.getRecipesUploaded().size()));
+        binding.tvMadeCount.setText(String.valueOf(CURRENT_USER.getRecipesMade().size()));
         binding.rvUploadedRecipes.setLayoutManager(new LinearLayoutManager(getContext()));
         binding.rvUploadedRecipes.setAdapter(adapter);
         queryRecipes("uploaded");
@@ -136,6 +138,13 @@ public class ProfileFragment extends Fragment {
             Log.i(TAG, recipes.toString());
             adapter.addAll(recipes);
             return;
+        } else if (type.equals("made")) {
+            adapter.clear();
+            recipes = CURRENT_USER.getRecipesMade();
+            Log.i(TAG, recipes.toString());
+            adapter.addAll(recipes);
+            binding.tvMadeCount.setText(String.valueOf(recipes.size()));
+            return;
         }
         query.include(Recipe.KEY_IMAGE_URL);
         query.include(Recipe.KEY_IMAGE);
@@ -151,7 +160,7 @@ public class ProfileFragment extends Fragment {
                 adapter.clear();
                 recipes = objects;
                 adapter.addAll(recipes);
-                binding.tvRecipeCount.setText(String.valueOf(recipes.size()));
+
             }
         });
     }
