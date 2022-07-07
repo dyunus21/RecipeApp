@@ -9,10 +9,6 @@ public class Ingredient extends ParseObject {
     public static final String KEY_COUNT = "count";
     public static final String KEY_UNIT = "unit";
 
-//    public Ingredient(String name, int count) {
-//        this.setName(name);
-//        this.setCount(count);
-//    }
     public void initialize(String name, int count, String unit) {
         this.setName(name);
         this.setCount(count);
@@ -35,11 +31,13 @@ public class Ingredient extends ParseObject {
     public void setUnit(String unit) {
         put(KEY_UNIT, unit);
     }
+
     public int getCount() {
         return getInt(KEY_COUNT);
     }
+
     public void setCount(int count) {
-        put(KEY_COUNT,count);
+        put(KEY_COUNT, count);
     }
 }
 

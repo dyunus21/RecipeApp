@@ -43,7 +43,7 @@ public class RecipeClient {
         params.put("sortDirection", "asc");
         params.put("fillIngredients", "true");
 //        params.put("includeIngredients", parameters.get("Ingredients"));
-        if(parameters.size() > 1) {
+        if (parameters.size() > 1) {
             if (!Objects.equals(parameters.get("Cuisine"), ""))
                 params.put("cuisine", parameters.get("Cuisine"));
             if (!Objects.equals(parameters.get("MealType"), ""))

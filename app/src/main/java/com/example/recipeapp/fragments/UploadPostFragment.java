@@ -27,6 +27,7 @@ import androidx.fragment.app.Fragment;
 import androidx.navigation.fragment.NavHostFragment;
 
 import com.example.recipeapp.R;
+import com.example.recipeapp.activities.MainActivity;
 import com.example.recipeapp.databinding.FragmentUploadPostBinding;
 import com.example.recipeapp.models.BitmapScaler;
 import com.example.recipeapp.models.Post;
@@ -46,9 +47,9 @@ public class UploadPostFragment extends Fragment {
     private static final String TAG = "FragmentUploadPost";
     private final static int CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE = 42;
     private final static int PICK_PHOTO_CODE = 1046;
+    private final String photoFileName = "photo.jpg";
     private File photoFile;
     private FragmentUploadPostBinding binding;
-    private final String photoFileName = "photo.jpg";
 
     public UploadPostFragment() {
 
@@ -58,6 +59,7 @@ public class UploadPostFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         binding = FragmentUploadPostBinding.inflate(getLayoutInflater());
+        ((MainActivity) getActivity()).getSupportActionBar().setTitle("Upload New Post");
         return binding.getRoot();
     }
 

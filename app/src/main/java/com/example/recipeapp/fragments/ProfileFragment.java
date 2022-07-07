@@ -13,6 +13,9 @@ import android.provider.MediaStore;
 import android.provider.OpenableColumns;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
@@ -23,6 +26,9 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.bumptech.glide.Glide;
+import com.example.recipeapp.R;
+import com.example.recipeapp.activities.LoginActivity;
+import com.example.recipeapp.activities.MainActivity;
 import com.example.recipeapp.activities.RegisterActivity;
 import com.example.recipeapp.adapters.ProfileAdapter;
 import com.example.recipeapp.databinding.FragmentProfileBinding;
@@ -74,6 +80,8 @@ public class ProfileFragment extends Fragment {
         recipes = new ArrayList<>();
         adapter = new ProfileAdapter(getContext(), recipes);
         User.getUser(CURRENT_USER);
+        ((MainActivity) getActivity()).getSupportActionBar().setTitle("Profile");
+        setHasOptionsMenu(true);
     }
 
     @Override
@@ -92,7 +100,6 @@ public class ProfileFragment extends Fragment {
         binding.tvMadeCount.setText(String.valueOf(CURRENT_USER.getRecipesMade().size()));
         binding.rvUploadedRecipes.setLayoutManager(new LinearLayoutManager(getContext()));
         binding.rvUploadedRecipes.setAdapter(adapter);
-//        queryRecipes("uploaded");
         setUpTabs();
 
     }
@@ -250,5 +257,11 @@ public class ProfileFragment extends Fragment {
             Log.e(TAG, "Unable to load image from URI", e);
         }
         return image;
+    }
+
+    @Override
+    public void onPrepareOptionsMenu(@NonNull Menu menu) {
+        menu.findItem(R.id.logout).setVisible(true);
+        super.onPrepareOptionsMenu(menu);
     }
 }
