@@ -92,7 +92,7 @@ public class ProfileFragment extends Fragment {
         binding.tvMadeCount.setText(String.valueOf(CURRENT_USER.getRecipesMade().size()));
         binding.rvUploadedRecipes.setLayoutManager(new LinearLayoutManager(getContext()));
         binding.rvUploadedRecipes.setAdapter(adapter);
-        queryRecipes("uploaded");
+//        queryRecipes("uploaded");
         setUpTabs();
 
     }
@@ -130,39 +130,17 @@ public class ProfileFragment extends Fragment {
 
     private void queryRecipes(String type) {
         ParseQuery<Recipe> query = ParseQuery.getQuery(Recipe.class);
+        adapter.clear();
         if (type.equals("uploaded")) {
-            query.whereEqualTo(Recipe.KEY_AUTHOR, CURRENT_USER.getParseUser());
+            recipes = CURRENT_USER.getRecipesUploaded();
         } else if (type.equals("liked")) {
-            adapter.clear();
             recipes = CURRENT_USER.getRecipesLiked();
-            Log.i(TAG, recipes.toString());
-            adapter.addAll(recipes);
-            return;
         } else if (type.equals("made")) {
-            adapter.clear();
             recipes = CURRENT_USER.getRecipesMade();
-            Log.i(TAG, recipes.toString());
-            adapter.addAll(recipes);
-            binding.tvMadeCount.setText(String.valueOf(recipes.size()));
-            return;
         }
-        query.include(Recipe.KEY_IMAGE_URL);
-        query.include(Recipe.KEY_IMAGE);
-        query.include(Recipe.KEY_INGREDIENT_LIST);
-        query.addDescendingOrder("createdAt");
-        query.findInBackground(new FindCallback<Recipe>() {
-            @Override
-            public void done(List<Recipe> objects, ParseException e) {
-                if (e != null) {
-                    Log.e(TAG, "Issue with getting uploaded recipes", e);
-                    return;
-                }
-                adapter.clear();
-                recipes = objects;
-                adapter.addAll(recipes);
-
-            }
-        });
+        Log.i(TAG, recipes.toString());
+        adapter.addAll(recipes);
+        return;
     }
 
     private void changeProfileImage() {
