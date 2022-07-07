@@ -30,6 +30,7 @@ import com.example.recipeapp.models.BitmapScaler;
 import com.example.recipeapp.models.ImageClient;
 import com.example.recipeapp.models.Recipe;
 import com.example.recipeapp.models.User;
+import com.google.android.material.tabs.TabLayout;
 import com.parse.FindCallback;
 import com.parse.ParseException;
 import com.parse.ParseFile;
@@ -72,6 +73,7 @@ public class ProfileFragment extends Fragment {
         super.onCreate(savedInstanceState);
         recipes = new ArrayList<>();
         adapter = new ProfileAdapter(getContext(), recipes);
+        User.getUser(CURRENT_USER);
     }
 
     @Override
@@ -79,7 +81,7 @@ public class ProfileFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         binding.tvUsername.setText("@" + CURRENT_USER.getParseUser().getUsername());
         binding.tvFullname.setText(CURRENT_USER.getFirstName() + " " + CURRENT_USER.getLastName());
-        Glide.with(getContext()).load(CURRENT_USER.getProfileImage().getUrl()).circleCrop().into(binding.ivProfileImage);
+        setProfileImage();
         binding.tvChangeProfileImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -89,12 +91,51 @@ public class ProfileFragment extends Fragment {
         binding.rvUploadedRecipes.setLayoutManager(new LinearLayoutManager(getContext()));
         binding.rvUploadedRecipes.setAdapter(adapter);
         queryRecipes("uploaded");
+        setUpTabs();
+
+    }
+
+    private void setUpTabs() {
+        binding.tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+            @Override
+            public void onTabSelected(TabLayout.Tab tab) {
+                if (tab == binding.tabLayout.getTabAt(0)) {
+                    queryRecipes("uploaded");
+                } else if (tab == binding.tabLayout.getTabAt(1)) {
+                    queryRecipes("liked");
+                } else if (tab == binding.tabLayout.getTabAt(2)) {
+                    queryRecipes("made");
+                }
+            }
+
+            @Override
+            public void onTabUnselected(TabLayout.Tab tab) {
+
+            }
+
+            @Override
+            public void onTabReselected(TabLayout.Tab tab) {
+                if (tab == binding.tabLayout.getTabAt(0)) {
+                    queryRecipes("uploaded");
+                } else if (tab == binding.tabLayout.getTabAt(1)) {
+                    queryRecipes("liked");
+                } else if (tab == binding.tabLayout.getTabAt(2)) {
+                    queryRecipes("made");
+                }
+            }
+        });
     }
 
     private void queryRecipes(String type) {
         ParseQuery<Recipe> query = ParseQuery.getQuery(Recipe.class);
         if (type.equals("uploaded")) {
             query.whereEqualTo(Recipe.KEY_AUTHOR, CURRENT_USER.getParseUser());
+        } else if (type.equals("liked")) {
+            adapter.clear();
+            recipes = CURRENT_USER.getRecipesLiked();
+            Log.i(TAG, recipes.toString());
+            adapter.addAll(recipes);
+            return;
         }
         query.include(Recipe.KEY_IMAGE_URL);
         query.include(Recipe.KEY_IMAGE);
@@ -108,14 +149,14 @@ public class ProfileFragment extends Fragment {
                     return;
                 }
                 adapter.clear();
-                recipes.addAll(objects);
-                adapter.notifyDataSetChanged();
+                recipes = objects;
+                adapter.addAll(recipes);
                 binding.tvRecipeCount.setText(String.valueOf(recipes.size()));
             }
         });
     }
 
-    private void setProfileImage() {
+    private void changeProfileImage() {
         CURRENT_USER.setProfileImage(new ParseFile(photoFile));
         CURRENT_USER.getParseUser().saveInBackground(new SaveCallback() {
             @Override
@@ -124,13 +165,17 @@ public class ProfileFragment extends Fragment {
                     Log.e(TAG, "Issue with saving profile image!", e);
                     Toast.makeText(getContext(), "Unable to save profile image. Please try again!", Toast.LENGTH_SHORT).show();
                     return;
-                } else {
-                    Glide.with(getContext()).load(CURRENT_USER.getProfileImage().getUrl()).circleCrop().into(binding.ivProfileImage);
-                    Toast.makeText(getContext(), "Successfully saved profile image!", Toast.LENGTH_SHORT).show();
                 }
+                setProfileImage();
+                Toast.makeText(getContext(), "Successfully saved profile image!", Toast.LENGTH_SHORT).show();
 
             }
         });
+    }
+
+    private final void setProfileImage() {
+        Glide.with(getContext()).load(CURRENT_USER.getProfileImage().getUrl()).circleCrop().into(binding.ivProfileImage);
+        return;
     }
 
     @Override
@@ -141,7 +186,7 @@ public class ProfileFragment extends Fragment {
             Bitmap selectedImage = loadFromUri(photoUri);
             photoFile = getPhotoFileUri(getFileName(photoUri));
             photoFile = resizeFile(selectedImage);
-            setProfileImage();
+            changeProfileImage();
             Log.i(TAG, "File: " + photoFile.toString());
         }
     }
