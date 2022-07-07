@@ -51,7 +51,7 @@ public class User extends ParseObject {
                 if (e != null) {
                     Log.i(TAG, "Unable to fetch user!", e);
                 }
-                Log.i(TAG, "Successfully fetched user!");
+                Log.i(TAG, "Seuccessfully fetched user!");
                 user.parseUser = object;
             }
         });

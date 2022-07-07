@@ -33,6 +33,7 @@ import com.example.recipeapp.models.Recipe;
 import com.example.recipeapp.models.User;
 import com.parse.ParseException;
 import com.parse.ParseFile;
+import com.parse.ParseQuery;
 import com.parse.ParseUser;
 import com.parse.SaveCallback;
 
@@ -50,6 +51,7 @@ public class UploadRecipeFragment extends Fragment {
     public String photoFileName = "photo.jpg";
     private File photoFile;
     private FragmentUploadRecipeBinding binding;
+    private static final User currentUser = new User(ParseUser.getCurrentUser());
 
     public UploadRecipeFragment() {
 
@@ -142,6 +144,23 @@ public class UploadRecipeFragment extends Fragment {
                 binding.etIngredientList.setText("");
                 binding.etInstructions.setText("");
                 binding.ivImage.setImageResource(0);
+                addRecipeToUser(recipe);
+            }
+        });
+
+    }
+
+    private void addRecipeToUser(Recipe recipe) {
+        List<Recipe> uploaded = currentUser.getRecipesUploaded();
+        uploaded.add(recipe);
+        currentUser.setRecipesUploaded(uploaded);
+        currentUser.getParseUser().saveInBackground(new SaveCallback() {
+            @Override
+            public void done(ParseException e) {
+                if (e != null) {
+                    Log.e(TAG, "Error in saving recipe to user uploaded recipe array",e);
+                }
+                Log.i(TAG, "Successfully saved recipe to user recipe array");
             }
         });
     }

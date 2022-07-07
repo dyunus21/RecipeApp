@@ -70,7 +70,9 @@ public class ProfileAdapter extends RecyclerView.Adapter<ProfileAdapter.ViewHold
         public void bind(Recipe recipe) {
             currentRecipe = recipe;
             binding.tvRecipeName.setText(recipe.getTitle());
-            Glide.with(context).load(recipe.getImage().getUrl()).into(binding.ivRecipeImage);
+
+            String url = recipe.getImageUrl() == null ? recipe.getImage().getUrl() : recipe.getImageUrl();
+            Glide.with(context).load(url).into(binding.ivRecipeImage);
         }
     }
 }
