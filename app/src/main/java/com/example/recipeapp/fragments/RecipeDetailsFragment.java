@@ -17,6 +17,7 @@ import com.bumptech.glide.Glide;
 import com.codepath.asynchttpclient.callback.JsonHttpResponseHandler;
 import com.example.recipeapp.R;
 import com.example.recipeapp.RecipeClient;
+import com.example.recipeapp.activities.MainActivity;
 import com.example.recipeapp.databinding.FragmentRecipeDetailsBinding;
 import com.example.recipeapp.models.Recipe;
 import com.example.recipeapp.models.User;
@@ -38,20 +39,19 @@ import okhttp3.Headers;
 
 public class RecipeDetailsFragment extends Fragment {
     private static final String TAG = "RecipeDetailsFragment";
+    private final boolean recipeInDatabase = false;
+    private final User currentUser = new User(ParseUser.getCurrentUser());
     private FragmentRecipeDetailsBinding binding;
     private Recipe recipe;
-    private final boolean recipeInDatabase = false;
     private RecipeClient client;
-    private final User currentUser = new User(ParseUser.getCurrentUser());
 
     public RecipeDetailsFragment() {
 
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        binding = FragmentRecipeDetailsBinding.inflate(getLayoutInflater());
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
         client = new RecipeClient(getContext());
         final Bundle bundle = this.getArguments();
         if (bundle != null) {
@@ -59,8 +59,15 @@ public class RecipeDetailsFragment extends Fragment {
             Log.i(TAG, "Received bundle: " + recipe.getRecipeId());
             findRecipe("None");
             User.getUser(recipe.getAuthor());
+            ((MainActivity)getActivity()).getSupportActionBar().setTitle("Recipe Details: " + recipe.getTitle());
         }
 
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        binding = FragmentRecipeDetailsBinding.inflate(getLayoutInflater());
         return binding.getRoot();
     }
 
@@ -70,11 +77,8 @@ public class RecipeDetailsFragment extends Fragment {
         binding.tvRecipeName.setText(recipe.getTitle());
         binding.tvCookTime.setText("Cooktime: " + recipe.getCooktime() + " mins");
         binding.tvCuisine.setText("Cuisine: " + recipe.getCuisineType());
-        if (recipe.getImageUrl() != null) {
-            Glide.with(getContext()).load(recipe.getImageUrl()).into(binding.ivImage);
-        } else {
-            Glide.with(getContext()).load(recipe.getImage().getUrl()).into(binding.ivImage);
-        }
+        String url = recipe.getImageUrl() == null ? recipe.getImage().getUrl() : recipe.getImageUrl();
+        Glide.with(getContext()).load(url).into(binding.ivImage);
         if (recipe.getRecipeId() != 0) {
             try {
                 getIngredients();
@@ -154,7 +158,7 @@ public class RecipeDetailsFragment extends Fragment {
                     addRecipeToDatabase(action);
                 } else if (action.equals("like")) {
                     likeRecipe();
-                } else if(action.equals("made")){
+                } else if (action.equals("made")) {
                     madeRecipe();
                 } else {
                     recipe = objects.get(0);
@@ -266,6 +270,4 @@ public class RecipeDetailsFragment extends Fragment {
     public void goBackToSearch(View view) {
         NavHostFragment.findNavController(this).navigate(R.id.recipeSearchFragment);
     }
-
-
 }

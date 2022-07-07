@@ -13,6 +13,7 @@ import androidx.fragment.app.Fragment;
 import androidx.navigation.fragment.NavHostFragment;
 
 import com.example.recipeapp.R;
+import com.example.recipeapp.activities.MainActivity;
 import com.example.recipeapp.databinding.FragmentAddIngredientBinding;
 import com.example.recipeapp.models.Ingredient;
 import com.example.recipeapp.models.User;
@@ -21,6 +22,7 @@ import com.parse.ParseUser;
 import com.parse.SaveCallback;
 
 import java.util.List;
+import java.util.Map;
 
 
 public class AddIngredientFragment extends Fragment {
@@ -39,7 +41,7 @@ public class AddIngredientFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        ((MainActivity) getActivity()).getSupportActionBar().setTitle("Add Ingredient");
     }
 
     @Override

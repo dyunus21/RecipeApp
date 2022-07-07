@@ -50,6 +50,7 @@ public class User extends ParseObject {
             public void done(ParseUser object, ParseException e) {
                 if (e != null) {
                     Log.i(TAG, "Unable to fetch user!", e);
+                    return;
                 }
                 Log.i(TAG, "Seuccessfully fetched user!");
                 user.parseUser = object;
@@ -112,7 +113,7 @@ public class User extends ParseObject {
         String ingredients = "";
         List<Ingredient> ingredientList = this.getIngredientArray();
         for (int i = 0; i < ingredientList.size(); i++) {
-            ingredients += ingredientList.get(0).getName();
+            ingredients += ingredientList.get(i).getName();
             if (i != ingredientList.size() - 1)
                 ingredients += ",";
         }

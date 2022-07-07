@@ -70,7 +70,7 @@ public class RecipeSearchAdapter extends RecyclerView.Adapter<RecipeSearchAdapte
         public void bind(Recipe recipe) {
             currentRecipe = recipe;
             binding.tvTitle.setText(recipe.getTitle());
-            if(recipe.getImageUrl()  == null)
+            if (recipe.getImageUrl() == null)
                 Glide.with(context).load(recipe.getImage().getUrl()).into(binding.ivImage);
             else
                 Glide.with(context).load(recipe.getImageUrl()).into(binding.ivImage);

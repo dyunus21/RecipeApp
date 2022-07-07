@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
+import com.example.recipeapp.activities.MainActivity;
 import com.example.recipeapp.adapters.SocialFeedAdapter;
 import com.example.recipeapp.databinding.FragmentSocialFeedBinding;
 import com.example.recipeapp.models.EndlessRecyclerViewScrollListener;
@@ -42,6 +43,7 @@ public class SocialFeedFragment extends Fragment {
         super.onCreate(savedInstanceState);
         postList = new ArrayList<>();
         adapter = new SocialFeedAdapter(getContext(), postList);
+        ((MainActivity) getActivity()).getSupportActionBar().setTitle("Explore the Community!");
     }
 
     @Override

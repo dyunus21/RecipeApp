@@ -119,3 +119,4 @@ public class InventoryAdapter extends RecyclerView.Adapter<InventoryAdapter.View
 
 
 }
+
