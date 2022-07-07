@@ -27,6 +27,7 @@ import androidx.fragment.app.Fragment;
 import androidx.navigation.fragment.NavHostFragment;
 
 import com.example.recipeapp.R;
+import com.example.recipeapp.activities.MainActivity;
 import com.example.recipeapp.databinding.FragmentUploadRecipeBinding;
 import com.example.recipeapp.models.BitmapScaler;
 import com.example.recipeapp.models.Recipe;
@@ -48,10 +49,10 @@ public class UploadRecipeFragment extends Fragment {
     public final static int CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE = 42;
     public final static int PICK_PHOTO_CODE = 1046;
     private static final String TAG = "FragmentUploadRecipe";
+    private static final User currentUser = new User(ParseUser.getCurrentUser());
     public String photoFileName = "photo.jpg";
     private File photoFile;
     private FragmentUploadRecipeBinding binding;
-    private static final User currentUser = new User(ParseUser.getCurrentUser());
 
     public UploadRecipeFragment() {
 
@@ -61,6 +62,7 @@ public class UploadRecipeFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         binding = FragmentUploadRecipeBinding.inflate(getLayoutInflater());
+        ((MainActivity) getActivity()).getSupportActionBar().setTitle("Upload New Recipe");
         return binding.getRoot();
     }
 
@@ -158,7 +160,7 @@ public class UploadRecipeFragment extends Fragment {
             @Override
             public void done(ParseException e) {
                 if (e != null) {
-                    Log.e(TAG, "Error in saving recipe to user uploaded recipe array",e);
+                    Log.e(TAG, "Error in saving recipe to user uploaded recipe array", e);
                 }
                 Log.i(TAG, "Successfully saved recipe to user recipe array");
             }

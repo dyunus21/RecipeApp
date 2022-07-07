@@ -44,6 +44,7 @@ public class InventoryFragment extends Fragment {
         super.onCreate(savedInstanceState);
         ingredientList = new ArrayList<>();
         adapter = new InventoryAdapter(getContext(), ingredientList);
+        ((MainActivity) getActivity()).getSupportActionBar().setTitle("Inventory");
     }
 
     @Override
@@ -89,6 +90,4 @@ public class InventoryFragment extends Fragment {
     private void goToAddIngredient() {
         NavHostFragment.findNavController(this).navigate(R.id.addIngredientFragment);
     }
-
-
 }

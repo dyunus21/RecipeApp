@@ -46,12 +46,12 @@ import okhttp3.Headers;
 
 public class RecipeSearchFragment extends Fragment {
     public static final String TAG = "RecipeSearchFragment";
+    private final Map<String, String> params = new HashMap<>();
     public List<Recipe> recipes;
     protected RecipeSearchAdapter adapter;
     private FragmentRecipeSearchBinding binding;
     private RecipeClient client;
     private User currentUser;
-    private final Map<String, String> params = new HashMap<>();
 
 
     public RecipeSearchFragment() {
@@ -162,6 +162,10 @@ public class RecipeSearchFragment extends Fragment {
         parseQuery.findInBackground(new FindCallback<Recipe>() {
             @Override
             public void done(List<Recipe> objects, ParseException e) {
+                if (e != null) {
+                    Log.e(TAG, "Unable to populate recipes", e);
+                    return;
+                }
                 Log.i(TAG, "Recipes uploaded: " + objects.toString());
                 recipes = objects;
                 adapter.notifyDataSetChanged();
@@ -183,7 +187,7 @@ public class RecipeSearchFragment extends Fragment {
                     recipes.addAll(Recipe.getRecipes(jsonArray));
                     adapter.addAll(recipes);
                 } catch (JSONException e) {
-                    Log.e(TAG, "Hit JSON exception",e);
+                    Log.e(TAG, "Hit JSON exception", e);
                 }
             }
 
@@ -204,7 +208,6 @@ public class RecipeSearchFragment extends Fragment {
         try {
             ParseUser parseUser = query.get(ParseUser.getCurrentUser().getObjectId());
             currentUser = new User(parseUser);
-            return;
         } catch (ParseException e) {
             Log.e(TAG, "Unable to fetch user!", e);
         }
