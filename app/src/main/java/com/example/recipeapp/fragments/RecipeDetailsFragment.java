@@ -32,6 +32,7 @@ import org.json.JSONException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import okhttp3.Headers;
 
@@ -41,6 +42,7 @@ public class RecipeDetailsFragment extends Fragment {
     private Recipe recipe;
     private final boolean recipeInDatabase = false;
     private RecipeClient client;
+    private final User currentUser = new User(ParseUser.getCurrentUser());
 
     public RecipeDetailsFragment() {
 
@@ -54,7 +56,9 @@ public class RecipeDetailsFragment extends Fragment {
         final Bundle bundle = this.getArguments();
         if (bundle != null) {
             recipe = bundle.getParcelable("Recipe");
-            Log.i(TAG, "Received bundle: " + recipe.getTitle());
+            Log.i(TAG, "Received bundle: " + recipe.getRecipeId());
+            findRecipe("None");
+            User.getUser(recipe.getAuthor());
         }
 
         return binding.getRoot();
@@ -96,7 +100,6 @@ public class RecipeDetailsFragment extends Fragment {
         if (recipe.getRecipeId() != 0) {
             binding.tvUploadedBy.setText("");
         } else {
-            User.getUser(recipe.getAuthor());
             binding.tvUploadedBy.setText("Uploaded by: @username");
         }
 
@@ -107,7 +110,8 @@ public class RecipeDetailsFragment extends Fragment {
             }
         });
 
-        if (recipe.isLikedbyCurrentUser(ParseUser.getCurrentUser())) {
+        // TODO: button does not change color to indicate liked recipes because ids differ each session
+        if (currentUser.isLikedbyCurrentUser(recipe)) {
             binding.ibHeart.setBackgroundResource(R.drawable.heart_filled);
         } else {
             binding.ibHeart.setBackgroundResource(R.drawable.heart);
@@ -119,7 +123,7 @@ public class RecipeDetailsFragment extends Fragment {
             }
         });
 
-        if (recipe.isMadebyCurrentUser(ParseUser.getCurrentUser())) {
+        if (currentUser.isMadebyCurrentUser(recipe)) {
             // TODO Change Image button color to gray
             binding.btnMade.setText("I Made it!");
         } else {
@@ -137,8 +141,6 @@ public class RecipeDetailsFragment extends Fragment {
         ParseQuery<Recipe> query = ParseQuery.getQuery(Recipe.class);
         query.include(Recipe.KEY_RECIPE_ID);
         query.include(Recipe.KEY_AUTHOR);
-        query.include(Recipe.KEY_LIKED_BY);
-        query.include(Recipe.KEY_MADE_BY);
         query.whereEqualTo(Recipe.KEY_RECIPE_ID, recipe.getRecipeId());
         query.findInBackground(new FindCallback<Recipe>() {
             @Override
@@ -147,62 +149,67 @@ public class RecipeDetailsFragment extends Fragment {
                     Log.e(TAG, "Error in finding recipe!");
                     return;
                 }
+                Log.i(TAG, "Recipes found: " + objects.toString());
                 if (objects.size() == 0) {
                     addRecipeToDatabase(action);
-                } else if (action == "like") {
+                } else if (action.equals("like")) {
                     likeRecipe();
-                } else {
+                } else if(action.equals("made")){
                     madeRecipe();
+                } else {
+                    recipe = objects.get(0);
+                    Log.i(TAG, "Recipe: " + recipe.getTitle());
                 }
             }
         });
     }
 
     private void madeRecipe() {
-        if (recipe.isMadebyCurrentUser(ParseUser.getCurrentUser())) {
+        if (currentUser.isMadebyCurrentUser(recipe)) {
             // TODO Change Image button color to gray
             binding.btnMade.setText("Make it!");
         } else {
             binding.btnMade.setText("I Made it");
         }
 
-        recipe.madeRecipe(ParseUser.getCurrentUser());
+        currentUser.madeRecipe(recipe);
 
-        recipe.saveInBackground(new SaveCallback() {
+        currentUser.getParseUser().saveInBackground(new SaveCallback() {
             @Override
             public void done(ParseException e) {
                 if (e != null) {
                     Log.e(TAG, "Error in setting recipe to made" + e);
                     return;
                 }
-                Log.i(TAG, "Recipe is made by: " + recipe.getMadeBy().toString());
+                Log.i(TAG, currentUser.getParseUser().getUsername() + " made recipe: " + recipe.getTitle());
             }
         });
     }
 
 
     private void likeRecipe() {
-        if (recipe.isLikedbyCurrentUser(ParseUser.getCurrentUser())) {
+        if (currentUser.isLikedbyCurrentUser(recipe)) {
             binding.ibHeart.setBackgroundResource(R.drawable.heart);
         } else {
             binding.ibHeart.setBackgroundResource(R.drawable.heart_filled);
         }
-        recipe.likeRecipe(ParseUser.getCurrentUser());
+        currentUser.likeRecipe(recipe);
 
-        recipe.saveInBackground(new SaveCallback() {
+        currentUser.getParseUser().saveInBackground(new SaveCallback() {
             @Override
             public void done(ParseException e) {
                 if (e != null) {
                     Log.e(TAG, "Error in liking recipe" + e);
                     return;
                 }
-                Log.i(TAG, "Recipe is liked by: " + recipe.getLikedBy().toString());
+                Log.i(TAG, currentUser.getParseUser().getUsername() + " liked recipe: " + recipe.getTitle());
             }
         });
 //        binding.tvLikes.setText(post.getLikeCount());
     }
 
     private void addRecipeToDatabase(String action) {
+        Log.i(TAG, "Adding recipe to database: " + recipe.getTitle());
         recipe.put("uploaded", true);
         recipe.saveInBackground(new SaveCallback() {
             @Override
@@ -212,7 +219,7 @@ public class RecipeDetailsFragment extends Fragment {
                     return;
                 }
                 Log.i(TAG, "New Recipe saved in database!");
-                if (action == "like") {
+                if (action.equals("like")) {
                     likeRecipe();
                 } else {
                     madeRecipe();
