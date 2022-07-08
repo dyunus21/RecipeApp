@@ -1,17 +1,25 @@
 package com.example.recipeapp.adapters;
 
 import android.content.Context;
+import android.os.Bundle;
 import android.text.Html;
+import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
+import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.example.recipeapp.R;
 import com.example.recipeapp.databinding.ItemPostBinding;
 import com.example.recipeapp.models.Post;
 import com.example.recipeapp.models.User;
+import com.parse.ParseException;
+import com.parse.ParseUser;
+import com.parse.SaveCallback;
 
 import java.util.List;
 
@@ -72,6 +80,44 @@ public class SocialFeedAdapter extends RecyclerView.Adapter<SocialFeedAdapter.Vi
             binding.tvTimestamp.setText(Post.calculateTimeAgo(post.getCreatedAt()));
             String sourceString = "<b>" + post.getAuthor().getUsername() + "</b> " + post.getDescription();
             binding.tvDescription.setText(Html.fromHtml(sourceString));
+            // TODO: Go to User Profile page when clicked on user profile image
+
+            List<ParseUser> likedBy = post.getLikedBy();
+            binding.tvLikes.setText(likedBy.size() + " likes");
+            if (post.isLikedbyCurrentUser(ParseUser.getCurrentUser())) {
+                binding.ibHeart.setBackgroundResource(R.drawable.heart_filled);
+            } else {
+                binding.ibHeart.setBackgroundResource(R.drawable.heart);
+            }
+
+            binding.ibHeart.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Log.i(TAG, "Current User: " + ParseUser.getCurrentUser().getObjectId());
+                    likePost();
+                }
+            });
+        }
+
+        private void likePost() {
+            if (currentPost.isLikedbyCurrentUser(ParseUser.getCurrentUser())) {
+                binding.ibHeart.setBackgroundResource(R.drawable.heart);
+            } else {
+                binding.ibHeart.setBackgroundResource(R.drawable.heart_filled);
+            }
+            currentPost.likePost(ParseUser.getCurrentUser());
+
+            currentPost.saveInBackground(new SaveCallback() {
+                @Override
+                public void done(ParseException e) {
+                    if (e != null) {
+                        Log.e(TAG, "Error in liking post" + e);
+                        return;
+                    }
+                    Log.i(TAG, "Successfully saved post");
+                }
+            });
+            binding.tvLikes.setText(currentPost.getLikedBy().size() + " likes");
         }
     }
 
