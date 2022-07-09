@@ -81,8 +81,9 @@ public class Post extends ParseObject {
         put(KEY_IMAGE, image);
     }
 
-    public ParseUser getAuthor() {
-        return getParseUser(KEY_AUTHOR);
+
+    public User getAuthor() {
+        return new User(getParseUser(KEY_AUTHOR));
     }
 
     public void setAuthor(User author) {
