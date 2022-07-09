@@ -4,9 +4,12 @@ import android.content.Context;
 import android.os.Bundle;
 import android.text.Html;
 import android.util.Log;
+import android.view.GestureDetector;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.navigation.fragment.NavHostFragment;
@@ -62,14 +65,16 @@ public class SocialFeedAdapter extends RecyclerView.Adapter<SocialFeedAdapter.Vi
         notifyDataSetChanged();
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder {
+    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnTouchListener {
         private final ItemPostBinding binding;
         private Post currentPost;
 
         public ViewHolder(@NonNull ItemPostBinding itemView) {
             super(itemView.getRoot());
+            itemView.getRoot().setOnTouchListener(this);
             this.binding = itemView;
         }
+
 
         public void bind(Post post) {
             currentPost = post;
@@ -93,7 +98,6 @@ public class SocialFeedAdapter extends RecyclerView.Adapter<SocialFeedAdapter.Vi
             binding.ibHeart.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Log.i(TAG, "Current User: " + ParseUser.getCurrentUser().getObjectId());
                     likePost();
                 }
             });
@@ -119,6 +123,31 @@ public class SocialFeedAdapter extends RecyclerView.Adapter<SocialFeedAdapter.Vi
             });
             binding.tvLikes.setText(currentPost.getLikedBy().size() + " likes");
         }
+
+        // TODO: Blocker: Gesture Detector detects Long Press instead of Double Tap
+        @Override
+        public boolean onTouch(View v, MotionEvent event) {
+            Log.i(TAG, "onTouch post: " + currentPost.getTitle());
+
+            GestureDetector gestureDetector = new GestureDetector(v.getContext(), new GestureDetector.SimpleOnGestureListener() {
+
+                @Override
+                public boolean onDoubleTap(MotionEvent e) {
+                    Log.i(TAG, "double tapped post: " + currentPost.getTitle());
+                    Toast.makeText(context, "Double tapped post: " + currentPost.getTitle(), Toast.LENGTH_SHORT).show();
+                    // likePost();
+                    return false;
+                }
+
+                @Override
+                public boolean onDown(MotionEvent e) {
+                    return true;
+                }
+            });
+            gestureDetector.onTouchEvent(event);
+            return false;
+        }
+
     }
 
 }
