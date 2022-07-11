@@ -31,6 +31,9 @@
         <action
             android:id="@+id/action_recipeDetailsFragment_to_recipeSearchFragment"
             app:destination="@id/recipeSearchFragment" />
+        <action
+            android:id="@+id/action_recipeDetailsFragment_to_uploadRecipeFragment"
+            app:destination="@id/uploadRecipeFragment" />
     </fragment>
     <fragment
         android:id="@+id/socialFeedFragment"

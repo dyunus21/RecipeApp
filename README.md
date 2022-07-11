@@ -55,6 +55,7 @@ _Version2_
 **Optional Nice-to-have Stories**
 
 _Version3_
+* [x] User can edit previously uploaded recipes
 * [ ] User can scan food barcode to update inventory
 * [ ] User profile contains timeline of meals
 * [ ] User can setup notifications and privacy settings

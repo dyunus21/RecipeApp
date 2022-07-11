@@ -122,9 +122,9 @@ public class UploadRecipeFragment extends Fragment {
         binding.etRecipeName.setText(recipe.getTitle());
         Glide.with(getContext()).load(recipe.getImage().getUrl()).into(binding.ivImage);
         binding.etCuisine.setText(recipe.getCuisineType());
-        binding.etCooktime.setText(recipe.getCooktime());
-        binding.etInstructions.setText((CharSequence) recipe.getInstructions());
-        binding.etIngredientList.setText(recipe.getIngredientList().);
+        binding.etCooktime.setText(String.valueOf(recipe.getCooktime()));
+        binding.etInstructions.setText(recipe.getInstructions().toString());
+        binding.etIngredientList.setText(recipe.getIngredientList().toString());
     }
 
     private void validateRecipe() {
