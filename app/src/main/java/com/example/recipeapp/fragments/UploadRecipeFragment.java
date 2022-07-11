@@ -33,6 +33,7 @@ import com.example.recipeapp.databinding.FragmentUploadRecipeBinding;
 import com.example.recipeapp.models.BitmapScaler;
 import com.example.recipeapp.models.Recipe;
 import com.example.recipeapp.models.User;
+import com.parse.GetCallback;
 import com.parse.ParseException;
 import com.parse.ParseFile;
 import com.parse.ParseQuery;
@@ -45,6 +46,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 
 public class UploadRecipeFragment extends Fragment {
     public final static int CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE = 42;
@@ -54,6 +56,7 @@ public class UploadRecipeFragment extends Fragment {
     public String photoFileName = "photo.jpg";
     private File photoFile;
     private Recipe recipe;
+    private boolean edited = false;
     private FragmentUploadRecipeBinding binding;
 
     public UploadRecipeFragment() {
@@ -62,14 +65,18 @@ public class UploadRecipeFragment extends Fragment {
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
-
+        User.getUser(currentUser);
         final Bundle bundle = this.getArguments();
+        ((MainActivity) getActivity()).getSupportActionBar().setTitle("Upload New Recipe");
         if (bundle != null) {
+            edited = true;
             recipe = bundle.getParcelable("Recipe");
             Log.i(TAG, "Received bundle: " + recipe.getRecipeId());
-//            findRecipe("None");
-            User.getUser(recipe.getAuthor());
             ((MainActivity) getActivity()).getSupportActionBar().setTitle("Edit: " + recipe.getTitle());
+            getRecipe();
+            User.getUser(recipe.getAuthor());
+        } else {
+            recipe = new Recipe();
         }
         super.onCreate(savedInstanceState);
     }
@@ -78,7 +85,6 @@ public class UploadRecipeFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         binding = FragmentUploadRecipeBinding.inflate(getLayoutInflater());
-        ((MainActivity) getActivity()).getSupportActionBar().setTitle("Upload New Recipe");
         return binding.getRoot();
     }
 
@@ -125,6 +131,7 @@ public class UploadRecipeFragment extends Fragment {
         binding.etCooktime.setText(String.valueOf(recipe.getCooktime()));
         binding.etInstructions.setText(recipe.getInstructions().toString());
         binding.etIngredientList.setText(recipe.getIngredientList().toString());
+        return;
     }
 
     private void validateRecipe() {
@@ -140,7 +147,7 @@ public class UploadRecipeFragment extends Fragment {
             return;
         }
 
-        if (photoFile == null || binding.ivImage.getDrawable() == null) {
+        if (photoFile == null && binding.ivImage.getDrawable() == null) {
             Toast.makeText(getContext(), "Post does not contain any image!", Toast.LENGTH_SHORT).show();
             return;
         }
@@ -148,7 +155,6 @@ public class UploadRecipeFragment extends Fragment {
     }
 
     private void publishRecipe(final String title, final String cuisineType, final int cooktime, final String ingredients, final String instructions) {
-        Recipe recipe = new Recipe();
         recipe.setTitle(title);
         recipe.setCuisineType(cuisineType);
         recipe.setCooktime(cooktime);
@@ -159,7 +165,8 @@ public class UploadRecipeFragment extends Fragment {
         List<String> instructionList = Arrays.asList(instructions.split("\n"));
         Log.i(TAG, "Instruction List Uploaded: " + instructionList);
         recipe.setInstructions(instructionList);
-        recipe.setImage(new ParseFile(photoFile));
+        if (photoFile != null)
+            recipe.setImage(new ParseFile(photoFile));
         Log.i(TAG, "Finished inputting recipe details");
         recipe.saveInBackground(new SaveCallback() {
             @Override
@@ -171,7 +178,8 @@ public class UploadRecipeFragment extends Fragment {
                 }
                 Log.i(TAG, "Successfully saved recipe: " + recipe.getTitle());
                 clearPage();
-                addRecipeToUser(recipe);
+                if (!edited)
+                    addRecipeToUser(recipe);
             }
         });
 
@@ -185,10 +193,35 @@ public class UploadRecipeFragment extends Fragment {
         binding.etInstructions.setText("");
         binding.ivImage.setImageResource(0);
     }
+    public void getRecipe() {
+        ParseQuery<Recipe> query = ParseQuery.getQuery(Recipe.class);
+        query.include(Recipe.KEY_TITLE);
+        query.include(Recipe.KEY_COOKTIME);
+        query.include(Recipe.KEY_CUISINE_TYPE);
+        query.include(Recipe.KEY_AUTHOR);
+        query.include(Recipe.KEY_RECIPE_ID);
+        query.include(Recipe.KEY_INGREDIENT_LIST);
+        query.include(Recipe.KEY_INSTRUCTIONS);
+        query.include(Recipe.KEY_IMAGE);
+        query.include(Recipe.KEY_IMAGE_URL);
+        query.include(Recipe.KEY_REVIEWS);
+        query.getInBackground(recipe.getObjectId(), new GetCallback<Recipe>() {
+            @Override
+            public void done(Recipe object, ParseException e) {
+                setRecipe(object);
+            }
+        });
+    }
+
+    private void setRecipe(Recipe object) {
+        this.recipe = object;
+        return;
+    }
 
     private void addRecipeToUser(Recipe recipe) {
         List<Recipe> uploaded = currentUser.getRecipesUploaded();
-        uploaded.add(recipe);
+        if(!uploaded.contains(recipe))
+            uploaded.add(recipe);
         currentUser.setRecipesUploaded(uploaded);
         currentUser.getParseUser().saveInBackground(new SaveCallback() {
             @Override
