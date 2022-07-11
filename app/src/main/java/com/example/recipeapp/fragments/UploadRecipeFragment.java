@@ -33,6 +33,7 @@ import com.example.recipeapp.databinding.FragmentUploadRecipeBinding;
 import com.example.recipeapp.models.BitmapScaler;
 import com.example.recipeapp.models.Recipe;
 import com.example.recipeapp.models.User;
+import com.parse.DeleteCallback;
 import com.parse.GetCallback;
 import com.parse.ParseException;
 import com.parse.ParseFile;
@@ -92,7 +93,17 @@ public class UploadRecipeFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        if (recipe != null) {
+        if (edited) {
+            binding.btnDelete.setVisibility(View.VISIBLE);
+        }
+        binding.btnDelete.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                deleteRecipe();
+            }
+        });
+
+        if (recipe.getTitle() != null) {
             initializePage();
         }
         binding.ibBack.setOnClickListener(new View.OnClickListener() {
@@ -122,6 +133,24 @@ public class UploadRecipeFragment extends Fragment {
         });
 
 
+    }
+
+    private void deleteRecipe() {
+        recipe.deleteInBackground(new DeleteCallback() {
+            @Override
+            public void done(ParseException e) {
+                if (e != null) {
+                    Log.e(TAG, "Unable to delete recipe: " + recipe.getTitle(), e);
+                    return;
+                }
+                Log.i(TAG, "Successfully deleted recipe" + recipe.getTitle());
+                List<Recipe> uploaded = currentUser.getRecipesUploaded();
+                uploaded.remove(recipe);
+                currentUser.setRecipesUploaded(uploaded);
+                currentUser.saveInBackground();
+                NavHostFragment.findNavController(getParentFragment()).navigate(R.id.recipeSearchFragment);
+            }
+        });
     }
 
     private void initializePage() {
@@ -193,6 +222,7 @@ public class UploadRecipeFragment extends Fragment {
         binding.etInstructions.setText("");
         binding.ivImage.setImageResource(0);
     }
+
     public void getRecipe() {
         ParseQuery<Recipe> query = ParseQuery.getQuery(Recipe.class);
         query.include(Recipe.KEY_TITLE);
@@ -220,7 +250,7 @@ public class UploadRecipeFragment extends Fragment {
 
     private void addRecipeToUser(Recipe recipe) {
         List<Recipe> uploaded = currentUser.getRecipesUploaded();
-        if(!uploaded.contains(recipe))
+        if (!uploaded.contains(recipe))
             uploaded.add(recipe);
         currentUser.setRecipesUploaded(uploaded);
         currentUser.getParseUser().saveInBackground(new SaveCallback() {
