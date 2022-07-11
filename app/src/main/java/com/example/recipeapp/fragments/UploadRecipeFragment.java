@@ -26,6 +26,7 @@ import androidx.core.content.FileProvider;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.fragment.NavHostFragment;
 
+import com.bumptech.glide.Glide;
 import com.example.recipeapp.R;
 import com.example.recipeapp.activities.MainActivity;
 import com.example.recipeapp.databinding.FragmentUploadRecipeBinding;
@@ -52,10 +53,25 @@ public class UploadRecipeFragment extends Fragment {
     private static final User currentUser = new User(ParseUser.getCurrentUser());
     public String photoFileName = "photo.jpg";
     private File photoFile;
+    private Recipe recipe;
     private FragmentUploadRecipeBinding binding;
 
     public UploadRecipeFragment() {
 
+    }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+
+        final Bundle bundle = this.getArguments();
+        if (bundle != null) {
+            recipe = bundle.getParcelable("Recipe");
+            Log.i(TAG, "Received bundle: " + recipe.getRecipeId());
+//            findRecipe("None");
+            User.getUser(recipe.getAuthor());
+            ((MainActivity) getActivity()).getSupportActionBar().setTitle("Edit: " + recipe.getTitle());
+        }
+        super.onCreate(savedInstanceState);
     }
 
     @Override
@@ -69,6 +85,10 @@ public class UploadRecipeFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
+        if (recipe != null) {
+            initializePage();
+        }
         binding.ibBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -95,12 +115,22 @@ public class UploadRecipeFragment extends Fragment {
             }
         });
 
+
+    }
+
+    private void initializePage() {
+        binding.etRecipeName.setText(recipe.getTitle());
+        Glide.with(getContext()).load(recipe.getImage().getUrl()).into(binding.ivImage);
+        binding.etCuisine.setText(recipe.getCuisineType());
+        binding.etCooktime.setText(recipe.getCooktime());
+        binding.etInstructions.setText((CharSequence) recipe.getInstructions());
+        binding.etIngredientList.setText(recipe.getIngredientList().);
     }
 
     private void validateRecipe() {
         final String title = binding.etRecipeName.getText().toString();
         final String cuisineType = binding.etCuisine.getText().toString();
-        final int cooktime = Integer.parseInt(binding.etCooktime.getText().toString());  // TODO: Inform user if inputted string
+        final int cooktime = Integer.parseInt(binding.etCooktime.getText().toString());
         final String ingredients = binding.etIngredientList.getText().toString();
         final String instructions = binding.etInstructions.getText().toString();
 
@@ -140,16 +170,20 @@ public class UploadRecipeFragment extends Fragment {
                     return;
                 }
                 Log.i(TAG, "Successfully saved recipe: " + recipe.getTitle());
-                binding.etRecipeName.setText("");
-                binding.etCuisine.setText("");
-                binding.etCooktime.setText("");
-                binding.etIngredientList.setText("");
-                binding.etInstructions.setText("");
-                binding.ivImage.setImageResource(0);
+                clearPage();
                 addRecipeToUser(recipe);
             }
         });
 
+    }
+
+    private void clearPage() {
+        binding.etRecipeName.setText("");
+        binding.etCuisine.setText("");
+        binding.etCooktime.setText("");
+        binding.etIngredientList.setText("");
+        binding.etInstructions.setText("");
+        binding.ivImage.setImageResource(0);
     }
 
     private void addRecipeToUser(Recipe recipe) {

@@ -9,10 +9,10 @@ import java.util.Date;
 
 @ParseClassName("Comment")
 public class Comment extends ParseObject {
-    private static final String TAG = "Comment";
     public static final String KEY_AUTHOR = "author";
     public static final String KEY_DESCRIPTION = "description";
     public static final String KEY_POST = "post";
+    private static final String TAG = "Comment";
 
     public static String calculateTimeAgo(Date createdAt) {
 

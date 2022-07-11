@@ -1,7 +1,9 @@
 package com.example.recipeapp.adapters;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
+import android.media.metrics.Event;
 import android.os.Bundle;
 import android.text.Html;
 import android.util.Log;
@@ -72,18 +74,20 @@ public class SocialFeedAdapter extends RecyclerView.Adapter<SocialFeedAdapter.Vi
         notifyDataSetChanged();
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnTouchListener {
+    public class ViewHolder extends RecyclerView.ViewHolder {
         private final ItemPostBinding binding;
         private Post currentPost;
         private CommentsAdapter commentsAdapter;
 
+        @SuppressLint("ClickableViewAccessibility")
         public ViewHolder(@NonNull ItemPostBinding itemView) {
             super(itemView.getRoot());
-            itemView.getRoot().setOnTouchListener(this);
+//            itemView.getRoot().setOnTouchListener(this);
             this.binding = itemView;
         }
 
 
+        @SuppressLint("ClickableViewAccessibility")
         public void bind(Post post) {
             currentPost = post;
             User user = post.getAuthor();
@@ -91,6 +95,7 @@ public class SocialFeedAdapter extends RecyclerView.Adapter<SocialFeedAdapter.Vi
             Glide.with(context).load(post.getImage().getUrl()).into(binding.ivImage);
             Glide.with(context).load(user.getProfileImage().getUrl()).circleCrop().into(binding.ivProfileImage);
             binding.tvTimestamp.setText(Post.calculateTimeAgo(post.getCreatedAt()));
+            binding.tvTitle.setText(post.getTitle());
             String sourceString = "<b>" + user.getParseUser().getUsername() + "</b> " + post.getDescription();
             binding.tvDescription.setText(Html.fromHtml(sourceString));
             // TODO: Go to User Profile page when clicked on user profile image
@@ -122,6 +127,24 @@ public class SocialFeedAdapter extends RecyclerView.Adapter<SocialFeedAdapter.Vi
             });
             refreshComments();
             //TODO: Collapse comments when exceeding certain limit
+
+            GestureDetector gestureDetector = new GestureDetector(context.getApplicationContext(), new GestureDetector.SimpleOnGestureListener() {
+
+                @Override
+                public boolean onDoubleTap(MotionEvent e) {
+                    Log.i(TAG, "double tapped post: " + currentPost.getTitle());
+                    Toast.makeText(context, "Double tapped post: " + currentPost.getTitle(), Toast.LENGTH_SHORT).show();
+                    likePost();
+                    return false;
+                }
+
+                @Override
+                public boolean onDown(MotionEvent e) {
+                    return true;
+                }
+            });
+
+            binding.ivImage.setOnTouchListener((v, event) -> gestureDetector.onTouchEvent(event));
         }
 
         private void likePost() {
@@ -185,31 +208,6 @@ public class SocialFeedAdapter extends RecyclerView.Adapter<SocialFeedAdapter.Vi
                 }
             });
         }
-
-        // TODO: Blocker: Gesture Detector detects Long Press instead of Double Tap
-        @Override
-        public boolean onTouch(View v, MotionEvent event) {
-            Log.i(TAG, "onTouch post: " + currentPost.getTitle());
-
-            GestureDetector gestureDetector = new GestureDetector(v.getContext(), new GestureDetector.SimpleOnGestureListener() {
-
-                @Override
-                public boolean onDoubleTap(MotionEvent e) {
-                    Log.i(TAG, "double tapped post: " + currentPost.getTitle());
-                    Toast.makeText(context, "Double tapped post: " + currentPost.getTitle(), Toast.LENGTH_SHORT).show();
-                    // likePost();
-                    return false;
-                }
-
-                @Override
-                public boolean onDown(MotionEvent e) {
-                    return true;
-                }
-            });
-            gestureDetector.onTouchEvent(event);
-            return false;
-        }
-
     }
 
 }

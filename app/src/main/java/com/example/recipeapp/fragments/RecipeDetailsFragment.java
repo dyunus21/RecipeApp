@@ -59,7 +59,7 @@ public class RecipeDetailsFragment extends Fragment {
             Log.i(TAG, "Received bundle: " + recipe.getRecipeId());
             findRecipe("None");
             User.getUser(recipe.getAuthor());
-            ((MainActivity)getActivity()).getSupportActionBar().setTitle("Recipe Details: " + recipe.getTitle());
+            ((MainActivity) getActivity()).getSupportActionBar().setTitle("Recipe Details: " + recipe.getTitle());
         }
 
     }
@@ -137,6 +137,17 @@ public class RecipeDetailsFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 findRecipe("made");
+            }
+        });
+        if (recipe.getAuthor() == currentUser) {
+            binding.ibEdit.setVisibility(View.VISIBLE);
+        } else {
+            binding.ibEdit.setVisibility(View.GONE);
+        }
+        binding.ibEdit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
             }
         });
     }
