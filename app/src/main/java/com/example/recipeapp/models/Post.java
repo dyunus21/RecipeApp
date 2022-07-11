@@ -18,7 +18,7 @@ public class Post extends ParseObject {
     public static final String KEY_IMAGE = "image";
     public static final String KEY_DESCRIPTION = "description";
     public static final String KEY_TITLE = "title";
-    public static final String KEY_LIKED_BY = "likedby";
+    public static final String KEY_LIKED_BY = "likedBy";
     public static final String KEY_COMMENTS = "comments";
 
     public static String calculateTimeAgo(Date createdAt) {
@@ -81,8 +81,9 @@ public class Post extends ParseObject {
         put(KEY_IMAGE, image);
     }
 
-    public ParseUser getAuthor() {
-        return getParseUser(KEY_AUTHOR);
+
+    public User getAuthor() {
+        return new User(getParseUser(KEY_AUTHOR));
     }
 
     public void setAuthor(User author) {
@@ -98,6 +99,32 @@ public class Post extends ParseObject {
 
     public void setLikedBy(List<ParseUser> likedBy) {
         put(KEY_LIKED_BY, likedBy);
+    }
+
+    public boolean isLikedbyCurrentUser(ParseUser currentUser) {
+        for (ParseUser user : getLikedBy()) {
+            if (currentUser.hasSameId(user)) {
+                Log.i(TAG, "Post is already liked by " + currentUser.getUsername());
+                return true;
+            }
+        }
+        Log.i(TAG, "Post has not been liked by " + currentUser.getUsername());
+        return false;
+    }
+
+    public void likePost(ParseUser currentUser) {
+        List<ParseUser> likedBy = getLikedBy();
+        for (int i = 0; i < likedBy.size(); i++) {
+            if (likedBy.get(i).hasSameId(currentUser)) {
+                likedBy.remove(i);
+                Log.i(TAG, "Size: " + likedBy.size());
+                setLikedBy(likedBy);
+                return;
+            }
+        }
+        likedBy.add(currentUser);
+        setLikedBy(likedBy);
+        return;
     }
 
     public List<Comment> getComments() {

@@ -33,7 +33,7 @@
         android:layout_width="25dp"
         android:layout_height="25dp"
         android:layout_marginStart="10dp"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="15dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/ic_baseline_account_circle_24" />
@@ -64,7 +64,7 @@
         android:id="@+id/ivImage"
         android:layout_width="match_parent"
         android:layout_height="300dp"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="15dp"
         android:scaleType="centerCrop"
         app:layout_constraintEnd_toEndOf="@+id/tvTimestamp"
         app:layout_constraintStart_toStartOf="@+id/tvUsername"
@@ -75,21 +75,66 @@
         android:id="@+id/ibHeart"
         android:layout_width="20dp"
         android:layout_height="20dp"
-        android:layout_marginStart="75dp"
-        android:layout_marginTop="5dp"
+        android:layout_marginStart="20dp"
         android:background="@drawable/heart"
         app:layout_constraintStart_toStartOf="@+id/ivImage"
-        app:layout_constraintTop_toBottomOf="@+id/ivImage" />
+        app:layout_constraintTop_toBottomOf="@+id/tvLikes" />
 
     <ImageButton
         android:id="@+id/ibShare"
         android:layout_width="20dp"
         android:layout_height="20dp"
-        android:layout_marginTop="5dp"
-        android:layout_marginEnd="75dp"
+        android:layout_marginStart="20dp"
         android:background="@android:drawable/ic_menu_share"
         android:backgroundTint="@color/black"
-        app:layout_constraintEnd_toEndOf="@+id/ivImage"
+        app:layout_constraintStart_toEndOf="@+id/ibHeart"
+        app:layout_constraintTop_toBottomOf="@+id/tvLikes" />
+
+    <TextView
+        android:id="@+id/tvLikes"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="0 likes"
+        android:textColor="@android:color/black"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="@+id/ibHeart"
+        app:layout_constraintStart_toStartOf="@+id/ibHeart"
         app:layout_constraintTop_toBottomOf="@+id/ivImage" />
+
+    <EditText
+        android:id="@+id/etComment"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="50dp"
+        android:ems="10"
+        android:hint="Add a Comment..."
+        android:inputType="textPersonName"
+        app:layout_constraintEnd_toEndOf="@+id/rvComments"
+        app:layout_constraintStart_toEndOf="@+id/ivCurrentUserProfileImage"
+        app:layout_constraintTop_toBottomOf="@+id/rvComments" />
+
+    <Button
+        android:id="@+id/btnPostComment"
+        android:layout_width="0dp"
+        android:layout_height="37dp"
+        android:text="Post"
+        android:textSize="10sp"
+        app:layout_constraintBottom_toBottomOf="@+id/etComment"
+        app:layout_constraintEnd_toEndOf="@+id/rvComments"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toEndOf="@+id/etComment"
+        app:layout_constraintTop_toBottomOf="@+id/rvComments" />
+
+    <ImageView
+        android:id="@+id/ivCurrentUserProfileImage"
+        android:layout_width="25dp"
+        android:layout_height="25dp"
+        android:layout_marginStart="10dp"
+        app:layout_constraintBottom_toBottomOf="@+id/etComment"
+        app:layout_constraintStart_toStartOf="@+id/rvComments"
+        app:layout_constraintTop_toBottomOf="@+id/rvComments"
+        app:srcCompat="@drawable/ic_baseline_account_circle_24" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
