@@ -64,11 +64,11 @@
         android:id="@+id/ivImage"
         android:layout_width="match_parent"
         android:layout_height="300dp"
-        android:layout_marginTop="15dp"
+        android:layout_marginTop="10dp"
         android:scaleType="centerCrop"
         app:layout_constraintEnd_toEndOf="@+id/tvTimestamp"
         app:layout_constraintStart_toStartOf="@+id/tvUsername"
-        app:layout_constraintTop_toBottomOf="@+id/tvUsername"
+        app:layout_constraintTop_toBottomOf="@+id/tvTitle"
         app:srcCompat="@drawable/placeholder_image" />
 
     <ImageButton
@@ -136,5 +136,16 @@
         app:layout_constraintStart_toStartOf="@+id/rvComments"
         app:layout_constraintTop_toBottomOf="@+id/rvComments"
         app:srcCompat="@drawable/ic_baseline_account_circle_24" />
+
+    <TextView
+        android:id="@+id/tvTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:text="Title"
+        android:textColor="@color/black"
+        android:textSize="20sp"
+        app:layout_constraintStart_toStartOf="@+id/ivProfileImage"
+        app:layout_constraintTop_toBottomOf="@+id/tvUsername" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

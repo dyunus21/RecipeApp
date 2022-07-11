@@ -13,12 +13,15 @@ import com.bumptech.glide.Glide;
 import com.example.recipeapp.R;
 import com.example.recipeapp.databinding.ItemRecipeCardBinding;
 import com.example.recipeapp.models.Recipe;
+import com.example.recipeapp.models.User;
+import com.parse.ParseUser;
 
 import java.util.List;
 
 public class RecipeSearchAdapter extends RecyclerView.Adapter<RecipeSearchAdapter.ViewHolder> {
     private static final String TAG = "RecipeSearchAdapter";
     private final Context context;
+    private final User CURRENT_USER = new  User(ParseUser.getCurrentUser());
     public List<Recipe> recipesList;
     private ItemRecipeCardBinding item_binding;
 
