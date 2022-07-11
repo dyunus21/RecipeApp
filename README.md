@@ -1,4 +1,4 @@
-# TBD - Recipe App
+# RecipeQuest
 
 ## Table of Contents
 1. [Overview](#overview)
@@ -8,7 +8,7 @@
 
 ## Overview
 ### Description
-People are commonly faced with a difficult decision to decide what to cook. Particularly, new cooks don't have the experience or knowledge to cook a variety of dishes, and hence rely on repetitive or take-home food. *Food app* provides users with recipe recommendation based on user preferences on cuisine types, meal time, diet plans, and available ingredients. It also performs as a social media platform, where users can upload and share traditional/unique recipes and update the recipe database. 
+People are commonly faced with a difficult decision to decide what to cook. Particularly, new cooks don't have the experience or knowledge to cook a variety of dishes, and hence rely on repetitive or take-home food. RecipeQuest provides users with recipe recommendation based on user preferences on cuisine types, meal time, diet plans, and available ingredients. It also performs as a social media platform, where users can upload and share traditional/unique recipes and update the recipe database. 
 
 ### App Evaluation
 
