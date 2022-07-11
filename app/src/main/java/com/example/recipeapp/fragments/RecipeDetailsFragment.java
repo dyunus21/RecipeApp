@@ -1,26 +1,28 @@
 package com.example.recipeapp.fragments;
 
-import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
 import androidx.navigation.fragment.NavHostFragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.bumptech.glide.Glide;
 import com.codepath.asynchttpclient.callback.JsonHttpResponseHandler;
 import com.example.recipeapp.R;
 import com.example.recipeapp.RecipeClient;
 import com.example.recipeapp.activities.MainActivity;
+import com.example.recipeapp.adapters.ReviewsAdapter;
 import com.example.recipeapp.databinding.FragmentRecipeDetailsBinding;
+import com.example.recipeapp.models.Comment;
 import com.example.recipeapp.models.Recipe;
+import com.example.recipeapp.models.Review;
 import com.example.recipeapp.models.User;
 import com.parse.FindCallback;
 import com.parse.ParseException;
@@ -34,7 +36,6 @@ import org.json.JSONException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 import okhttp3.Headers;
 
@@ -45,6 +46,8 @@ public class RecipeDetailsFragment extends Fragment {
     private FragmentRecipeDetailsBinding binding;
     private Recipe recipe;
     private RecipeClient client;
+    private ReviewsAdapter reviewsAdapter;
+    private List<Review> reviews;
 
     public RecipeDetailsFragment() {
 
@@ -54,6 +57,8 @@ public class RecipeDetailsFragment extends Fragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         client = new RecipeClient(getContext());
+        reviews = new ArrayList<>();
+        reviewsAdapter = new ReviewsAdapter(getContext(), reviews);
         final Bundle bundle = this.getArguments();
         if (bundle != null) {
             recipe = bundle.getParcelable("Recipe");
@@ -151,6 +156,62 @@ public class RecipeDetailsFragment extends Fragment {
                 final Bundle bundle = new Bundle();
                 bundle.putParcelable(Recipe.class.getSimpleName(), recipe);
                 v.setOnClickListener(Navigation.createNavigateOnClickListener(R.id.action_recipeDetailsFragment_to_uploadRecipeFragment, bundle));
+            }
+        });
+        Glide.with(getContext()).load(currentUser.getProfileImage().getUrl()).circleCrop().into(binding.ivProfileImage);
+        binding.rvReviews.setLayoutManager(new LinearLayoutManager(getContext()));
+        binding.rvReviews.setAdapter(reviewsAdapter);
+        queryReviews();
+        binding.btnPost.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                postReview();
+            }
+        });
+
+    }
+
+    private void postReview() {
+        String description = binding.etReview.getText().toString();
+        Review review = new Review();
+        review.setAuthor(currentUser);
+        review.setDescription(description);
+        review.setRecipe(recipe);
+        review.setRating(binding.rbRating.getRating());
+        review.saveInBackground(new SaveCallback() {
+            @Override
+            public void done(ParseException e) {
+                if (e != null) {
+                    Log.e(TAG, "Error with saving review! " + e.getMessage());
+                    return;
+                }
+                Log.i(TAG, "Successfully added review");
+                binding.etReview.setText("");
+                binding.rbRating.setRating(0);
+                binding.ivProfileImage.setImageResource(0);
+                queryReviews();
+            }
+        });
+    }
+
+    private void queryReviews() {
+        ParseQuery<Review> query = ParseQuery.getQuery("Review");
+        query.whereEqualTo(Review.KEY_RECIPE, recipe);
+        query.orderByDescending(Comment.KEY_CREATED_AT);
+        query.include(Review.KEY_AUTHOR);
+        query.include(Review.KEY_DESCRIPTION);
+        query.include(Review.KEY_RATING);
+        query.include(Review.KEY_RECIPE);
+        query.findInBackground(new FindCallback<Review>() {
+            @Override
+            public void done(List<Review> objects, ParseException e) {
+                if (e != null) {
+                    Log.e(TAG, "Error in fetching reviews");
+                    return;
+                }
+                reviewsAdapter.clear();
+                reviews = objects;
+                reviewsAdapter.addAll(reviews);
             }
         });
     }
