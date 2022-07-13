@@ -3,6 +3,7 @@ package com.example.recipeapp.fragments;
 import static android.app.Activity.RESULT_OK;
 
 import android.annotation.SuppressLint;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
@@ -47,7 +48,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Objects;
 
 public class UploadRecipeFragment extends Fragment {
     public final static int CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE = 42;
@@ -59,6 +59,7 @@ public class UploadRecipeFragment extends Fragment {
     private Recipe recipe;
     private boolean edited = false;
     private FragmentUploadRecipeBinding binding;
+    private ProgressDialog progressDialogue;
 
     public UploadRecipeFragment() {
 
@@ -68,6 +69,7 @@ public class UploadRecipeFragment extends Fragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         User.getUser(currentUser);
         final Bundle bundle = this.getArguments();
+        progressDialogue = new ProgressDialog(getContext());
         ((MainActivity) getActivity()).getSupportActionBar().setTitle("Upload New Recipe");
         if (bundle != null) {
             edited = true;
@@ -128,6 +130,8 @@ public class UploadRecipeFragment extends Fragment {
         binding.btnPublish.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                progressDialogue.setMessage("Uploading recipe...");
+                progressDialogue.show();
                 validateRecipe();
             }
         });
@@ -158,8 +162,16 @@ public class UploadRecipeFragment extends Fragment {
         Glide.with(getContext()).load(recipe.getImage().getUrl()).into(binding.ivImage);
         binding.etCuisine.setText(recipe.getCuisineType());
         binding.etCooktime.setText(String.valueOf(recipe.getCooktime()));
-        binding.etInstructions.setText(recipe.getInstructions().toString());
-        binding.etIngredientList.setText(recipe.getIngredientList().toString());
+        String instructions = "";
+        for (int i = 0; i < recipe.getInstructions().size(); i++) {
+            instructions += recipe.getInstructions().get(i) + "\n";
+        }
+        binding.etInstructions.setText(instructions);
+        String ingredients = "";
+        for (int i = 0; i < recipe.getIngredientList().size(); i++) {
+            ingredients += recipe.getIngredientList().get(i) + "\n";
+        }
+        binding.etIngredientList.setText(ingredients);
         return;
     }
 
@@ -209,6 +221,7 @@ public class UploadRecipeFragment extends Fragment {
                 clearPage();
                 if (!edited)
                     addRecipeToUser(recipe);
+                progressDialogue.dismiss();
             }
         });
 

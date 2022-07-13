@@ -68,7 +68,7 @@ public class AddIngredientFragment extends Fragment {
         String count = binding.etCount.getText().toString();
         String unit = binding.etUnit.getText().toString();
         if (name.isEmpty() || count.isEmpty() || unit.isEmpty()) {
-            Toast.makeText(getContext(), "Field cannot be empty!", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getContext(), "Fields cannot be empty!", Toast.LENGTH_SHORT).show();
             return;
         }
         addIngredient(name, count, unit);
