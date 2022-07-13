@@ -11,6 +11,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.example.recipeapp.databinding.ItemCommentBinding;
 import com.example.recipeapp.models.Comment;
+import com.example.recipeapp.utilities.CurrentTimeProvider;
+import com.example.recipeapp.utilities.TimeUtils;
 import com.parse.ParseUser;
 
 import java.util.ArrayList;
@@ -21,6 +23,7 @@ public class CommentsAdapter extends RecyclerView.Adapter<CommentsAdapter.ViewHo
     public List<Comment> comments;
     private final Context context;
     private ItemCommentBinding item_binding;
+    private final TimeUtils timeUtils = new TimeUtils(new CurrentTimeProvider());
 
     public CommentsAdapter(Context context) {
         this.comments = new ArrayList<>();
@@ -73,7 +76,7 @@ public class CommentsAdapter extends RecyclerView.Adapter<CommentsAdapter.ViewHo
             String sourceString = "<b>" + comment.getAuthor().getParseUser().getUsername() + "</b> " + comment.getDescription();
             binding.tvBody.setText(Html.fromHtml(sourceString));
             Glide.with(context).load(comment.getAuthor().getProfileImage().getUrl()).circleCrop().into(binding.ivProfileImage);
-            binding.tvTimestamp.setText(Comment.calculateTimeAgo(comment.getCreatedAt()));
+            binding.tvTimestamp.setText(timeUtils.calculateTimeAgo(comment.getCreatedAt()));
         }
 
     }
