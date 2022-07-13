@@ -20,7 +20,7 @@
         <entry key="app/src/main/res/layout/fragment_item_list_dialog_list_dialog_item.xml" value="0.14235055724417425" />
         <entry key="app/src/main/res/layout/fragment_login.xml" value="0.19022327367810235" />
         <entry key="app/src/main/res/layout/fragment_profile.xml" value="0.22063140869140627" />
-        <entry key="app/src/main/res/layout/fragment_recipe_details.xml" value="0.4928451538085939" />
+        <entry key="app/src/main/res/layout/fragment_recipe_details.xml" value="0.28807220458984384" />
         <entry key="app/src/main/res/layout/fragment_recipe_search.xml" value="0.1" />
         <entry key="app/src/main/res/layout/fragment_register.xml" value="0.41893115942028986" />
         <entry key="app/src/main/res/layout/fragment_social_feed.xml" value="0.2346684773763021" />
@@ -29,7 +29,7 @@
         <entry key="app/src/main/res/layout/fragment_upload_recipe.xml" value="0.2755855598484418" />
         <entry key="app/src/main/res/layout/item_comment.xml" value="0.3688400268554688" />
         <entry key="app/src/main/res/layout/item_ingredient.xml" value="0.35108136163241604" />
-        <entry key="app/src/main/res/layout/item_post.xml" value="0.1" />
+        <entry key="app/src/main/res/layout/item_post.xml" value="0.32377319335937493" />
         <entry key="app/src/main/res/layout/item_profile_recipe.xml" value="0.30928802490234375" />
         <entry key="app/src/main/res/layout/item_recipe_card.xml" value="0.40625" />
         <entry key="app/src/main/res/layout/item_review.xml" value="0.44718969473567033" />

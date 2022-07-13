@@ -68,7 +68,7 @@ public class ReviewsAdapter extends RecyclerView.Adapter<ReviewsAdapter.ViewHold
         }
 
         public void bind(Review review) {
-            binding.tvUsername.setText(review.getAuthor().getParseUser().getUsername());
+            binding.tvUsername.setText("@" + review.getAuthor().getParseUser().getUsername());
             binding.tvTimestamp.setText(Review.calculateTimeAgo(review.getCreatedAt()));
             binding.tvDescription.setText(review.getDescription());
             binding.rbRating.setRating(review.getRating());
