@@ -65,4 +65,12 @@ public class RecipeClient {
         client.get(BASE_URL + "/recipes/" + recipeId + "/information", headers, params, handler);
     }
 
+    public void getRandomRecipes(JsonHttpResponseHandler handler) throws IOException {
+        AsyncHttpClient client = new AsyncHttpClient();
+
+        RequestParams params = new RequestParams();
+        params.put("number", 10);
+        client.get(BASE_URL + "/recipes/random", headers, params, handler);
+    }
+
 }
