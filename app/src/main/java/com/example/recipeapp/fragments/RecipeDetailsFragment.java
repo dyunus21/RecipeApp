@@ -105,7 +105,7 @@ public class RecipeDetailsFragment extends Fragment {
         List<String> instructions = recipe.getInstructions();
         Log.i(TAG, "instructions: " + instructions.toString());
         for (int i = 0; i < instructions.size(); i++) {
-            binding.tvInstructionsList.append((i + 1) + ". " + instructions.get(i) + "\n");
+            binding.tvInstructionsList.append((i + 1) + ". " + instructions.get(i) + "\n \n");
         }
 
         if (recipe.getRecipeId() != 0) {
