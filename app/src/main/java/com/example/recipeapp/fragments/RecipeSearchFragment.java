@@ -10,7 +10,6 @@ import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.EditText;
 import android.widget.SearchView;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -22,16 +21,13 @@ import com.codepath.asynchttpclient.callback.JsonHttpResponseHandler;
 import com.example.recipeapp.R;
 import com.example.recipeapp.RecipeClient;
 import com.example.recipeapp.adapters.RecipeSearchAdapter;
-import com.example.recipeapp.databinding.FilterDialogBinding;
 import com.example.recipeapp.databinding.FragmentRecipeSearchBinding;
 import com.example.recipeapp.models.Recipe;
 import com.example.recipeapp.models.User;
-
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.parse.FindCallback;
 import com.parse.ParseException;
 import com.parse.ParseQuery;
-
 import com.parse.ParseUser;
 
 import org.json.JSONArray;
@@ -195,6 +191,12 @@ public class RecipeSearchFragment extends Fragment {
         });
     }
 
+    private void showNoResultsDialog() {
+        MaterialAlertDialogBuilder materialAlertDialogBuilder = new MaterialAlertDialogBuilder(getContext());
+        materialAlertDialogBuilder.setMessage("No results found!");
+        materialAlertDialogBuilder.show();
+    }
+
     public void populateRecipes(String query) throws IOException {
 
         ParseQuery<Recipe> parseQuery = ParseQuery.getQuery(Recipe.class);
@@ -212,6 +214,9 @@ public class RecipeSearchFragment extends Fragment {
                 }
                 Log.i(TAG, "Recipes uploaded: " + objects.toString());
                 recipes = objects;
+                if (recipes.size() == 0) {
+                    showNoResultsDialog();
+                }
                 adapter.notifyDataSetChanged();
             }
         });
