@@ -25,6 +25,8 @@ import com.example.recipeapp.databinding.ItemPostBinding;
 import com.example.recipeapp.models.Comment;
 import com.example.recipeapp.models.Post;
 import com.example.recipeapp.models.User;
+import com.example.recipeapp.utilities.CurrentTimeProvider;
+import com.example.recipeapp.utilities.TimeUtils;
 import com.parse.FindCallback;
 import com.parse.ParseException;
 import com.parse.ParseQuery;
@@ -39,6 +41,7 @@ public class SocialFeedAdapter extends RecyclerView.Adapter<SocialFeedAdapter.Vi
     private final List<Post> postList;
     private final User CURRENT_USER = new User(ParseUser.getCurrentUser());
     private ItemPostBinding item_binding;
+    private final TimeUtils timeUtils = new TimeUtils(new CurrentTimeProvider());
 
     public SocialFeedAdapter(Context context, List<Post> postList) {
         this.context = context;
@@ -79,6 +82,8 @@ public class SocialFeedAdapter extends RecyclerView.Adapter<SocialFeedAdapter.Vi
         private Post currentPost;
         private CommentsAdapter commentsAdapter;
 
+
+
         @SuppressLint("ClickableViewAccessibility")
         public ViewHolder(@NonNull ItemPostBinding itemView) {
             super(itemView.getRoot());
@@ -94,7 +99,7 @@ public class SocialFeedAdapter extends RecyclerView.Adapter<SocialFeedAdapter.Vi
             binding.tvUsername.setText("@" + user.getParseUser().getUsername());
             Glide.with(context).load(post.getImage().getUrl()).into(binding.ivImage);
             Glide.with(context).load(user.getProfileImage().getUrl()).circleCrop().into(binding.ivProfileImage);
-            binding.tvTimestamp.setText(Post.calculateTimeAgo(post.getCreatedAt()));
+            binding.tvTimestamp.setText(timeUtils.calculateTimeAgo(post.getCreatedAt()));
             binding.tvTitle.setText(post.getTitle());
             String sourceString = "<b>" + user.getParseUser().getUsername() + "</b> " + post.getDescription();
             binding.tvDescription.setText(Html.fromHtml(sourceString));

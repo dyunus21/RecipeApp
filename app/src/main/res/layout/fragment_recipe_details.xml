@@ -64,7 +64,7 @@
             android:textColor="@color/black"
             android:textSize="20sp"
             android:textStyle="bold"
-            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/ibEdit"
             app:layout_constraintStart_toEndOf="@+id/ibBack"
             app:layout_constraintTop_toTopOf="parent" />
 
