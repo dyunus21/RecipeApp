@@ -43,7 +43,7 @@ public class SocialFeedFragment extends Fragment {
         super.onCreate(savedInstanceState);
         postList = new ArrayList<>();
         adapter = new SocialFeedAdapter(getContext(), postList);
-        ((MainActivity) getActivity()).getSupportActionBar().setTitle("Explore the Community!");
+        //:((MainActivity) getActivity()).getSupportActionBar().setTitle("Explore the Community!");
     }
 
     @Override

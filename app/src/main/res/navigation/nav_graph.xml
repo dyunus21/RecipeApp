@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
-    app:startDestination="@id/recipeSearchFragment">
+    app:startDestination="@id/socialFeedFragment">
 
     <fragment
         android:id="@+id/recipeSearchFragment"
@@ -18,7 +18,7 @@
         android:id="@+id/profileFragment"
         android:name="com.example.recipeapp.fragments.ProfileFragment"
         android:label="fragment_profile"
-        tools:layout="@layout/fragment_profile" >
+        tools:layout="@layout/fragment_profile">
         <action
             android:id="@+id/action_profileFragment_to_recipeDetailsFragment"
             app:destination="@id/recipeDetailsFragment" />
@@ -27,7 +27,7 @@
         android:id="@+id/recipeDetailsFragment"
         android:name="com.example.recipeapp.fragments.RecipeDetailsFragment"
         android:label="fragment_recipe_details"
-        tools:layout="@layout/fragment_recipe_details" >
+        tools:layout="@layout/fragment_recipe_details">
         <action
             android:id="@+id/action_recipeDetailsFragment_to_recipeSearchFragment"
             app:destination="@id/recipeSearchFragment" />
@@ -48,7 +48,7 @@
         android:id="@+id/uploadFragment"
         android:name="com.example.recipeapp.fragments.UploadFragment"
         android:label="fragment_upload"
-        tools:layout="@layout/fragment_upload" >
+        tools:layout="@layout/fragment_upload">
         <action
             android:id="@+id/action_uploadFragment_to_uploadRecipeFragment"
             app:destination="@id/uploadRecipeFragment" />
@@ -60,7 +60,7 @@
         android:id="@+id/inventoryFragment"
         android:name="com.example.recipeapp.fragments.InventoryFragment"
         android:label="fragment_inventory"
-        tools:layout="@layout/fragment_inventory" >
+        tools:layout="@layout/fragment_inventory">
         <action
             android:id="@+id/action_inventoryFragment_to_addIngredientFragment"
             app:destination="@id/addIngredientFragment" />
@@ -79,7 +79,7 @@
         android:id="@+id/addIngredientFragment"
         android:name="com.example.recipeapp.fragments.AddIngredientFragment"
         android:label="fragment_add_ingredient"
-        tools:layout="@layout/fragment_add_ingredient" >
+        tools:layout="@layout/fragment_add_ingredient">
         <action
             android:id="@+id/action_addIngredientFragment_to_inventoryFragment"
             app:destination="@id/inventoryFragment" />

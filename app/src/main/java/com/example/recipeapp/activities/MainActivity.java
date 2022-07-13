@@ -22,7 +22,6 @@ import com.parse.ParseUser;
 
 public class MainActivity extends AppCompatActivity {
 
-    public final static int PROFILE_PHOTO_CODE = 0;
     private static final String TAG = "MainActivity";
     public static NavController navController;
     public User CURRENT_USER = new User(ParseUser.getCurrentUser());
