@@ -20,6 +20,7 @@ public class Post extends ParseObject {
     public static final String KEY_TITLE = "title";
     public static final String KEY_LIKED_BY = "likedBy";
     public static final String KEY_COMMENTS = "comments";
+    public static final String KEY_TYPE = "type";
 
     public String getDescription() {
         return getString(KEY_DESCRIPTION);
@@ -100,6 +101,13 @@ public class Post extends ParseObject {
 
     public void setComments(List<Comment> comments) {
         put(KEY_COMMENTS, comments);
+    }
+
+    public String getType() {
+        return getString(KEY_TYPE);
+    }
+    public void setType(String type) {
+        put(KEY_TYPE,type);
     }
 
 

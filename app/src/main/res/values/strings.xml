@@ -42,4 +42,9 @@
         <item>snack</item>
         <item>drink</item>
     </string-array>
+    <string-array name="postOptions">
+        <item>Challenge</item>
+        <item>Question</item>
+        <item>Recipe</item>
+    </string-array>
 </resources>

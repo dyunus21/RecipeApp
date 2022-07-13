@@ -19,6 +19,9 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -26,6 +29,7 @@ import androidx.annotation.Nullable;
 import androidx.core.content.FileProvider;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.fragment.NavHostFragment;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.recipeapp.R;
 import com.example.recipeapp.activities.MainActivity;
@@ -43,7 +47,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
-public class UploadPostFragment extends Fragment {
+public class UploadPostFragment extends Fragment implements AdapterView.OnItemSelectedListener {
 
     private static final String TAG = "FragmentUploadPost";
     private final static int CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE = 42;
@@ -64,6 +68,15 @@ public class UploadPostFragment extends Fragment {
         ((MainActivity) getActivity()).getSupportActionBar().setTitle("Upload New Post");
         progressDialog = new ProgressDialog(getContext());
         return binding.getRoot();
+    }
+
+    public void onItemSelected(AdapterView<?> parent, View view, int pos, long id) {
+        parent.getItemAtPosition(pos);
+    }
+
+    @Override
+    public void onNothingSelected(AdapterView<?> parent) {
+
     }
 
     @Override
@@ -95,6 +108,12 @@ public class UploadPostFragment extends Fragment {
                 validateRecipe();
             }
         });
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(getContext(),
+                R.array.postOptions, android.R.layout.simple_spinner_item);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        binding.spinner.setAdapter(adapter);
+        binding.spinner.setOnItemSelectedListener(this);
+
     }
 
     private void validateRecipe() {
@@ -119,6 +138,7 @@ public class UploadPostFragment extends Fragment {
         post.setImage(new ParseFile(photoFile));
         post.setTitle(title);
         post.setDescription(description);
+        post.setType(binding.spinner.getSelectedItem().toString());
         post.saveInBackground(new SaveCallback() {
             @Override
             public void done(ParseException e) {
@@ -246,4 +266,5 @@ public class UploadPostFragment extends Fragment {
             Log.i(TAG, "File: " + photoFile.toString());
         }
     }
+
 }
