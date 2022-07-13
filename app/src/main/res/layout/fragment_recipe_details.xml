@@ -230,6 +230,10 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="28dp"
                 android:layout_marginTop="6dp"
+                android:clickable="true"
+                android:isIndicator="false"
+                android:numStars="5"
+                android:stepSize="0.5"
                 app:layout_constraintStart_toEndOf="@+id/tvRatingText"
                 app:layout_constraintTop_toBottomOf="@+id/etReview" />
 
@@ -247,8 +251,9 @@
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rvReviews"
                 android:layout_width="match_parent"
-                android:layout_height="68dp"
+                android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
+                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/btnPost" />
         </androidx.constraintlayout.widget.ConstraintLayout>
