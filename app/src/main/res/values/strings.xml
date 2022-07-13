@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">RecipeApp</string>
+    <string name="app_name">RecipeQuest</string>
     <string-array name="cuisine">
         <item>African</item>
         <item>American</item>

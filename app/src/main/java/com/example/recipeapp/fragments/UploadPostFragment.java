@@ -3,6 +3,7 @@ package com.example.recipeapp.fragments;
 import static android.app.Activity.RESULT_OK;
 
 import android.annotation.SuppressLint;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
@@ -50,6 +51,7 @@ public class UploadPostFragment extends Fragment {
     private final String photoFileName = "photo.jpg";
     private File photoFile;
     private FragmentUploadPostBinding binding;
+    private ProgressDialog progressDialog;
 
     public UploadPostFragment() {
 
@@ -60,6 +62,7 @@ public class UploadPostFragment extends Fragment {
                              Bundle savedInstanceState) {
         binding = FragmentUploadPostBinding.inflate(getLayoutInflater());
         ((MainActivity) getActivity()).getSupportActionBar().setTitle("Upload New Post");
+        progressDialog = new ProgressDialog(getContext());
         return binding.getRoot();
     }
 
@@ -87,6 +90,8 @@ public class UploadPostFragment extends Fragment {
         binding.btnPost.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                progressDialog.setMessage("Uploading post...");
+                progressDialog.show();
                 validateRecipe();
             }
         });
@@ -126,6 +131,7 @@ public class UploadPostFragment extends Fragment {
                 binding.etTitle.setText("");
                 binding.etDescription.setText("");
                 binding.ivImage.setImageResource(0);
+                progressDialog.dismiss();
             }
         });
     }

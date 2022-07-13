@@ -8,11 +8,10 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.navigation.fragment.NavHostFragment;
 
-import com.example.recipeapp.R;
 import com.example.recipeapp.activities.MainActivity;
 import com.example.recipeapp.databinding.FragmentUploadBinding;
+
 
 public class UploadFragment extends Fragment {
 
@@ -40,25 +39,8 @@ public class UploadFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        binding.btnPost.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                goToUploadPost();
-            }
-        });
-        binding.btnRecipe.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                goToUploadRecipe();
-            }
-        });
-    }
-
-    public void goToUploadRecipe() {
-        NavHostFragment.findNavController(this).navigate(R.id.uploadRecipeFragment);
-    }
-
-    public void goToUploadPost() {
-        NavHostFragment.findNavController(this).navigate(R.id.uploadPostFragment);
+        //TODO: Bottom sheet needs to come above bottom nav bar
+        ModalBottomSheet modalBottomSheet = new ModalBottomSheet();
+        modalBottomSheet.show(getActivity().getSupportFragmentManager(), ModalBottomSheet.TAG);
     }
 }
