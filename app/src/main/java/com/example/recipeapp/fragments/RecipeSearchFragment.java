@@ -214,9 +214,6 @@ public class RecipeSearchFragment extends Fragment {
                 }
                 Log.i(TAG, "Recipes uploaded: " + objects.toString());
                 recipes = objects;
-                if (recipes.size() == 0) {
-                    showNoResultsDialog();
-                }
                 adapter.notifyDataSetChanged();
             }
         });
@@ -234,6 +231,9 @@ public class RecipeSearchFragment extends Fragment {
                 }
                 try {
                     recipes.addAll(Recipe.getRecipes(jsonArray));
+                    if (recipes.size() == 0) {
+                        showNoResultsDialog();
+                    }
                     adapter.addAll(recipes);
                 } catch (JSONException e) {
                     Log.e(TAG, "Hit JSON exception", e);
