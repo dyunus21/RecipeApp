@@ -11,6 +11,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.Navigation;
 import androidx.navigation.fragment.NavHostFragment;
 
 import com.bumptech.glide.Glide;
@@ -139,7 +140,7 @@ public class RecipeDetailsFragment extends Fragment {
                 findRecipe("made");
             }
         });
-        if (recipe.getAuthor() == currentUser) {
+        if (recipe.getRecipeId() == 0 && ParseUser.getCurrentUser().hasSameId(recipe.getAuthor().getParseUser())) {
             binding.ibEdit.setVisibility(View.VISIBLE);
         } else {
             binding.ibEdit.setVisibility(View.GONE);
@@ -147,7 +148,9 @@ public class RecipeDetailsFragment extends Fragment {
         binding.ibEdit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                final Bundle bundle = new Bundle();
+                bundle.putParcelable(Recipe.class.getSimpleName(), recipe);
+                v.setOnClickListener(Navigation.createNavigateOnClickListener(R.id.action_recipeDetailsFragment_to_uploadRecipeFragment, bundle));
             }
         });
     }
@@ -157,6 +160,9 @@ public class RecipeDetailsFragment extends Fragment {
         query.include(Recipe.KEY_RECIPE_ID);
         query.include(Recipe.KEY_AUTHOR);
         query.whereEqualTo(Recipe.KEY_RECIPE_ID, recipe.getRecipeId());
+        if (recipe.getRecipeId() == 0) {
+            query.whereEqualTo(Recipe.KEY_OBJECT_ID, recipe.getObjectId());
+        }
         query.findInBackground(new FindCallback<Recipe>() {
             @Override
             public void done(List<Recipe> objects, ParseException e) {
@@ -261,6 +267,7 @@ public class RecipeDetailsFragment extends Fragment {
                     for (int i = 0; i < ingredients.size(); i++) {
                         binding.tvIngredientList.append("• " + ingredients.get(i) + "\n");
                     }
+                    Log.i(TAG, "Saved ingredients " + recipe.getIngredientList().toString());
                     recipe.setIngredientList(ingredients);
                 } catch (JSONException e) {
                     Log.e(TAG, "Hit JSON exception", e);
