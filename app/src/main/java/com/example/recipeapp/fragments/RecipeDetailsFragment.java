@@ -1,5 +1,6 @@
 package com.example.recipeapp.fragments;
 
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -24,6 +25,7 @@ import com.example.recipeapp.models.Comment;
 import com.example.recipeapp.models.Recipe;
 import com.example.recipeapp.models.Review;
 import com.example.recipeapp.models.User;
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.parse.FindCallback;
 import com.parse.ParseException;
 import com.parse.ParseQuery;
@@ -156,7 +158,7 @@ public class RecipeDetailsFragment extends Fragment {
             public void onClick(View v) {
                 final Bundle bundle = new Bundle();
                 bundle.putParcelable(Recipe.class.getSimpleName(), recipe);
-                v.setOnClickListener(Navigation.createNavigateOnClickListener(R.id.action_recipeDetailsFragment_to_uploadRecipeFragment, bundle));
+                v.setOnClickListener(Navigation.createNavigateOnClickListener(R.id.action_recipeDetailsFragment_to_uploadPostFragment, bundle));
             }
         });
         Glide.with(getContext()).load(currentUser.getProfileImage().getUrl()).circleCrop().into(binding.ivProfileImage);
@@ -167,6 +169,28 @@ public class RecipeDetailsFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 postReview();
+            }
+        });
+
+        binding.ibShare.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                MaterialAlertDialogBuilder alertDialogBuilder = new MaterialAlertDialogBuilder(getContext());
+                alertDialogBuilder.setMessage("Do you want to share this recipe?");
+                alertDialogBuilder.setPositiveButton("Share", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        final Bundle bundle = new Bundle();
+                        bundle.putParcelable(Recipe.class.getSimpleName(), recipe);
+                        UploadPostFragment uploadPostFragment = new UploadPostFragment();
+                        uploadPostFragment.setArguments(bundle);
+                        getFragmentManager()
+                                .beginTransaction()
+                                .replace(R.id.nav_host_fragment, uploadPostFragment)
+                                .commit();
+                    }
+                });
+                alertDialogBuilder.show();
             }
         });
 

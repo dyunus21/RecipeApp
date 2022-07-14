@@ -32,8 +32,8 @@
             android:id="@+id/action_recipeDetailsFragment_to_recipeSearchFragment"
             app:destination="@id/recipeSearchFragment" />
         <action
-            android:id="@+id/action_recipeDetailsFragment_to_uploadRecipeFragment"
-            app:destination="@id/uploadRecipeFragment" />
+            android:id="@+id/action_recipeDetailsFragment_to_uploadPostFragment"
+            app:destination="@id/uploadPostFragment" />
     </fragment>
     <fragment
         android:id="@+id/socialFeedFragment"
@@ -43,6 +43,9 @@
         <action
             android:id="@+id/action_socialFeedFragment_to_profileFragment"
             app:destination="@id/profileFragment" />
+        <action
+            android:id="@+id/action_socialFeedFragment_to_recipeDetailsFragment"
+            app:destination="@id/recipeDetailsFragment" />
     </fragment>
     <fragment
         android:id="@+id/uploadFragment"

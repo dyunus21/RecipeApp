@@ -36,6 +36,7 @@ import com.example.recipeapp.activities.MainActivity;
 import com.example.recipeapp.databinding.FragmentUploadPostBinding;
 import com.example.recipeapp.models.BitmapScaler;
 import com.example.recipeapp.models.Post;
+import com.example.recipeapp.models.Recipe;
 import com.example.recipeapp.models.User;
 import com.parse.ParseException;
 import com.parse.ParseFile;
@@ -56,6 +57,7 @@ public class UploadPostFragment extends Fragment implements AdapterView.OnItemSe
     private File photoFile;
     private FragmentUploadPostBinding binding;
     private ProgressDialog progressDialog;
+    private Recipe recipe;
 
     public UploadPostFragment() {
 
@@ -65,7 +67,15 @@ public class UploadPostFragment extends Fragment implements AdapterView.OnItemSe
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         binding = FragmentUploadPostBinding.inflate(getLayoutInflater());
+
+        final Bundle bundle = this.getArguments();
+        if (bundle != null) {
+            recipe = bundle.getParcelable("Recipe");
+            Log.i(TAG, "Received bundle: " + recipe.getRecipeId());
+        }
+
         ((MainActivity) getActivity()).getSupportActionBar().setTitle("Upload New Post");
+
         progressDialog = new ProgressDialog(getContext());
         return binding.getRoot();
     }
@@ -113,6 +123,11 @@ public class UploadPostFragment extends Fragment implements AdapterView.OnItemSe
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         binding.spinner.setAdapter(adapter);
         binding.spinner.setOnItemSelectedListener(this);
+
+        if(recipe!= null) {
+            Log.i(TAG, "Recieved recipe in Upload post!");
+            binding.etRecipeLink.setText(recipe.getObjectId() + " " + recipe.getTitle());
+        }
 
     }
 

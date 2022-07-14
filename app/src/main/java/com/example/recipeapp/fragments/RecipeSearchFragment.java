@@ -175,7 +175,8 @@ public class RecipeSearchFragment extends Fragment {
                 }
                 try {
                     adapter.clear();
-                    recipes = Recipe.getRecipes(jsonArray);
+                    recipes = Recipe.
+                            getRecipes(jsonArray);
                     adapter.addAll(recipes);
                     binding.rvRecipes.scrollToPosition(0);
                     binding.swipeContainer.setRefreshing(false);

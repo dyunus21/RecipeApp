@@ -15,15 +15,18 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.navigation.Navigation;
 import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.example.recipeapp.R;
+import com.example.recipeapp.activities.MainActivity;
 import com.example.recipeapp.databinding.ItemPostBinding;
 import com.example.recipeapp.models.Comment;
 import com.example.recipeapp.models.Post;
+import com.example.recipeapp.models.Recipe;
 import com.example.recipeapp.models.User;
 import com.example.recipeapp.utilities.CurrentTimeProvider;
 import com.example.recipeapp.utilities.TimeUtils;
@@ -42,11 +45,13 @@ public class SocialFeedAdapter extends RecyclerView.Adapter<SocialFeedAdapter.Vi
     private final User CURRENT_USER = new User(ParseUser.getCurrentUser());
     private ItemPostBinding item_binding;
     private final TimeUtils timeUtils = new TimeUtils(new CurrentTimeProvider());
+    private Recipe recipe;
 
     public SocialFeedAdapter(Context context, List<Post> postList) {
         this.context = context;
         this.postList = postList;
     }
+
 
     @NonNull
     @Override
@@ -57,9 +62,15 @@ public class SocialFeedAdapter extends RecyclerView.Adapter<SocialFeedAdapter.Vi
     }
 
     @Override
+    public void onBindViewHolder(@NonNull ViewHolder holder, int position, @NonNull List<Object> payloads) {
+        super.onBindViewHolder(holder, position, payloads);
+    }
+
+    @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         final Post post = postList.get(position);
         holder.bind(post);
+
     }
 
     @Override
@@ -150,6 +161,7 @@ public class SocialFeedAdapter extends RecyclerView.Adapter<SocialFeedAdapter.Vi
             });
 
             binding.ivImage.setOnTouchListener((v, event) -> gestureDetector.onTouchEvent(event));
+
         }
 
         private void likePost() {
