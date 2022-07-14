@@ -85,6 +85,8 @@ public class SocialFeedFragment extends Fragment {
         ParseQuery<Post> query = ParseQuery.getQuery(Post.class);
         query.include(Post.KEY_AUTHOR);
         query.include(Post.KEY_IMAGE);
+        query.include(Post.KEY_RECIPE_LINKED);
+        query.include(Post.KEY_TITLE);
         query.setLimit(20);
         if (time != null) {
             Log.i(TAG, "Endless Scroll! on");

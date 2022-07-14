@@ -2,8 +2,6 @@ package com.example.recipeapp.adapters;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.content.Intent;
-import android.media.metrics.Event;
 import android.os.Bundle;
 import android.text.Html;
 import android.util.Log;
@@ -15,15 +13,16 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.navigation.Navigation;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.example.recipeapp.R;
-import com.example.recipeapp.activities.MainActivity;
 import com.example.recipeapp.databinding.ItemPostBinding;
+import com.example.recipeapp.fragments.RecipeDetailsFragment;
+import com.example.recipeapp.fragments.SocialFeedFragment;
 import com.example.recipeapp.models.Comment;
 import com.example.recipeapp.models.Post;
 import com.example.recipeapp.models.Recipe;
@@ -43,9 +42,8 @@ public class SocialFeedAdapter extends RecyclerView.Adapter<SocialFeedAdapter.Vi
     private final Context context;
     private final List<Post> postList;
     private final User CURRENT_USER = new User(ParseUser.getCurrentUser());
-    private ItemPostBinding item_binding;
     private final TimeUtils timeUtils = new TimeUtils(new CurrentTimeProvider());
-    private Recipe recipe;
+    private ItemPostBinding item_binding;
 
     public SocialFeedAdapter(Context context, List<Post> postList) {
         this.context = context;
@@ -59,11 +57,6 @@ public class SocialFeedAdapter extends RecyclerView.Adapter<SocialFeedAdapter.Vi
         item_binding = ItemPostBinding.inflate(LayoutInflater.from(context), parent, false);
         User.getUser(CURRENT_USER);
         return new ViewHolder(item_binding);
-    }
-
-    @Override
-    public void onBindViewHolder(@NonNull ViewHolder holder, int position, @NonNull List<Object> payloads) {
-        super.onBindViewHolder(holder, position, payloads);
     }
 
     @Override
@@ -94,11 +87,9 @@ public class SocialFeedAdapter extends RecyclerView.Adapter<SocialFeedAdapter.Vi
         private CommentsAdapter commentsAdapter;
 
 
-
         @SuppressLint("ClickableViewAccessibility")
         public ViewHolder(@NonNull ItemPostBinding itemView) {
             super(itemView.getRoot());
-//            itemView.getRoot().setOnTouchListener(this);
             this.binding = itemView;
         }
 
@@ -161,6 +152,22 @@ public class SocialFeedAdapter extends RecyclerView.Adapter<SocialFeedAdapter.Vi
             });
 
             binding.ivImage.setOnTouchListener((v, event) -> gestureDetector.onTouchEvent(event));
+            if (post.getRecipeLinked() != null) {
+                binding.btnGoToRecipe.setVisibility(View.VISIBLE);
+            }
+            binding.btnGoToRecipe.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    final Bundle bundle = new Bundle();
+                    bundle.putParcelable(Recipe.class.getSimpleName(), post.getRecipeLinked());
+                    RecipeDetailsFragment recipeDetailsFragment = new RecipeDetailsFragment();
+                    recipeDetailsFragment.setArguments(bundle);
+                    ((AppCompatActivity) context).getSupportFragmentManager()
+                            .beginTransaction()
+                            .replace(R.id.nav_host_fragment, recipeDetailsFragment)
+                            .commit();
+                }
+            });
 
         }
 

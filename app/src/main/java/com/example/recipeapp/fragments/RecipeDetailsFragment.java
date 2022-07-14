@@ -64,7 +64,7 @@ public class RecipeDetailsFragment extends Fragment {
         final Bundle bundle = this.getArguments();
         if (bundle != null) {
             recipe = bundle.getParcelable("Recipe");
-            Log.i(TAG, "Received bundle: " + recipe.getRecipeId());
+            Log.i(TAG, "Received bundle: " + recipe.getObjectId());
             findRecipe("None");
             ((MainActivity) getActivity()).getSupportActionBar().setTitle("Recipe Details: " + recipe.getTitle());
         }

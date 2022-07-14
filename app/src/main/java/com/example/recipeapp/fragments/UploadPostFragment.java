@@ -154,6 +154,9 @@ public class UploadPostFragment extends Fragment implements AdapterView.OnItemSe
         post.setTitle(title);
         post.setDescription(description);
         post.setType(binding.spinner.getSelectedItem().toString());
+        if(recipe != null) {
+            post.setRecipeLinked(recipe);
+        }
         post.saveInBackground(new SaveCallback() {
             @Override
             public void done(ParseException e) {
@@ -167,6 +170,14 @@ public class UploadPostFragment extends Fragment implements AdapterView.OnItemSe
                 binding.etDescription.setText("");
                 binding.ivImage.setImageResource(0);
                 progressDialog.dismiss();
+                final Bundle bundle = new Bundle();
+                bundle.putParcelable(Recipe.class.getSimpleName(), recipe);
+                SocialFeedFragment socialFeedFragment = new SocialFeedFragment();
+                socialFeedFragment.setArguments(bundle);
+                getFragmentManager()
+                        .beginTransaction()
+                        .replace(R.id.nav_host_fragment, socialFeedFragment)
+                        .commit();
             }
         });
     }
