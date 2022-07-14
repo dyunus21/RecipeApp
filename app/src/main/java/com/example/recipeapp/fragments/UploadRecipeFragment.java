@@ -111,7 +111,12 @@ public class UploadRecipeFragment extends Fragment {
         binding.ibBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                goBackToUpload();
+                binding.ibBack.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        ((MainActivity)getActivity()).onBackPressed();
+                    }
+                });
             }
         });
 

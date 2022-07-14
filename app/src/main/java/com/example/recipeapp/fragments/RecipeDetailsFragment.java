@@ -119,7 +119,7 @@ public class RecipeDetailsFragment extends Fragment {
         binding.ibBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                goBackToSearch(v);
+                ((MainActivity)getActivity()).onBackPressed();
             }
         });
 

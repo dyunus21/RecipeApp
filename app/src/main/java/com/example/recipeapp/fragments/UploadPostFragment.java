@@ -95,7 +95,12 @@ public class UploadPostFragment extends Fragment implements AdapterView.OnItemSe
         binding.ibBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                goBackToUpload();
+                binding.ibBack.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        ((MainActivity)getActivity()).onBackPressed();
+                    }
+                });
             }
         });
         binding.btnTakePic.setOnClickListener(new View.OnClickListener() {
