@@ -10,27 +10,24 @@ import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.EditText;
 import android.widget.SearchView;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.codepath.asynchttpclient.callback.JsonHttpResponseHandler;
 import com.example.recipeapp.R;
 import com.example.recipeapp.RecipeClient;
 import com.example.recipeapp.adapters.RecipeSearchAdapter;
-import com.example.recipeapp.databinding.FilterDialogBinding;
 import com.example.recipeapp.databinding.FragmentRecipeSearchBinding;
 import com.example.recipeapp.models.Recipe;
 import com.example.recipeapp.models.User;
-
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.parse.FindCallback;
 import com.parse.ParseException;
 import com.parse.ParseQuery;
-
 import com.parse.ParseUser;
 
 import org.json.JSONArray;
@@ -82,6 +79,25 @@ public class RecipeSearchFragment extends Fragment {
         GridLayoutManager gridLayoutManager = new GridLayoutManager(getContext(), 2);
         binding.rvRecipes.setLayoutManager(gridLayoutManager);
         // TODO: Implement Endless Scrolling and Refresh
+        binding.swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                try {
+                    initializeScreen();
+                } catch (IOException e) {
+                    Log.e(TAG, "Unable to initialize screen");
+                }
+            }
+        });
+        try {
+            initializeScreen();
+        } catch (IOException e) {
+            Log.e(TAG, "Unable to initialize screen");
+        }
+        binding.swipeContainer.setColorSchemeResources(android.R.color.holo_blue_bright,
+                android.R.color.holo_green_light,
+                android.R.color.holo_orange_light,
+                android.R.color.holo_red_light);
 
         binding.ibFilter.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -136,19 +152,49 @@ public class RecipeSearchFragment extends Fragment {
                 return true;
             }
 
-            // Note to self: Getting recipes everytime query changes might result in extensive API calls
             @Override
             public boolean onQueryTextChange(String newText) {
-//                Log.i(TAG, newText);
-//                try {
-//                    getRecipes(newText);
-//                } catch (IOException e) {
-//                    e.printStackTrace();
-//                }
-                return true;
+                return false;
+            }
+
+        });
+    }
+
+    private void initializeScreen() throws IOException {
+
+        // TODO: if pull to refresh, change random recipes
+        client.getRandomRecipes(new JsonHttpResponseHandler() {
+            @Override
+            public void onSuccess(int statusCode, Headers headers, JSON json) {
+                Log.i(TAG, "Successfully initialized search screen " + json.toString());
+                JSONArray jsonArray = null;
+                try {
+                    jsonArray = json.jsonObject.getJSONArray("recipes");
+                } catch (JSONException e) {
+                    Log.e(TAG, "Hit JSON exception", e);
+                }
+                try {
+                    adapter.clear();
+                    recipes = Recipe.getRecipes(jsonArray);
+                    adapter.addAll(recipes);
+                    binding.rvRecipes.scrollToPosition(0);
+                    binding.swipeContainer.setRefreshing(false);
+                } catch (JSONException e) {
+                    Log.e(TAG, "Hit JSON exception", e);
+                }
+            }
+
+            @Override
+            public void onFailure(int statusCode, Headers headers, String response, Throwable throwable) {
 
             }
         });
+    }
+
+    private void showNoResultsDialog() {
+        MaterialAlertDialogBuilder materialAlertDialogBuilder = new MaterialAlertDialogBuilder(getContext());
+        materialAlertDialogBuilder.setMessage("No results found!");
+        materialAlertDialogBuilder.show();
     }
 
     public void populateRecipes(String query) throws IOException {
@@ -185,6 +231,9 @@ public class RecipeSearchFragment extends Fragment {
                 }
                 try {
                     recipes.addAll(Recipe.getRecipes(jsonArray));
+                    if (recipes.size() == 0) {
+                        showNoResultsDialog();
+                    }
                     adapter.addAll(recipes);
                 } catch (JSONException e) {
                     Log.e(TAG, "Hit JSON exception", e);

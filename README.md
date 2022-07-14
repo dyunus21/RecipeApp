@@ -43,7 +43,6 @@ _Version1_
 * [x] User can switch between Tabs (Recipe Search, Ingredients Inventory, Social Feed, Profile Page)
    
 _Version2_
-* [ ] User can follow other users
 * [x] User can view/update user profiles
     * [x] Personal Information
     * [x] Recipes liked
@@ -56,15 +55,15 @@ _Version2_
 
 _Version3_
 * [x] User can edit previously uploaded recipes
+* [x] Initial search screen displays random/recommended recipes
+* [ ] User can share recipes directly to social feed
+* [ ] User can view a demo of app before account creation
 * [ ] User can scan food barcode to update inventory
-* [ ] User profile contains timeline of meals
-* [ ] User can setup notifications and privacy settings
-* [ ] User can spin a daily wheel to get a random recipe
-* [ ] User can complete weekly challenges and view leaderboard
+* [ ] User can follow other users
 
 _Version4_
-* [ ] User can receive AI-based recipe recommendation based on previous recipes viewed and other filters
 * [ ] User can be directed to nearby shops that contain unavailable ingredients ([Yelp API](https://www.yelp.com/developers))
+* [ ] User can complete weekly challenges and view leaderboard
 * [ ] Users can view what nearby users/followers are currently eating (Snapchat-like feature) ([Google Maps SDK](https://developers.google.com/maps/documentation/android-sdk/overview))
 * [ ] Users can translate recipes to different languages ([Google Translate API](https://cloud.google.com/translate))
 
