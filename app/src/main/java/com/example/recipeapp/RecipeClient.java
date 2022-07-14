@@ -34,9 +34,9 @@ public class RecipeClient {
     }
 
     public void getRecipes(String query, Map<String, String> parameters, JsonHttpResponseHandler handler) throws IOException {
-        AsyncHttpClient client = new AsyncHttpClient();
+        final AsyncHttpClient client = new AsyncHttpClient();
 
-        RequestParams params = new RequestParams();
+        final RequestParams params = new RequestParams();
         params.put("query", query);
         params.put("addRecipeInformation", "true");
         params.put("instructionsRequired", "true");
@@ -57,12 +57,23 @@ public class RecipeClient {
 
     // Currently only used to extract ingredient list
     public void getRecipesDetailed(int recipeId, JsonHttpResponseHandler handler) throws IOException {
-        AsyncHttpClient client = new AsyncHttpClient();
+        final AsyncHttpClient client = new AsyncHttpClient();
 
-        RequestParams params = new RequestParams();
+        final RequestParams params = new RequestParams();
         params.put("id", recipeId);
         Log.i(TAG, "RecipeDetailedURL: " + BASE_URL + "/recipes/" + recipeId + "/information");
         client.get(BASE_URL + "/recipes/" + recipeId + "/information", headers, params, handler);
     }
 
+<<<<<<< Updated upstream
+=======
+    public void getRandomRecipes(JsonHttpResponseHandler handler) throws IOException {
+        final AsyncHttpClient client = new AsyncHttpClient();
+
+        final RequestParams params = new RequestParams();
+        params.put("number", 10);
+        client.get(BASE_URL + "/recipes/random", headers, params, handler);
+    }
+
+>>>>>>> Stashed changes
 }

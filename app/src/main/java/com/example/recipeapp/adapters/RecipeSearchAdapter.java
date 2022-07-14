@@ -21,7 +21,7 @@ import java.util.List;
 public class RecipeSearchAdapter extends RecyclerView.Adapter<RecipeSearchAdapter.ViewHolder> {
     private static final String TAG = "RecipeSearchAdapter";
     private final Context context;
-    private final User CURRENT_USER = new  User(ParseUser.getCurrentUser());
+    private final User CURRENT_USER = new User(ParseUser.getCurrentUser());
     public List<Recipe> recipesList;
     private ItemRecipeCardBinding item_binding;
 
@@ -30,6 +30,7 @@ public class RecipeSearchAdapter extends RecyclerView.Adapter<RecipeSearchAdapte
         this.recipesList = recipes;
     }
 
+    //TODO: Check animations
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
