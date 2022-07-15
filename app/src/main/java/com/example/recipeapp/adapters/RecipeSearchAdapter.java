@@ -1,22 +1,40 @@
 package com.example.recipeapp.adapters;
 
 import android.content.Context;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.LayoutInflater;
+import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.transition.ChangeBounds;
+import androidx.transition.ChangeImageTransform;
+import androidx.transition.ChangeTransform;
+import androidx.transition.Fade;
+import androidx.transition.TransitionSet;
 
 import com.bumptech.glide.Glide;
 import com.example.recipeapp.R;
+import com.example.recipeapp.activities.MainActivity;
 import com.example.recipeapp.databinding.ItemRecipeCardBinding;
+import com.example.recipeapp.fragments.RecipeDetailsFragment;
 import com.example.recipeapp.models.Recipe;
 import com.example.recipeapp.models.User;
 import com.parse.ParseUser;
 
 import java.util.List;
+
+class DetailsTransition extends TransitionSet {
+    public DetailsTransition() {
+        setOrdering(ORDERING_TOGETHER);
+        addTransition(new ChangeBounds()).
+                addTransition(new ChangeTransform()).
+                addTransition(new ChangeImageTransform());
+    }
+}
 
 public class RecipeSearchAdapter extends RecyclerView.Adapter<RecipeSearchAdapter.ViewHolder> {
     private static final String TAG = "RecipeSearchAdapter";
@@ -44,6 +62,26 @@ public class RecipeSearchAdapter extends RecyclerView.Adapter<RecipeSearchAdapte
         holder.bind(recipe);
         final Bundle bundle = new Bundle();
         bundle.putParcelable(Recipe.class.getSimpleName(), recipe);
+        RecipeDetailsFragment details = new RecipeDetailsFragment();
+
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                    details.setSharedElementEnterTransition(new DetailsTransition());
+                    details.setEnterTransition(new Fade());
+                    details.setExitTransition(new Fade());
+                    details.setSharedElementReturnTransition(new DetailsTransition());
+                }
+
+                ((MainActivity) context).getSupportFragmentManager()
+                        .beginTransaction()
+                        .addSharedElement(holder.binding.ivImage, "shared_image")
+                        .replace(R.id.nav_host_fragment, details)
+                        .addToBackStack(null)
+                        .commit();
+            }
+        });
         holder.itemView.setOnClickListener(Navigation.createNavigateOnClickListener(R.id.action_recipeSearchFragment_to_recipeDetailsFragment, bundle));
     }
 

@@ -13,6 +13,10 @@ import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
 import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.transition.ChangeBounds;
+import androidx.transition.ChangeImageTransform;
+import androidx.transition.ChangeTransform;
+import androidx.transition.TransitionSet;
 
 import com.bumptech.glide.Glide;
 import com.codepath.asynchttpclient.callback.JsonHttpResponseHandler;
@@ -96,7 +100,7 @@ public class RecipeDetailsFragment extends Fragment {
                 Log.e(TAG, "Error with getting ingredients", e);
             }
         } else {
-            binding.tvUploadedBy.setText("Uploaded by: @" + recipe.getAuthor().getParseUser().getUsername());
+//            binding.tvUploadedBy.setText("Uploaded by: @" + recipe.getAuthor().getParseUser().getUsername());
             List<String> ingredients = recipe.getIngredientList();
             Log.i(TAG, "Ingredients: " + ingredients.toString());
             for (int i = 0; i < ingredients.size(); i++) {
