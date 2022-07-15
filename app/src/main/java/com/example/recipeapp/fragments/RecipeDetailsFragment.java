@@ -87,7 +87,7 @@ public class RecipeDetailsFragment extends Fragment {
         String url = recipe.getImageUrl() == null ? recipe.getImage().getUrl() : recipe.getImageUrl();
         Glide.with(getContext()).load(url).into(binding.ivImage);
         if (recipe.getRecipeId() != 0) {
-            binding.tvUploadedBy.setText("");
+            binding.tvUploadedBy.setVisibility(View.GONE);
             try {
                 getIngredients();
                 Log.i(TAG, "list: " + recipe.getIngredientList().toString());
@@ -96,7 +96,7 @@ public class RecipeDetailsFragment extends Fragment {
                 Log.e(TAG, "Error with getting ingredients", e);
             }
         } else {
-//            binding.tvUploadedBy.setText("Uploaded by: @" + recipe.getAuthor().getParseUser().getUsername());
+            binding.tvUploadedBy.setText("Uploaded by: @" + recipe.getAuthor().getParseUser().getUsername());
             List<String> ingredients = recipe.getIngredientList();
             Log.i(TAG, "Ingredients: " + ingredients.toString());
             for (int i = 0; i < ingredients.size(); i++) {
