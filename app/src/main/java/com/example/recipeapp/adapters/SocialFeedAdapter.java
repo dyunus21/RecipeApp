@@ -14,7 +14,6 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -22,7 +21,6 @@ import com.bumptech.glide.Glide;
 import com.example.recipeapp.R;
 import com.example.recipeapp.databinding.ItemPostBinding;
 import com.example.recipeapp.fragments.RecipeDetailsFragment;
-import com.example.recipeapp.fragments.SocialFeedFragment;
 import com.example.recipeapp.models.Comment;
 import com.example.recipeapp.models.Post;
 import com.example.recipeapp.models.Recipe;

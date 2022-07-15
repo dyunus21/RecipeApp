@@ -93,7 +93,7 @@ public class InventoryAdapter extends RecyclerView.Adapter<InventoryAdapter.View
                     alertDialogBuilder.setPositiveButton("Delete", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
-                            Log.i(TAG, "Deleted ingredient: " +currentIngredient.getName());
+                            Log.i(TAG, "Deleted ingredient: " + currentIngredient.getName());
                             deleteIngredient();
                         }
                     });
@@ -113,7 +113,7 @@ public class InventoryAdapter extends RecyclerView.Adapter<InventoryAdapter.View
             currentIngredient.deleteInBackground(new DeleteCallback() {
                 @Override
                 public void done(ParseException e) {
-                    if(e!= null) {
+                    if (e != null) {
                         Log.e(TAG, "Unable to delete ingredient");
                         return;
                     }
