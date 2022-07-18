@@ -21,7 +21,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.Spinner;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -29,7 +28,6 @@ import androidx.annotation.Nullable;
 import androidx.core.content.FileProvider;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.fragment.NavHostFragment;
-import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.recipeapp.R;
 import com.example.recipeapp.activities.MainActivity;
@@ -98,7 +96,7 @@ public class UploadPostFragment extends Fragment implements AdapterView.OnItemSe
                 binding.ibBack.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        ((MainActivity)getActivity()).onBackPressed();
+                        getActivity().onBackPressed();
                     }
                 });
             }
@@ -129,7 +127,7 @@ public class UploadPostFragment extends Fragment implements AdapterView.OnItemSe
         binding.spinner.setAdapter(adapter);
         binding.spinner.setOnItemSelectedListener(this);
 
-        if(recipe!= null) {
+        if (recipe != null) {
             Log.i(TAG, "Recieved recipe in Upload post!");
             binding.etRecipeLink.setText(recipe.getObjectId() + " " + recipe.getTitle());
         }
@@ -159,7 +157,7 @@ public class UploadPostFragment extends Fragment implements AdapterView.OnItemSe
         post.setTitle(title);
         post.setDescription(description);
         post.setType(binding.spinner.getSelectedItem().toString());
-        if(recipe != null) {
+        if (recipe != null) {
             post.setRecipeLinked(recipe);
         }
         post.saveInBackground(new SaveCallback() {

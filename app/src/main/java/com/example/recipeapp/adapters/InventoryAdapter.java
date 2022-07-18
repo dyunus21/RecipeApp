@@ -1,6 +1,7 @@
 package com.example.recipeapp.adapters;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,6 +12,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.recipeapp.databinding.ItemIngredientBinding;
 import com.example.recipeapp.models.Ingredient;
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
+import com.parse.DeleteCallback;
 import com.parse.ParseException;
 import com.parse.SaveCallback;
 
@@ -80,6 +83,43 @@ public class InventoryAdapter extends RecyclerView.Adapter<InventoryAdapter.View
                 @Override
                 public void onClick(View v) {
                     remove(ingredient);
+                }
+            });
+            binding.ibDelete.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    MaterialAlertDialogBuilder alertDialogBuilder = new MaterialAlertDialogBuilder(context);
+                    alertDialogBuilder.setMessage("Do you want to delete this ingredient: " + currentIngredient.getName() + "?");
+                    alertDialogBuilder.setPositiveButton("Delete", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            Log.i(TAG, "Deleted ingredient: " + currentIngredient.getName());
+                            deleteIngredient();
+                        }
+                    });
+                    alertDialogBuilder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            Log.i(TAG, "Dismissed delete ingredient");
+                            dialog.dismiss();
+                        }
+                    });
+                    alertDialogBuilder.show();
+                }
+            });
+        }
+
+        private void deleteIngredient() {
+            currentIngredient.deleteInBackground(new DeleteCallback() {
+                @Override
+                public void done(ParseException e) {
+                    if (e != null) {
+                        Log.e(TAG, "Unable to delete ingredient");
+                        return;
+                    }
+                    Log.i(TAG, "Sucessfully deleted ingredient");
+                    ingredientList.remove(currentIngredient);
+                    notifyDataSetChanged();
                 }
             });
         }
