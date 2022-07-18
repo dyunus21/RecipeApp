@@ -10,7 +10,6 @@ import android.graphics.BitmapFactory;
 import android.graphics.ImageDecoder;
 import android.graphics.Point;
 import android.graphics.Rect;
-import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -30,6 +29,7 @@ import androidx.fragment.app.Fragment;
 
 import com.example.recipeapp.databinding.FragmentBarcodeScanBinding;
 import com.example.recipeapp.models.BitmapScaler;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
@@ -51,6 +51,7 @@ public class BarcodeScanFragment extends Fragment {
     private final static int CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE = 42;
     private final static int PICK_PHOTO_CODE = 1046;
     private final String photoFileName = "photo.jpg";
+    private Bitmap imageBitmap;
     private FragmentBarcodeScanBinding binding;
     private File photoFile;
 
@@ -74,12 +75,18 @@ public class BarcodeScanFragment extends Fragment {
                 launchCamera();
             }
         });
+        binding.btnGallery.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onPickPhoto(v);
+            }
+        });
         binding.btnScan.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (photoFile!=null) {
-                    Bitmap bitmap = ((BitmapDrawable)binding.ivImage.getDrawable()).getBitmap();
-                    InputImage image = InputImage.fromBitmap(bitmap,0);
+                if (imageBitmap != null) {
+                    Log.i(TAG, "Image bitmap: " + imageBitmap);
+                    InputImage image = InputImage.fromBitmap(imageBitmap, 90);
                     scanBarcodes(image);
                 }
             }
@@ -88,34 +95,24 @@ public class BarcodeScanFragment extends Fragment {
 
     private void scanBarcodes(InputImage image) {
         Log.i(TAG, "Scanning Barcode...");
-        // [START set_detector_options]
         BarcodeScannerOptions options =
                 new BarcodeScannerOptions.Builder()
                         .setBarcodeFormats(
                                 Barcode.FORMAT_QR_CODE,
-                                Barcode.FORMAT_AZTEC)
+                                Barcode.FORMAT_AZTEC,
+                                Barcode.FORMAT_ALL_FORMATS,
+                                Barcode.FORMAT_UPC_A)
                         .build();
-        // [END set_detector_options]
-
-        // [START get_detector]
         BarcodeScanner scanner = BarcodeScanning.getClient();
-        // Or, to specify the formats to recognize:
-        // BarcodeScanner scanner = BarcodeScanning.getClient(options);
-        // [END get_detector]
-
-        // [START run_detector]
         Task<List<Barcode>> result = scanner.process(image)
                 .addOnSuccessListener(new OnSuccessListener<List<Barcode>>() {
                     @Override
                     public void onSuccess(List<Barcode> barcodes) {
-                        // Task completed successfully
-                        // [START_EXCLUDE]
-                        // [START get_barcodes]
+                        Log.i(TAG, "Success barcode, ");
                         for (Barcode barcode : barcodes) {
+                            Log.i(TAG, barcode.toString());
                             Rect bounds = barcode.getBoundingBox();
                             Point[] corners = barcode.getCornerPoints();
-
-                            String rawValue = barcode.getRawValue();
 
                             int valueType = barcode.getValueType();
                             // See API reference for complete list of supported types
@@ -124,25 +121,33 @@ public class BarcodeScanFragment extends Fragment {
                                     String ssid = barcode.getWifi().getSsid();
                                     String password = barcode.getWifi().getPassword();
                                     int type = barcode.getWifi().getEncryptionType();
+                                    Log.i(TAG, "Barcode: " + ssid + " " + password);
                                     break;
                                 case Barcode.TYPE_URL:
                                     String title = barcode.getUrl().getTitle();
                                     String url = barcode.getUrl().getUrl();
+                                    Log.i(TAG, "Barcode: " + title + " " + url);
                                     break;
+                                case Barcode.TYPE_PRODUCT:
+                                    String rawValue = barcode.getRawValue();
+                                    Log.i(TAG, "Barcode: " + rawValue);
+                                    break;
+
                             }
                         }
-                        // [END get_barcodes]
-                        // [END_EXCLUDE]
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
-                        // Task failed with an exception
-                        // ...
+                        Log.e(TAG, "Failed to scan barcode", e);
+                    }
+                }).addOnCompleteListener(new OnCompleteListener<List<Barcode>>() {
+                    @Override
+                    public void onComplete(@NonNull Task<List<Barcode>> task) {
+                        Log.i(TAG, "Complete barcode");
                     }
                 });
-        // [END run_detector]
     }
 
     public File resizeFile(Bitmap image) {
@@ -161,7 +166,16 @@ public class BarcodeScanFragment extends Fragment {
         }
         Log.i(TAG, "File: " + resizedFile);
         binding.ivImage.setImageBitmap(resizedBitmap);
+        imageBitmap = resizedBitmap;
         return resizedFile;
+    }
+
+    public void onPickPhoto(View view) {
+        Log.i(TAG, "onPickPhoto!");
+        Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+        Log.i(TAG, "start intent for gallery!");
+        startActivityForResult(intent, PICK_PHOTO_CODE);
+
     }
 
     @SuppressLint("Range")

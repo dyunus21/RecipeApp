@@ -1,16 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".fragments.BarcodeScanFragment">
+
+    <Button
+        android:id="@+id/btnGallery"
+        android:layout_width="0dp"
+        android:layout_height="60dp"
+        android:layout_marginStart="30dp"
+        android:layout_marginEnd="32dp"
+        android:text="Upload from gallery"
+        android:textSize="12sp"
+        app:layout_constraintEnd_toEndOf="@+id/ivImage"
+        app:layout_constraintStart_toEndOf="@+id/btnTakePic"
+        app:layout_constraintTop_toBottomOf="@+id/ivImage" />
 
     <Button
         android:id="@+id/btnTakePic"
         android:layout_width="120dp"
         android:layout_height="60dp"
-        android:layout_marginStart="100dp"
+        android:layout_marginStart="28dp"
         android:text="Take a Picture"
         android:textSize="12sp"
         app:layout_constraintStart_toStartOf="@+id/ivImage"
@@ -29,9 +41,9 @@
         android:id="@+id/btnScan"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="44dp"
+        android:layout_marginTop="52dp"
         android:text="Scan"
-        app:layout_constraintEnd_toEndOf="@+id/btnTakePic"
+        app:layout_constraintEnd_toEndOf="@+id/btnGallery"
         app:layout_constraintStart_toStartOf="@+id/btnTakePic"
         app:layout_constraintTop_toBottomOf="@+id/btnTakePic" />
 
