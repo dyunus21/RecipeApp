@@ -14,9 +14,8 @@
         app:showAsAction="always" />
     <item
         android:id="@+id/uploadFragment"
-        android:icon="@drawable/ic_baseline_add_24"
-        android:title="Upload"
-        app:showAsAction="always" />
+        android:title=""
+        />
     <item
         android:id="@+id/inventoryFragment"
         android:icon="@drawable/ic_baseline_shopping_cart_24"

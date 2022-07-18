@@ -13,6 +13,10 @@ import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
 import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.transition.ChangeBounds;
+import androidx.transition.ChangeImageTransform;
+import androidx.transition.ChangeTransform;
+import androidx.transition.TransitionSet;
 
 import com.bumptech.glide.Glide;
 import com.codepath.asynchttpclient.callback.JsonHttpResponseHandler;
@@ -87,7 +91,7 @@ public class RecipeDetailsFragment extends Fragment {
         String url = recipe.getImageUrl() == null ? recipe.getImage().getUrl() : recipe.getImageUrl();
         Glide.with(getContext()).load(url).into(binding.ivImage);
         if (recipe.getRecipeId() != 0) {
-            binding.tvUploadedBy.setText("");
+            binding.tvUploadedBy.setVisibility(View.GONE);
             try {
                 getIngredients();
                 Log.i(TAG, "list: " + recipe.getIngredientList().toString());

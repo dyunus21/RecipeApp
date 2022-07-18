@@ -2,21 +2,24 @@ package com.example.recipeapp.activities;
 
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
+import androidx.core.content.ContextCompat;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.NavigationUI;
 
 import com.example.recipeapp.R;
+import com.example.recipeapp.databinding.ActivityMainBinding;
+import com.example.recipeapp.models.FabAnimation;
 import com.example.recipeapp.models.User;
-import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.parse.ParseUser;
 
@@ -25,18 +28,55 @@ public class MainActivity extends AppCompatActivity {
     private static final String TAG = "MainActivity";
     public static NavController navController;
     public User CURRENT_USER = new User(ParseUser.getCurrentUser());
+    public ActivityMainBinding binding;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        binding = ActivityMainBinding.inflate(getLayoutInflater());
+        setContentView(binding.getRoot());
 
-        Toolbar toolbar = findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
+        setSupportActionBar(binding.toolbar);
         User.getUser(CURRENT_USER);
         navController = Navigation.findNavController(this, R.id.nav_host_fragment);
-        final BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
-        NavigationUI.setupWithNavController(bottomNavigationView, navController);
+        binding.bottomNavigationView.setBackground(new ColorDrawable(ContextCompat.getColor(this, R.color.teal_700)));
+        binding.bottomNavigationView.getMenu().getItem(2).setEnabled(false);
+        NavigationUI.setupWithNavController(binding.bottomNavigationView, navController);
+
+        FabAnimation.init(binding.fabRecipe);
+        FabAnimation.init(binding.fabPost);
+        final boolean[] isRotate = {false};
+        binding.fabUpload.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                animateFab(v, isRotate);
+            }
+        });
+        binding.fabRecipe.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                navController.navigate(R.id.uploadRecipeFragment);
+                binding.fabUpload.callOnClick();
+            }
+        });
+        binding.fabPost.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                navController.navigate(R.id.uploadPostFragment);
+                binding.fabUpload.callOnClick();
+            }
+        });
+    }
+
+    private void animateFab(View v, boolean[] isRotate) {
+        isRotate[0] = FabAnimation.rotateFab(v, !isRotate[0]);
+        if (isRotate[0]) {
+            FabAnimation.showIn(binding.fabRecipe);
+            FabAnimation.showIn(binding.fabPost);
+        } else {
+            FabAnimation.showOut(binding.fabRecipe);
+            FabAnimation.showOut(binding.fabPost);
+        }
     }
 
     @Override
