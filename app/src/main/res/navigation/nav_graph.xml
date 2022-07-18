@@ -87,4 +87,9 @@
             android:id="@+id/action_addIngredientFragment_to_inventoryFragment"
             app:destination="@id/inventoryFragment" />
     </fragment>
+    <fragment
+        android:id="@+id/barcodeScanFragment"
+        android:name="com.example.recipeapp.fragments.BarcodeScanFragment"
+        android:label="fragment_barcode_scan"
+        tools:layout="@layout/fragment_barcode_scan" />
 </navigation>
