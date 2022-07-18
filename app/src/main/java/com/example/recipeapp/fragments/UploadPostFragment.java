@@ -36,6 +36,7 @@ import com.example.recipeapp.activities.MainActivity;
 import com.example.recipeapp.databinding.FragmentUploadPostBinding;
 import com.example.recipeapp.models.BitmapScaler;
 import com.example.recipeapp.models.Post;
+import com.example.recipeapp.models.Recipe;
 import com.example.recipeapp.models.User;
 import com.parse.ParseException;
 import com.parse.ParseFile;
@@ -56,6 +57,7 @@ public class UploadPostFragment extends Fragment implements AdapterView.OnItemSe
     private File photoFile;
     private FragmentUploadPostBinding binding;
     private ProgressDialog progressDialog;
+    private Recipe recipe;
 
     public UploadPostFragment() {
 
@@ -65,7 +67,15 @@ public class UploadPostFragment extends Fragment implements AdapterView.OnItemSe
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         binding = FragmentUploadPostBinding.inflate(getLayoutInflater());
+
+        final Bundle bundle = this.getArguments();
+        if (bundle != null) {
+            recipe = bundle.getParcelable("Recipe");
+            Log.i(TAG, "Received bundle: " + recipe.getRecipeId());
+        }
+
         ((MainActivity) getActivity()).getSupportActionBar().setTitle("Upload New Post");
+
         progressDialog = new ProgressDialog(getContext());
         return binding.getRoot();
     }
@@ -85,7 +95,12 @@ public class UploadPostFragment extends Fragment implements AdapterView.OnItemSe
         binding.ibBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                goBackToUpload();
+                binding.ibBack.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        ((MainActivity)getActivity()).onBackPressed();
+                    }
+                });
             }
         });
         binding.btnTakePic.setOnClickListener(new View.OnClickListener() {
@@ -114,6 +129,11 @@ public class UploadPostFragment extends Fragment implements AdapterView.OnItemSe
         binding.spinner.setAdapter(adapter);
         binding.spinner.setOnItemSelectedListener(this);
 
+        if(recipe!= null) {
+            Log.i(TAG, "Recieved recipe in Upload post!");
+            binding.etRecipeLink.setText(recipe.getObjectId() + " " + recipe.getTitle());
+        }
+
     }
 
     private void validateRecipe() {
@@ -139,6 +159,9 @@ public class UploadPostFragment extends Fragment implements AdapterView.OnItemSe
         post.setTitle(title);
         post.setDescription(description);
         post.setType(binding.spinner.getSelectedItem().toString());
+        if(recipe != null) {
+            post.setRecipeLinked(recipe);
+        }
         post.saveInBackground(new SaveCallback() {
             @Override
             public void done(ParseException e) {
@@ -152,6 +175,14 @@ public class UploadPostFragment extends Fragment implements AdapterView.OnItemSe
                 binding.etDescription.setText("");
                 binding.ivImage.setImageResource(0);
                 progressDialog.dismiss();
+                final Bundle bundle = new Bundle();
+                bundle.putParcelable(Recipe.class.getSimpleName(), recipe);
+                SocialFeedFragment socialFeedFragment = new SocialFeedFragment();
+                socialFeedFragment.setArguments(bundle);
+                getFragmentManager()
+                        .beginTransaction()
+                        .replace(R.id.nav_host_fragment, socialFeedFragment)
+                        .commit();
             }
         });
     }

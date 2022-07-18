@@ -21,6 +21,7 @@ public class Post extends ParseObject {
     public static final String KEY_LIKED_BY = "likedBy";
     public static final String KEY_COMMENTS = "comments";
     public static final String KEY_TYPE = "type";
+    public static final String KEY_RECIPE_LINKED = "recipeLinked";
 
     public String getDescription() {
         return getString(KEY_DESCRIPTION);
@@ -53,6 +54,14 @@ public class Post extends ParseObject {
 
     public void setAuthor(User author) {
         put(KEY_AUTHOR, author.getParseUser());
+    }
+
+    public Recipe getRecipeLinked() {
+        return (Recipe) getParseObject(KEY_RECIPE_LINKED);
+    }
+
+    public void setRecipeLinked (Recipe recipe) {
+        put(KEY_RECIPE_LINKED, recipe);
     }
 
     public List<ParseUser> getLikedBy() {

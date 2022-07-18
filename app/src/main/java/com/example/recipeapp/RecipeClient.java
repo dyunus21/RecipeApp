@@ -65,8 +65,6 @@ public class RecipeClient {
         client.get(BASE_URL + "/recipes/" + recipeId + "/information", headers, params, handler);
     }
 
-<<<<<<< Updated upstream
-=======
     public void getRandomRecipes(JsonHttpResponseHandler handler) throws IOException {
         final AsyncHttpClient client = new AsyncHttpClient();
 
@@ -75,5 +73,4 @@ public class RecipeClient {
         client.get(BASE_URL + "/recipes/random", headers, params, handler);
     }
 
->>>>>>> Stashed changes
 }

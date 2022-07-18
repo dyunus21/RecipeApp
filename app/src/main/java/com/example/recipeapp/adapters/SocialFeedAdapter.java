@@ -2,8 +2,6 @@ package com.example.recipeapp.adapters;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.content.Intent;
-import android.media.metrics.Event;
 import android.os.Bundle;
 import android.text.Html;
 import android.util.Log;
@@ -15,6 +13,7 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -22,8 +21,11 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.example.recipeapp.R;
 import com.example.recipeapp.databinding.ItemPostBinding;
+import com.example.recipeapp.fragments.RecipeDetailsFragment;
+import com.example.recipeapp.fragments.SocialFeedFragment;
 import com.example.recipeapp.models.Comment;
 import com.example.recipeapp.models.Post;
+import com.example.recipeapp.models.Recipe;
 import com.example.recipeapp.models.User;
 import com.example.recipeapp.utilities.CurrentTimeProvider;
 import com.example.recipeapp.utilities.TimeUtils;
@@ -40,13 +42,14 @@ public class SocialFeedAdapter extends RecyclerView.Adapter<SocialFeedAdapter.Vi
     private final Context context;
     private final List<Post> postList;
     private final User CURRENT_USER = new User(ParseUser.getCurrentUser());
-    private ItemPostBinding item_binding;
     private final TimeUtils timeUtils = new TimeUtils(new CurrentTimeProvider());
+    private ItemPostBinding item_binding;
 
     public SocialFeedAdapter(Context context, List<Post> postList) {
         this.context = context;
         this.postList = postList;
     }
+
 
     @NonNull
     @Override
@@ -60,6 +63,7 @@ public class SocialFeedAdapter extends RecyclerView.Adapter<SocialFeedAdapter.Vi
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         final Post post = postList.get(position);
         holder.bind(post);
+
     }
 
     @Override
@@ -83,11 +87,9 @@ public class SocialFeedAdapter extends RecyclerView.Adapter<SocialFeedAdapter.Vi
         private CommentsAdapter commentsAdapter;
 
 
-
         @SuppressLint("ClickableViewAccessibility")
         public ViewHolder(@NonNull ItemPostBinding itemView) {
             super(itemView.getRoot());
-//            itemView.getRoot().setOnTouchListener(this);
             this.binding = itemView;
         }
 
@@ -150,6 +152,26 @@ public class SocialFeedAdapter extends RecyclerView.Adapter<SocialFeedAdapter.Vi
             });
 
             binding.ivImage.setOnTouchListener((v, event) -> gestureDetector.onTouchEvent(event));
+            if (post.getRecipeLinked() != null) {
+                binding.btnGoToRecipe.setVisibility(View.VISIBLE);
+            }
+            binding.btnGoToRecipe.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    final Bundle bundle = new Bundle();
+                    bundle.putParcelable(Recipe.class.getSimpleName(), post.getRecipeLinked());
+                    RecipeDetailsFragment recipeDetailsFragment = new RecipeDetailsFragment();
+                    recipeDetailsFragment.setArguments(bundle);
+                    ((AppCompatActivity) context).getSupportFragmentManager()
+                            .beginTransaction()
+                            .replace(R.id.nav_host_fragment, recipeDetailsFragment)
+                            .commit();
+                }
+            });
+
+            binding.tvPostType.setText(post.getType());
+            // TODO: Change tv color based on type
+
         }
 
         private void likePost() {
