@@ -47,5 +47,16 @@
         app:layout_constraintStart_toStartOf="@+id/btnTakePic"
         app:layout_constraintTop_toBottomOf="@+id/btnTakePic" />
 
+    <TextView
+        android:id="@+id/tvRawvalue"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="100dp"
+        android:hint="Raw Value: xxxxxxxxxxxx"
+        android:textSize="20dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/btnScan" />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

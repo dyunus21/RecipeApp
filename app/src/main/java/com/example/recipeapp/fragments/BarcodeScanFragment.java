@@ -86,7 +86,7 @@ public class BarcodeScanFragment extends Fragment {
             public void onClick(View v) {
                 if (imageBitmap != null) {
                     Log.i(TAG, "Image bitmap: " + imageBitmap);
-                    InputImage image = InputImage.fromBitmap(imageBitmap, 90);
+                    InputImage image = InputImage.fromBitmap(imageBitmap, 0);
                     scanBarcodes(image);
                 }
             }
@@ -131,6 +131,7 @@ public class BarcodeScanFragment extends Fragment {
                                 case Barcode.TYPE_PRODUCT:
                                     String rawValue = barcode.getRawValue();
                                     Log.i(TAG, "Barcode: " + rawValue);
+                                    binding.tvRawvalue.setText("Raw Value: " + rawValue);
                                     break;
 
                             }
