@@ -32,6 +32,8 @@ import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
 import com.bumptech.glide.Glide;
+import com.codepath.asynchttpclient.callback.JsonHttpResponseHandler;
+import com.example.recipeapp.BarcodeAnalyzeClient;
 import com.example.recipeapp.R;
 import com.example.recipeapp.databinding.FragmentBarcodeScanBinding;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -46,6 +48,8 @@ import com.google.mlkit.vision.barcode.BarcodeScanning;
 import com.google.mlkit.vision.barcode.common.Barcode;
 import com.google.mlkit.vision.common.InputImage;
 
+import org.json.JSONException;
+
 import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
@@ -55,6 +59,8 @@ import java.util.List;
 import java.util.Locale;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+
+import okhttp3.Headers;
 
 public class BarcodeScanFragment extends Fragment {
 
@@ -212,6 +218,7 @@ public class BarcodeScanFragment extends Fragment {
                                 rawValue = barcode.getRawValue();
                                 Log.i(TAG, "Barcode: " + rawValue);
                                 ((TextView) view.findViewById(R.id.tvRawvalue)).setText("Raw Value: " + rawValue);
+                                getProductName(rawValue, view);
                             } else {
                                 Toast.makeText(getContext(), "Barcode not detected", Toast.LENGTH_SHORT).show();
                             }
@@ -232,6 +239,26 @@ public class BarcodeScanFragment extends Fragment {
                 });
     }
 
+    private void getProductName(String rawValue, View view) {
+        BarcodeAnalyzeClient barcodeAnalyzeClient = new BarcodeAnalyzeClient(getContext());
+        barcodeAnalyzeClient.analyzeBarcode(rawValue, new JsonHttpResponseHandler() {
+            @Override
+            public void onSuccess(int statusCode, Headers headers, JSON json) {
+                Log.i(TAG, "Analyzed barcode!" + json.toString());
+                try {
+                    ((TextView) view.findViewById(R.id.tvProductName)).setText("Product Name: " + json.jsonObject.getString("item_name"));
+                } catch (JSONException e) {
+                    Log.e(TAG, "Unable to process ingredient name!", e);
+                }
+            }
+
+            @Override
+            public void onFailure(int statusCode, Headers headers, String response, Throwable throwable) {
+                Log.e(TAG, "Unable to analyze barcode" + throwable + " " + response);
+            }
+        });
+    }
+
     private void showAlert(Uri uri) {
         MaterialAlertDialogBuilder alertDialogBuilder = new MaterialAlertDialogBuilder(getContext());
         View view = getLayoutInflater().inflate(R.layout.camera_dialog, null);
@@ -250,6 +277,12 @@ public class BarcodeScanFragment extends Fragment {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 dialog.cancel();
+            }
+        });
+        alertDialogBuilder.setPositiveButton("Add Ingredient", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                Log.i(TAG, "Add Ingredient: ");
             }
         });
         alertDialogBuilder.setView(view);

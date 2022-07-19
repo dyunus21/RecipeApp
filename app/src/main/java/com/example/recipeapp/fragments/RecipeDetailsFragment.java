@@ -317,7 +317,6 @@ public class RecipeDetailsFragment extends Fragment {
                 Log.i(TAG, currentUser.getParseUser().getUsername() + " liked recipe: " + recipe.getTitle());
             }
         });
-//        binding.tvLikes.setText(post.getLikeCount());
     }
 
     private void addRecipeToDatabase(String action) {
