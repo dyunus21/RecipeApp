@@ -2,9 +2,11 @@ package com.example.recipeapp.fragments;
 
 import static android.app.Activity.RESULT_OK;
 
+import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -21,11 +23,16 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.camera.core.CameraSelector;
+import androidx.camera.core.ImageCapture;
+import androidx.camera.core.Preview;
+import androidx.camera.lifecycle.ProcessCameraProvider;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.core.content.FileProvider;
 import androidx.fragment.app.Fragment;
 
@@ -35,6 +42,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.common.util.concurrent.ListenableFuture;
 import com.google.mlkit.vision.barcode.BarcodeScanner;
 import com.google.mlkit.vision.barcode.BarcodeScannerOptions;
 import com.google.mlkit.vision.barcode.BarcodeScanning;
@@ -45,7 +53,12 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.security.Permission;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class BarcodeScanFragment extends Fragment {
 
@@ -57,6 +70,10 @@ public class BarcodeScanFragment extends Fragment {
     private FragmentBarcodeScanBinding binding;
     private File photoFile;
     private ProgressDialog progressDialog;
+    private int REQUEST_CODE_PERMISSIONS = 10;
+    private String[] REQUIRED_PERMISSIONS = new ArrayList<String>(Arrays.asList(Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE)).toArray(new String[0]);
+    private ImageCapture imageCapture;
+    private ExecutorService cameraExecutor;
 
     public BarcodeScanFragment() {
 
@@ -73,16 +90,17 @@ public class BarcodeScanFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        if (allPermissionsGranted()) {
+            Log.i(TAG, "Start Camera!");
+            startCamera();
+        } else {
+            ActivityCompat.requestPermissions(
+                    getActivity(), REQUIRED_PERMISSIONS, REQUEST_CODE_PERMISSIONS);
+        }
         binding.btnTakePic.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                launchCamera();
-            }
-        });
-        binding.btnGallery.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                onPickPhoto(v);
+//                takePhoto();
             }
         });
         binding.btnScan.setOnClickListener(new View.OnClickListener() {
@@ -97,6 +115,43 @@ public class BarcodeScanFragment extends Fragment {
                 }
             }
         });
+        cameraExecutor = Executors.newSingleThreadExecutor();
+    }
+
+    private boolean allPermissionsGranted() {
+        return true;
+        // List.all() in Java
+        //ContextCompat.checkSelfPermission(getContext(),REQUIRED_PERMISSIONS.toString()) == PackageManager.PERMISSION_GRANTED;
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        if(requestCode == REQUEST_CODE_PERMISSIONS) {
+            if(allPermissionsGranted()) {
+                startCamera();
+            } else {
+                Toast.makeText(getContext(),"Permissions not granted by the user. ", Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
+
+    private void startCamera() {
+        ListenableFuture<ProcessCameraProvider> processCameraProvider = ProcessCameraProvider.getInstance(getContext());
+        processCameraProvider.addListener(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    ProcessCameraProvider cameraProvider = processCameraProvider.get();
+                    Preview preview = new Preview.Builder().build();
+                    preview.setSurfaceProvider(binding.viewFinder.getSurfaceProvider());
+                    CameraSelector cameraSelector = CameraSelector.DEFAULT_BACK_CAMERA;
+                    cameraProvider.unbindAll();
+                    cameraProvider.bindToLifecycle(getViewLifecycleOwner(), cameraSelector, preview);
+                } catch (Exception e) {
+                    Log.e(TAG, "Use case binding failed");
+                }
+            }
+        }, ContextCompat.getMainExecutor(getContext()));
     }
 
     private void scanBarcodes(InputImage image) {
@@ -123,12 +178,6 @@ public class BarcodeScanFragment extends Fragment {
                             int valueType = barcode.getValueType();
                             // See API reference for complete list of supported types
                             switch (valueType) {
-                                case Barcode.TYPE_WIFI:
-                                    String ssid = barcode.getWifi().getSsid();
-                                    String password = barcode.getWifi().getPassword();
-                                    int type = barcode.getWifi().getEncryptionType();
-                                    Log.i(TAG, "Barcode: " + ssid + " " + password);
-                                    break;
                                 case Barcode.TYPE_URL:
                                     String title = barcode.getUrl().getTitle();
                                     String url = barcode.getUrl().getUrl();
