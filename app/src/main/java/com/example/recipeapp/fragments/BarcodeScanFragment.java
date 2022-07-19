@@ -241,6 +241,8 @@ public class BarcodeScanFragment extends Fragment {
         btnScanBarcode.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                progressDialog.setMessage("Scanning barcode...");
+                progressDialog.show();
                 scanBarcodes(inputImage, view);
             }
         });
