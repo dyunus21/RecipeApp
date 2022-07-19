@@ -3,6 +3,7 @@ package com.example.recipeapp.fragments;
 import static android.app.Activity.RESULT_OK;
 
 import android.annotation.SuppressLint;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
@@ -20,6 +21,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -54,6 +56,7 @@ public class BarcodeScanFragment extends Fragment {
     private Bitmap imageBitmap;
     private FragmentBarcodeScanBinding binding;
     private File photoFile;
+    private ProgressDialog progressDialog;
 
     public BarcodeScanFragment() {
 
@@ -63,6 +66,7 @@ public class BarcodeScanFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         binding = FragmentBarcodeScanBinding.inflate(getLayoutInflater());
+        progressDialog = new ProgressDialog(getContext());
         return binding.getRoot();
     }
 
@@ -85,6 +89,8 @@ public class BarcodeScanFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 if (imageBitmap != null) {
+                    progressDialog.setMessage("Scanning Barcode...");
+                    progressDialog.show();
                     Log.i(TAG, "Image bitmap: " + imageBitmap);
                     InputImage image = InputImage.fromBitmap(imageBitmap, 0);
                     scanBarcodes(image);
@@ -147,6 +153,7 @@ public class BarcodeScanFragment extends Fragment {
                     @Override
                     public void onComplete(@NonNull Task<List<Barcode>> task) {
                         Log.i(TAG, "Complete barcode");
+                        progressDialog.dismiss();
                     }
                 });
     }

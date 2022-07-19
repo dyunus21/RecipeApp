@@ -137,7 +137,6 @@ public class UploadPostFragment extends Fragment implements AdapterView.OnItemSe
     private void validateRecipe() {
         String title = binding.etTitle.getText().toString();
         String description = binding.etDescription.getText().toString();
-        //TODO: Later update to TOAST messages regarding specific fields
         if (title.isEmpty() || description.isEmpty()) {
             Toast.makeText(getContext(), "Field cannot be empty!", Toast.LENGTH_SHORT).show();
             return;
@@ -183,10 +182,6 @@ public class UploadPostFragment extends Fragment implements AdapterView.OnItemSe
                         .commit();
             }
         });
-    }
-
-    private void goBackToUpload() {
-        NavHostFragment.findNavController(this).navigate(R.id.uploadFragment);
     }
 
     public void onPickPhoto(View view) {
