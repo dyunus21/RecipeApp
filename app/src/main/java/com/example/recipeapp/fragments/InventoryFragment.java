@@ -19,6 +19,8 @@ import com.example.recipeapp.databinding.FragmentInventoryBinding;
 import com.example.recipeapp.models.Ingredient;
 import com.example.recipeapp.models.User;
 
+import com.google.mlkit.vision.barcode.BarcodeScannerOptions;
+import com.google.mlkit.vision.barcode.common.Barcode;
 import com.parse.ParseException;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
@@ -85,6 +87,16 @@ public class InventoryFragment extends Fragment {
             }
         });
 
+        binding.ibScan.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                goToBarcodeScan();
+            }
+        });
+    }
+
+    private void goToBarcodeScan() {
+        NavHostFragment.findNavController(this).navigate(R.id.barcodeScanFragment);
     }
 
     private void goToAddIngredient() {

@@ -67,13 +67,10 @@ public class RecipeSearchAdapter extends RecyclerView.Adapter<RecipeSearchAdapte
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                    details.setSharedElementEnterTransition(new DetailsTransition());
-                    details.setEnterTransition(new Fade());
-                    details.setExitTransition(new Fade());
-                    details.setSharedElementReturnTransition(new DetailsTransition());
-                }
-
+                details.setSharedElementEnterTransition(new DetailsTransition());
+                details.setEnterTransition(new Fade());
+                details.setExitTransition(new Fade());
+                details.setSharedElementReturnTransition(new DetailsTransition());
                 ((MainActivity) context).getSupportFragmentManager()
                         .beginTransaction()
                         .addSharedElement(holder.binding.ivImage, "shared_image")

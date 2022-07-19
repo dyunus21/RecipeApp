@@ -8,15 +8,19 @@
         <entry key="app/src/main/res/drawable/ic_baseline_add_24.xml" value="0.146" />
         <entry key="app/src/main/res/drawable/ic_favorite.xml" value="0.144" />
         <entry key="app/src/main/res/drawable/ic_favorite_filled.xml" value="0.1" />
-        <entry key="app/src/main/res/drawable/rounded_rectangle.xml" value="0.1" />
+        <entry key="app/src/main/res/drawable/ic_outline_rectangle_24.xml" value="0.3475" />
+        <entry key="app/src/main/res/drawable/rounded_rectangle.xml" value="0.26413726806640625" />
         <entry key="app/src/main/res/layout/activity_login.xml" value="0.3145833333333333" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.2661900838216146" />
         <entry key="app/src/main/res/layout/activity_main2.xml" value="0.14235055724417425" />
         <entry key="app/src/main/res/layout/activity_register.xml" value="0.3296025594075521" />
+        <entry key="app/src/main/res/layout/camera_dialog.xml" value="0.34479166666666666" />
         <entry key="app/src/main/res/layout/dialog.xml" value="0.34479166666666666" />
         <entry key="app/src/main/res/layout/filter_dialog.xml" value="0.4377283732096354" />
         <entry key="app/src/main/res/layout/fragment_add_ingredient.xml" value="0.3885462381194791" />
-        <entry key="app/src/main/res/layout/fragment_inventory.xml" value="0.32864583333333336" />
+        <entry key="app/src/main/res/layout/fragment_barcode_scan.xml" value="0.5616997824130692" />
+        <entry key="app/src/main/res/layout/fragment_barcode_scanning.xml" value="0.36770833333333336" />
+        <entry key="app/src/main/res/layout/fragment_inventory.xml" value="0.2624638875325521" />
         <entry key="app/src/main/res/layout/fragment_item_list_dialog_list_dialog.xml" value="0.14235055724417425" />
         <entry key="app/src/main/res/layout/fragment_item_list_dialog_list_dialog_item.xml" value="0.14235055724417425" />
         <entry key="app/src/main/res/layout/fragment_login.xml" value="0.19022327367810235" />
