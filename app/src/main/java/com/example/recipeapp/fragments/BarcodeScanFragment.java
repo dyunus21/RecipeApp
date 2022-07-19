@@ -102,16 +102,6 @@ public class BarcodeScanFragment extends Fragment {
                 takePhoto();
             }
         });
-        binding.btnScan.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (inputImage != null) {
-                    progressDialog.setMessage("Scanning Barcode...");
-                    progressDialog.show();
-                    scanBarcodes(inputImage, v);
-                }
-            }
-        });
         cameraExecutor = Executors.newSingleThreadExecutor();
     }
 
