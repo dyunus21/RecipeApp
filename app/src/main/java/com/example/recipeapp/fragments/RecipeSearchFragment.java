@@ -102,41 +102,7 @@ public class RecipeSearchFragment extends Fragment {
         binding.ibFilter.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                View view = getLayoutInflater().inflate(R.layout.filter_dialog, null);
-                MaterialAlertDialogBuilder alertDialog = new MaterialAlertDialogBuilder(getContext());
-                final AutoCompleteTextView actvCuisine = view.findViewById(R.id.actvCuisine);
-                ArrayAdapter cuisineAdapter = new ArrayAdapter(getContext(), android.R.layout.simple_dropdown_item_1line, getResources().getStringArray(R.array.cuisine));
-                actvCuisine.setAdapter(cuisineAdapter);
-
-                final AutoCompleteTextView actvMealType = view.findViewById(R.id.actvMealType);
-                ArrayAdapter mealAdapter = new ArrayAdapter(getContext(), android.R.layout.simple_dropdown_item_1line, getResources().getStringArray(R.array.meal));
-                actvMealType.setAdapter(mealAdapter);
-
-                final EditText etCooktime = view.findViewById(R.id.etCooktime);
-                alertDialog.setTitle("Choose your preferences");
-
-                alertDialog.setPositiveButton("Set Filter", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        params.put("Cooktime", etCooktime.getText().toString());
-                        params.put("Cuisine", actvCuisine.getText().toString());
-                        params.put("MealType", actvMealType.getText().toString());
-
-                        Log.i(TAG, "Max Cooktime: " + etCooktime.getText().toString());
-                        Log.i(TAG, "Cuisine text: " + actvCuisine.getText());
-                        Log.i(TAG, "Meal type text: " + actvMealType.getText());
-                        Log.i(TAG, params.toString());
-                    }
-                }).setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        Log.i(TAG, "Cancelled filter");
-                    }
-                });
-                alertDialog.setView(view);
-                alertDialog.show();
-
-
+                initFilterDialog();
             }
         });
         binding.svSearch.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
@@ -158,6 +124,42 @@ public class RecipeSearchFragment extends Fragment {
             }
 
         });
+    }
+
+    private void initFilterDialog() {
+        View view = getLayoutInflater().inflate(R.layout.filter_dialog, null);
+        MaterialAlertDialogBuilder alertDialog = new MaterialAlertDialogBuilder(getContext());
+        final AutoCompleteTextView actvCuisine = view.findViewById(R.id.actvCuisine);
+        ArrayAdapter cuisineAdapter = new ArrayAdapter(getContext(), android.R.layout.simple_dropdown_item_1line, getResources().getStringArray(R.array.cuisine));
+        actvCuisine.setAdapter(cuisineAdapter);
+
+        final AutoCompleteTextView actvMealType = view.findViewById(R.id.actvMealType);
+        ArrayAdapter mealAdapter = new ArrayAdapter(getContext(), android.R.layout.simple_dropdown_item_1line, getResources().getStringArray(R.array.meal));
+        actvMealType.setAdapter(mealAdapter);
+
+        final EditText etCooktime = view.findViewById(R.id.etCooktime);
+        alertDialog.setTitle("Choose your preferences");
+
+        alertDialog.setPositiveButton("Set Filter", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                params.put("Cooktime", etCooktime.getText().toString());
+                params.put("Cuisine", actvCuisine.getText().toString());
+                params.put("MealType", actvMealType.getText().toString());
+
+                Log.i(TAG, "Max Cooktime: " + etCooktime.getText().toString());
+                Log.i(TAG, "Cuisine text: " + actvCuisine.getText());
+                Log.i(TAG, "Meal type text: " + actvMealType.getText());
+                Log.i(TAG, params.toString());
+            }
+        }).setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                Log.i(TAG, "Cancelled filter");
+            }
+        });
+        alertDialog.setView(view);
+        alertDialog.show();
     }
 
     private void initializeScreen() throws IOException {
