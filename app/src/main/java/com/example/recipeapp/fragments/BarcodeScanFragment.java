@@ -15,8 +15,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -30,12 +28,16 @@ import androidx.camera.lifecycle.ProcessCameraProvider;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.fragment.NavHostFragment;
 
 import com.bumptech.glide.Glide;
 import com.codepath.asynchttpclient.callback.JsonHttpResponseHandler;
 import com.example.recipeapp.BarcodeAnalyzeClient;
 import com.example.recipeapp.R;
+import com.example.recipeapp.databinding.CameraDialogBinding;
 import com.example.recipeapp.databinding.FragmentBarcodeScanBinding;
+import com.example.recipeapp.models.Ingredient;
+import com.example.recipeapp.models.User;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -47,6 +49,9 @@ import com.google.mlkit.vision.barcode.BarcodeScannerOptions;
 import com.google.mlkit.vision.barcode.BarcodeScanning;
 import com.google.mlkit.vision.barcode.common.Barcode;
 import com.google.mlkit.vision.common.InputImage;
+import com.parse.ParseException;
+import com.parse.ParseUser;
+import com.parse.SaveCallback;
 
 import org.json.JSONException;
 
@@ -71,6 +76,8 @@ public class BarcodeScanFragment extends Fragment {
     private final int REQUEST_CODE_PERMISSIONS = 10;
     private final String[] REQUIRED_PERMISSIONS = new ArrayList<String>(Arrays.asList(Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE)).toArray(new String[0]);
     private final String FILENAME_FORMAT = "yyyy-MM-dd-HH-mm-ss-SSS";
+    private final Ingredient ingredient = new Ingredient();
+    private final User CURRENT_USER = new User(ParseUser.getCurrentUser());
     private Bitmap imageBitmap;
     private FragmentBarcodeScanBinding binding;
     private File photoFile;
@@ -261,16 +268,19 @@ public class BarcodeScanFragment extends Fragment {
 
     private void showAlert(Uri uri) {
         MaterialAlertDialogBuilder alertDialogBuilder = new MaterialAlertDialogBuilder(getContext());
-        View view = getLayoutInflater().inflate(R.layout.camera_dialog, null);
-        ImageView ivPreview = view.findViewById(R.id.ivPreview);
-        Glide.with(getContext()).load(uri).into(ivPreview);
-        Button btnScanBarcode = view.findViewById(R.id.btnScanBarcode);
-        btnScanBarcode.setOnClickListener(new View.OnClickListener() {
+        CameraDialogBinding cameraDialogBinding = CameraDialogBinding.inflate(getLayoutInflater());
+        Glide.with(getContext()).load(uri).into(cameraDialogBinding.ivPreview);
+        cameraDialogBinding.btnScanBarcode.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 progressDialog.setMessage("Scanning barcode...");
                 progressDialog.show();
-                scanBarcodes(inputImage, view);
+                scanBarcodes(inputImage, cameraDialogBinding.getRoot());
+                cameraDialogBinding.tvResultsText.setVisibility(View.VISIBLE);
+                cameraDialogBinding.tvRawvalue.setVisibility(View.VISIBLE);
+                cameraDialogBinding.tvProductName.setVisibility(View.VISIBLE);
+                cameraDialogBinding.tilCount.setVisibility(View.VISIBLE);
+                cameraDialogBinding.tilUnit.setVisibility(View.VISIBLE);
             }
         });
         alertDialogBuilder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
@@ -282,10 +292,52 @@ public class BarcodeScanFragment extends Fragment {
         alertDialogBuilder.setPositiveButton("Add Ingredient", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                Log.i(TAG, "Add Ingredient: ");
+                Log.i(TAG, "Add Ingredient: " + cameraDialogBinding.tvProductName.getText().toString().substring(14));
+                String name = cameraDialogBinding.tvProductName.getText().toString().substring(14);
+                String count = cameraDialogBinding.etCount.getText().toString();
+                String unit = cameraDialogBinding.etUnit.getText().toString();
+                if (name.isEmpty() || count.isEmpty() || unit.isEmpty()) {
+                    Toast.makeText(getContext(), "Fields cannot be empty!", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                addIngredient(cameraDialogBinding, name, count, unit);
             }
         });
-        alertDialogBuilder.setView(view);
+        alertDialogBuilder.setView(cameraDialogBinding.getRoot());
         alertDialogBuilder.show();
+    }
+
+    private void addIngredient(CameraDialogBinding cameraDialogBinding, final String name, final String count, final String unit) {
+        Ingredient ingredient = new Ingredient();
+        ingredient.initialize(name, Integer.parseInt(count), unit);
+        ingredient.saveInBackground(new SaveCallback() {
+            @Override
+            public void done(ParseException e) {
+                if (e != null) {
+                    Log.e(TAG, "Error in adding ingredient!", e);
+                    return;
+                }
+                List<Ingredient> ingredientList = CURRENT_USER.getIngredientArray();
+                ingredientList.add(ingredient);
+
+                CURRENT_USER.setIngredientArray(ingredientList);
+                CURRENT_USER.getParseUser().saveInBackground(new SaveCallback() {
+                    @Override
+                    public void done(ParseException e) {
+                        if (e != null) {
+                            Log.e(TAG, "Error in adding ingredient to user!", e);
+                            return;
+                        }
+                        Log.i(TAG, "Saved ingredient to user's ingredient list!");
+                        goToInventory();
+                    }
+                });
+            }
+        });
+
+    }
+
+    private void goToInventory() {
+        NavHostFragment.findNavController(this).navigate(R.id.inventoryFragment);
     }
 }

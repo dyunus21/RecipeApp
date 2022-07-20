@@ -27,10 +27,7 @@ import java.util.Map;
 
 public class AddIngredientFragment extends Fragment {
     private static final String TAG = "AddIngredientFragment";
-
-
     private final User CURRENT_USER = new User(ParseUser.getCurrentUser());
-
     private FragmentAddIngredientBinding binding;
 
 
