@@ -107,15 +107,15 @@ public class BarcodeScanFragment extends Fragment {
     }
 
     private void startCamera() {
-        ListenableFuture<ProcessCameraProvider> processCameraProvider = ProcessCameraProvider.getInstance(getContext());
+        final ListenableFuture<ProcessCameraProvider> processCameraProvider = ProcessCameraProvider.getInstance(getContext());
         processCameraProvider.addListener(() -> {
             try {
-                ProcessCameraProvider cameraProvider = processCameraProvider.get();
-                Preview preview = new Preview.Builder().build();
+                final ProcessCameraProvider cameraProvider = processCameraProvider.get();
+                final Preview preview = new Preview.Builder().build();
                 preview.setSurfaceProvider(binding.viewFinder.getSurfaceProvider());
                 initImageAnalyzer();
 
-                CameraSelector cameraSelector = CameraSelector.DEFAULT_BACK_CAMERA;
+                final CameraSelector cameraSelector = CameraSelector.DEFAULT_BACK_CAMERA;
                 cameraProvider.unbindAll();
                 cameraProvider.bindToLifecycle(getViewLifecycleOwner(), cameraSelector, preview, imageAnalyzer);
             } catch (Exception e) {
@@ -138,7 +138,7 @@ public class BarcodeScanFragment extends Fragment {
 
     private void getProductName(String rawValue) {
         Log.i(TAG, "Getting product name for: " + rawValue);
-        BarcodeAnalyzeClient barcodeAnalyzeClient = new BarcodeAnalyzeClient(getContext());
+        final BarcodeAnalyzeClient barcodeAnalyzeClient = new BarcodeAnalyzeClient(getContext());
         barcodeAnalyzeClient.analyzeBarcode(rawValue, new JsonHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Headers headers, JSON json) {
@@ -160,8 +160,8 @@ public class BarcodeScanFragment extends Fragment {
     }
 
     public void showAlert() {
-        MaterialAlertDialogBuilder alertDialogBuilder = new MaterialAlertDialogBuilder(getContext());
-        CameraDialogBinding cameraDialogBinding = CameraDialogBinding.inflate(getLayoutInflater());
+        final MaterialAlertDialogBuilder alertDialogBuilder = new MaterialAlertDialogBuilder(getContext());
+        final CameraDialogBinding cameraDialogBinding = CameraDialogBinding.inflate(getLayoutInflater());
         cameraDialogBinding.tvRawvalue.setText("Raw Value: " + barcode.getRawValue());
         cameraDialogBinding.tvProductName.setText("Product Name: " + productName);
         Glide.with(getContext()).load(bitmap).into(cameraDialogBinding.ivPreview);
@@ -211,7 +211,7 @@ public class BarcodeScanFragment extends Fragment {
         NavHostFragment.findNavController(this).navigate(R.id.inventoryFragment);
     }
 
-    public void setBarcode(Barcode barcode, Bitmap bitmap) {
+    public void setBarcode(final Barcode barcode, final Bitmap bitmap) {
         imageAnalyzer.clearAnalyzer();
         this.barcode = barcode;
         this.bitmap = bitmap;
