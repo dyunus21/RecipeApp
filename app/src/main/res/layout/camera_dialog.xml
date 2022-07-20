@@ -7,11 +7,12 @@
 
     <TextView
         android:id="@+id/tvRawvalue"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
+        android:layout_marginEnd="10dp"
         android:textSize="20sp"
-        android:visibility="gone"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="@+id/tvResultsText"
         app:layout_constraintTop_toBottomOf="@+id/tvResultsText"
         tools:text="Raw Value: xxxxxxxxxxxx" />
@@ -60,27 +61,26 @@
         android:text="Results:"
         android:textSize="20sp"
         android:textStyle="bold"
-        android:visibility="gone"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/btnScanBarcode" />
 
     <TextView
         android:id="@+id/tvProductName"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
+        android:layout_marginEnd="10dp"
         android:textSize="20sp"
-        android:visibility="gone"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="@+id/tvRawvalue"
         app:layout_constraintTop_toBottomOf="@+id/tvRawvalue"
-        tools:text=" Product Name: xxx" />
+        tools:text="Product Name: xxx" />
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/tilCount"
         android:layout_width="149dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
-        android:visibility="gone"
         app:layout_constraintStart_toStartOf="@+id/tvProductName"
         app:layout_constraintTop_toBottomOf="@+id/tvProductName">
 
@@ -98,7 +98,6 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="20dp"
         android:layout_marginEnd="20dp"
-        android:visibility="gone"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/tilCount"
         app:layout_constraintTop_toTopOf="@+id/tilCount">

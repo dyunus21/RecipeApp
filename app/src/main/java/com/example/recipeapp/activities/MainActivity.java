@@ -2,14 +2,19 @@ package com.example.recipeapp.activities;
 
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.drawable.ColorDrawable;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 import androidx.navigation.NavController;
@@ -36,6 +41,7 @@ public class MainActivity extends AppCompatActivity {
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         final View view = binding.getRoot();
         setContentView(view);
+        binding.setController(this);
 
         setSupportActionBar(binding.toolbar);
         User.getUser(CURRENT_USER);
@@ -53,13 +59,7 @@ public class MainActivity extends AppCompatActivity {
                 animateFab(v, isRotate);
             }
         });
-        binding.fabRecipe.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                navController.navigate(R.id.uploadRecipeFragment);
-                binding.fabUpload.callOnClick();
-            }
-        });
+//        Log.i(TAG, "Current Fragment: " + getSupportFragmentManager().);
         binding.fabPost.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -67,6 +67,11 @@ public class MainActivity extends AppCompatActivity {
                 binding.fabUpload.callOnClick();
             }
         });
+    }
+
+    public void animateFabRecipeOnClick() {
+        navController.navigate(R.id.uploadRecipeFragment);
+        binding.fabUpload.callOnClick();
     }
 
     private void animateFab(View v, boolean[] isRotate) {
