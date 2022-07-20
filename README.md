@@ -56,12 +56,13 @@ _Version2_
 _Version3_
 * [x] User can edit previously uploaded recipes
 * [x] Initial search screen displays random/recommended recipes
-* [ ] User can share recipes directly to social feed
+* [x] User can share recipes directly to social feed
 * [ ] User can view a demo of app before account creation
-* [ ] User can scan food barcode to update inventory
+* [x] User can scan food barcode to update inventory
 * [ ] User can follow other users
 
 _Version4_
+* [ ] User can search for a recipe based on image
 * [ ] User can be directed to nearby shops that contain unavailable ingredients ([Yelp API](https://www.yelp.com/developers))
 * [ ] User can complete weekly challenges and view leaderboard
 * [ ] Users can view what nearby users/followers are currently eating (Snapchat-like feature) ([Google Maps SDK](https://developers.google.com/maps/documentation/android-sdk/overview))

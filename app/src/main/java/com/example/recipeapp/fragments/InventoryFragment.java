@@ -53,6 +53,7 @@ public class InventoryFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         binding = FragmentInventoryBinding.inflate(getLayoutInflater());
+        binding.setFragmentController(this);
         return binding.getRoot();
     }
 
@@ -80,12 +81,12 @@ public class InventoryFragment extends Fragment {
             Log.e(TAG, "No user found");
         }
 
-        binding.fabAdd.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                goToAddIngredient();
-            }
-        });
+//        binding.fabAdd.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                goToAddIngredient();
+//            }
+//        });
 
         binding.ibScan.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -99,7 +100,7 @@ public class InventoryFragment extends Fragment {
         NavHostFragment.findNavController(this).navigate(R.id.barcodeScanFragment);
     }
 
-    private void goToAddIngredient() {
+    public void goToAddIngredient() {
         NavHostFragment.findNavController(this).navigate(R.id.addIngredientFragment);
     }
 }
