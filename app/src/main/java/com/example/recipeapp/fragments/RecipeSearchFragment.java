@@ -59,6 +59,7 @@ public class RecipeSearchFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         binding = FragmentRecipeSearchBinding.inflate(getLayoutInflater());
+        binding.setFragmentRecipeSearchController(this);
         return binding.getRoot();
     }
 
@@ -78,33 +79,8 @@ public class RecipeSearchFragment extends Fragment {
         binding.rvRecipes.setAdapter(adapter);
         GridLayoutManager gridLayoutManager = new GridLayoutManager(getContext(), 2);
         binding.rvRecipes.setLayoutManager(gridLayoutManager);
-        // TODO: Implement Endless Scrolling and Refresh
-        binding.swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                try {
-                    initializeScreen();
-                } catch (IOException e) {
-                    Log.e(TAG, "Unable to initialize screen");
-                }
-            }
-        });
-        try {
-            initializeScreen();
-        } catch (IOException e) {
-            Log.e(TAG, "Unable to initialize screen");
-        }
-        binding.swipeContainer.setColorSchemeResources(android.R.color.holo_blue_bright,
-                android.R.color.holo_green_light,
-                android.R.color.holo_orange_light,
-                android.R.color.holo_red_light);
+        setRefresh();
 
-        binding.ibFilter.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                initFilterDialog();
-            }
-        });
         binding.svSearch.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
@@ -126,7 +102,29 @@ public class RecipeSearchFragment extends Fragment {
         });
     }
 
-    private void initFilterDialog() {
+    private void setRefresh() {
+        binding.swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                try {
+                    initializeScreen();
+                } catch (IOException e) {
+                    Log.e(TAG, "Unable to initialize screen");
+                }
+            }
+        });
+        try {
+            initializeScreen();
+        } catch (IOException e) {
+            Log.e(TAG, "Unable to initialize screen");
+        }
+        binding.swipeContainer.setColorSchemeResources(android.R.color.holo_blue_bright,
+                android.R.color.holo_green_light,
+                android.R.color.holo_orange_light,
+                android.R.color.holo_red_light);
+    }
+
+    public void initFilterDialog() {
         View view = getLayoutInflater().inflate(R.layout.filter_dialog, null);
         MaterialAlertDialogBuilder alertDialog = new MaterialAlertDialogBuilder(getContext());
         final AutoCompleteTextView actvCuisine = view.findViewById(R.id.actvCuisine);
@@ -163,8 +161,6 @@ public class RecipeSearchFragment extends Fragment {
     }
 
     private void initializeScreen() throws IOException {
-
-        // TODO: if pull to refresh, change random recipes
         client.getRandomRecipes(new JsonHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Headers headers, JSON json) {
