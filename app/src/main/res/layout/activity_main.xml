@@ -55,16 +55,15 @@
             <fragment
                 android:id="@+id/nav_host_fragment"
                 android:name="androidx.navigation.fragment.NavHostFragment"
-                android:layout_width="403dp"
+                android:layout_width="0dp"
                 android:layout_height="0dp"
                 android:layout_gravity="bottom"
-                android:layout_marginBottom="50dp"
+                android:layout_marginBottom="55dp"
                 app:defaultNavHost="true"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/toolbar"
-                app:layout_constraintVertical_bias="0.0"
                 app:navGraph="@navigation/nav_graph" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
@@ -112,7 +111,7 @@
                 tools:ignore="SpeakableTextPresentCheck" />
     
         </LinearLayout>
-    
-    
+
+
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
 </layout>

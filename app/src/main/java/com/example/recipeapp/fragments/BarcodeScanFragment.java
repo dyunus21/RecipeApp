@@ -69,6 +69,7 @@ public class BarcodeScanFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         binding = FragmentBarcodeScanBinding.inflate(getLayoutInflater());
+        binding.setFragmentBarcodeController(this);
         progressDialog = new ProgressDialog(getContext());
         return binding.getRoot();
     }
@@ -171,14 +172,14 @@ public class BarcodeScanFragment extends Fragment {
         alertDialogBuilder.setPositiveButton("Add Ingredient", (dialog, which) -> {
             Log.i(TAG, "Add Ingredient: " + cameraDialogBinding.tvProductName.getText().toString().substring(14));
             String name = cameraDialogBinding.tvProductName.getText().toString().substring(14);
-            int count = Integer.parseInt(cameraDialogBinding.etCount.getText().toString());
+            String count = cameraDialogBinding.etCount.getText().toString();
             String unit = cameraDialogBinding.etUnit.getText().toString();
-            if (name.isEmpty() || count == 0 || unit.isEmpty()) {
+            if (name.isEmpty() || count.isEmpty() || unit.isEmpty()) {
                 Toast.makeText(getContext(), "Fields cannot be empty!", Toast.LENGTH_SHORT).show();
-                return;
+            } else {
+                ingredient.initialize(name, Integer.parseInt(count), unit);
+                saveIngredient();
             }
-            ingredient.initialize(name, count, unit);
-            saveIngredient();
         });
         alertDialogBuilder.setView(cameraDialogBinding.getRoot());
         alertDialogBuilder.show();
@@ -206,7 +207,7 @@ public class BarcodeScanFragment extends Fragment {
 
     }
 
-    private void goToInventory() {
+    public void goToInventory() {
         NavHostFragment.findNavController(this).navigate(R.id.inventoryFragment);
     }
 
