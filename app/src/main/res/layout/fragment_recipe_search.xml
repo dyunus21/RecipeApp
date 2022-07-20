@@ -17,13 +17,14 @@
         tools:context=".fragments.RecipeSearchFragment">
 
         <ImageButton
-            android:id="@+id/imageButton"
+            android:id="@+id/ibCamera"
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:layout_marginStart="10dp"
             android:background="@drawable/ic_outline_photo_camera_24"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/svSearch" />
+            app:layout_constraintTop_toTopOf="@+id/svSearch"
+            android:onClick="@{(view)->fragmentRecipeSearchController.initCamera()}"/>
 
         <ImageButton
             android:id="@+id/ibFilter"
@@ -46,7 +47,7 @@
             android:background="#C3CDCC"
             android:queryHint="Search for a recipe"
             app:layout_constraintEnd_toStartOf="@+id/ibFilter"
-            app:layout_constraintStart_toEndOf="@+id/imageButton"
+            app:layout_constraintStart_toEndOf="@+id/ibCamera"
             app:layout_constraintTop_toTopOf="parent"
             tools:queryHint="Find a recipe..." />
 

@@ -1,6 +1,12 @@
 package com.example.recipeapp.fragments;
 
+import static android.app.Activity.RESULT_OK;
+
 import android.content.DialogInterface;
+import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -10,6 +16,7 @@ import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.EditText;
 import android.widget.SearchView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -17,11 +24,14 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
+import com.bumptech.glide.Glide;
 import com.codepath.asynchttpclient.callback.JsonHttpResponseHandler;
 import com.example.recipeapp.R;
 import com.example.recipeapp.RecipeClient;
 import com.example.recipeapp.adapters.RecipeSearchAdapter;
 import com.example.recipeapp.databinding.FragmentRecipeSearchBinding;
+import com.example.recipeapp.databinding.ImageSearchDialogBinding;
+import com.example.recipeapp.models.ImageClient;
 import com.example.recipeapp.models.Recipe;
 import com.example.recipeapp.models.User;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
@@ -33,6 +43,7 @@ import com.parse.ParseUser;
 import org.json.JSONArray;
 import org.json.JSONException;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -43,12 +54,16 @@ import okhttp3.Headers;
 
 public class RecipeSearchFragment extends Fragment {
     public static final String TAG = "RecipeSearchFragment";
+    private final static int CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE = 42;
+    private final static int PICK_PHOTO_CODE = 1046;
     private final Map<String, String> params = new HashMap<>();
+    private final User currentUser = new User(ParseUser.getCurrentUser());
     public List<Recipe> recipes;
     protected RecipeSearchAdapter adapter;
     private FragmentRecipeSearchBinding binding;
     private RecipeClient client;
-    private User currentUser;
+    private ImageClient imageClient;
+    private File photoFile;
 
 
     public RecipeSearchFragment() {
@@ -69,7 +84,8 @@ public class RecipeSearchFragment extends Fragment {
         client = new RecipeClient(getContext());
         recipes = new ArrayList<>();
         adapter = new RecipeSearchAdapter(getContext(), recipes);
-        getUser();
+        imageClient = new ImageClient(this);
+        User.getUser(currentUser);
     }
 
     @Override
@@ -79,7 +95,7 @@ public class RecipeSearchFragment extends Fragment {
         binding.rvRecipes.setAdapter(adapter);
         GridLayoutManager gridLayoutManager = new GridLayoutManager(getContext(), 2);
         binding.rvRecipes.setLayoutManager(gridLayoutManager);
-        setRefresh();
+//        setRefresh();
 
         binding.svSearch.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
@@ -246,18 +262,45 @@ public class RecipeSearchFragment extends Fragment {
         });
     }
 
-    private void getUser() {
-        ParseQuery<ParseUser> query = ParseQuery.getQuery(ParseUser.class);
-        query.whereEqualTo(User.KEY_OBJECT_ID, ParseUser.getCurrentUser().getObjectId());
-        query.include(User.KEY_INGREDIENT_ARRAY);
-        query.include(User.KEY_PROFILE_IMAGE);
+    public void initCamera() {
+        imageClient.launchCamera();
+    }
 
-        Log.i(TAG, "User id: " + ParseUser.getCurrentUser().getObjectId());
-        try {
-            ParseUser parseUser = query.get(ParseUser.getCurrentUser().getObjectId());
-            currentUser = new User(parseUser);
-        } catch (ParseException e) {
-            Log.e(TAG, "Unable to fetch user!", e);
+    public void showPreview() {
+        Log.i(TAG, "Show preview");
+        MaterialAlertDialogBuilder alertDialogBuilder = new MaterialAlertDialogBuilder(getContext());
+        alertDialogBuilder.setTitle("Preview");
+        final ImageSearchDialogBinding imageSearchDialogBinding = ImageSearchDialogBinding.inflate(getLayoutInflater());
+        Glide.with(getContext()).load(photoFile).into(imageSearchDialogBinding.ivPreview);
+        alertDialogBuilder.setPositiveButton("Search", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                Log.i(TAG, "Search for recipes based on image");
+            }
+        });
+        alertDialogBuilder.setView(imageSearchDialogBinding.getRoot());
+        alertDialogBuilder.show();
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        Log.i(TAG, "Reached here!!!");
+        photoFile = imageClient.getPhotoFile();
+        if (requestCode == CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE) {
+            Log.i(TAG, "onActivity result camera");
+            if (resultCode == RESULT_OK) {
+                final Bitmap takenImage = BitmapFactory.decodeFile(photoFile.getAbsolutePath());
+                photoFile = imageClient.resizeFile(takenImage);
+                Log.i(TAG, "File: " + photoFile.toString());
+                showPreview();
+            } else {
+                Toast.makeText(getContext(), "Picture wasn't taken!", Toast.LENGTH_SHORT).show();
+            }
+        } else if ((data != null) && requestCode == PICK_PHOTO_CODE) {
+            final Uri photoUri = data.getData();
+            Bitmap selectedImage = imageClient.loadFromUri(photoUri);
+            photoFile = imageClient.resizeFile(selectedImage);
+            Log.i(TAG, "File: " + photoFile.toString());
         }
     }
 }
