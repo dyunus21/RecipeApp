@@ -1,288 +1,311 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="#D7ECE9">
+    xmlns:tools="http://schemas.android.com/tools">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <data>
+
+        <variable
+            name="fragmentRecipeDetailsController"
+            type="com.example.recipeapp.fragments.RecipeDetailsFragment" />
+
+        <variable
+            name="made"
+            type="String" />
+
+        <variable
+            name="like"
+            type="String" />
+    </data>
+
+    <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".fragments.RecipeDetailsFragment">
-
-        <TextView
-            android:id="@+id/tvInstructionsList"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="30dp"
-            android:layout_marginTop="5dp"
-            android:layout_marginEnd="30dp"
-            android:fontFamily="monospace"
-            android:inputType="textMultiLine"
-            android:textAlignment="textStart"
-            android:textColor="@color/black"
-            android:textSize="16sp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/tvInstructionsText" />
-
-        <TextView
-            android:id="@+id/tvInstructionsText"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="30dp"
-            android:layout_marginTop="10dp"
-            android:fontFamily="sans-serif-condensed"
-            android:text="Instructions"
-            android:textSize="18sp"
-            android:textStyle="bold"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/tvIngredientList" />
-
-        <TextView
-            android:id="@+id/tvCuisine"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="30dp"
-            android:fontFamily="sans-serif-smallcaps"
-            android:text="Cuisine: Asian"
-            android:textColor="@color/black"
-            android:textSize="18sp"
-            app:layout_constraintEnd_toEndOf="@+id/ivImage"
-            app:layout_constraintHorizontal_bias="1.0"
-            app:layout_constraintStart_toEndOf="@+id/tvCookTime"
-            app:layout_constraintTop_toTopOf="@+id/tvCookTime" />
-
-        <TextView
-            android:id="@+id/tvRecipeName"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="5dp"
-            android:layout_marginTop="10dp"
-            android:layout_marginEnd="5dp"
-            android:fontFamily="sans-serif-smallcaps"
-            android:inputType="textMultiLine"
-            android:text="Recipe Title"
-            android:textAlignment="center"
-            android:textColor="@color/black"
-            android:textSize="24sp"
-            android:textStyle="bold"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/ivImage" />
-
-        <ImageView
-            android:id="@+id/ivImage"
-            android:layout_width="415dp"
-            android:layout_height="288dp"
-            android:scaleType="centerCrop"
-            android:src="@android:drawable/ic_menu_gallery"
-            android:transitionName="shared_image"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="1.0"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/ibBack" />
-
-        <ImageButton
-            android:id="@+id/ibBack"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:layout_marginStart="10dp"
-            android:layout_marginTop="8dp"
-            android:background="?attr/homeAsUpIndicator"
-            android:backgroundTint="@color/black"
-            android:onClick="goBackToSearch"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            tools:ignore="TouchTargetSizeCheck,SpeakableTextPresentCheck" />
-
-        <ImageButton
-            android:id="@+id/ibEdit"
-            android:layout_width="34dp"
-            android:layout_height="0dp"
-            android:layout_marginEnd="20dp"
-            android:background="@drawable/ic_baseline_edit_24"
-            app:layout_constraintBottom_toBottomOf="@+id/ibHeart"
-            app:layout_constraintEnd_toStartOf="@+id/ibHeart"
-            app:layout_constraintTop_toTopOf="@+id/ibHeart"
-            tools:ignore="TouchTargetSizeCheck,SpeakableTextPresentCheck" />
-
-        <Button
-            android:id="@+id/btnMade"
-            android:layout_width="114dp"
-            android:layout_height="40dp"
-            android:layout_marginTop="10dp"
-            android:backgroundTint="@color/teal_200"
-            android:text="Make this!"
-            android:textSize="12sp"
-            app:layout_constraintEnd_toEndOf="@+id/tvUploadedBy"
-            app:layout_constraintStart_toStartOf="@+id/tvUploadedBy"
-            app:layout_constraintTop_toBottomOf="@+id/tvUploadedBy"
-            tools:ignore="TouchTargetSizeCheck" />
-
-        <ImageButton
-            android:id="@+id/ibHeart"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:layout_marginEnd="20dp"
-            android:background="@drawable/heart"
-            app:layout_constraintEnd_toStartOf="@+id/ibShare"
-            app:layout_constraintTop_toTopOf="@+id/ibBack"
-            tools:ignore="SpeakableTextPresentCheck,TouchTargetSizeCheck" />
-
-        <TextView
-            android:id="@+id/tvCookTime"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="30dp"
-            android:layout_marginTop="10dp"
-            android:fontFamily="sans-serif-smallcaps"
-            android:text="Cooktime: 15m"
-            android:textColor="@color/black"
-            android:textSize="18sp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/btnMade" />
-
-        <TextView
-            android:id="@+id/tvIngredientText"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="30dp"
-            android:layout_marginTop="20dp"
-            android:fontFamily="sans-serif-condensed"
-            android:text="Ingredients"
-            android:textSize="18sp"
-            android:textStyle="bold"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/tvCookTime" />
-
-        <TextView
-            android:id="@+id/tvIngredientList"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="30dp"
-            android:layout_marginTop="5dp"
-            android:layout_marginEnd="30dp"
-            android:fontFamily="monospace"
-            android:inputType="textMultiLine"
-            android:textColor="@color/black"
-            android:textSize="16sp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="@+id/tvIngredientText"
-            app:layout_constraintTop_toBottomOf="@+id/tvIngredientText" />
-
-        <TextView
-            android:id="@+id/tvReviewText"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="30dp"
-            android:layout_marginTop="20dp"
-            android:fontFamily="sans-serif-condensed"
-            android:text="Reviews (0)"
-            android:textSize="18sp"
-            android:textStyle="bold"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/tvInstructionsList" />
-
-        <TextView
-            android:id="@+id/tvUploadedBy"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:text="Uploaded by: @username"
-            app:layout_constraintEnd_toEndOf="@+id/ivImage"
-            app:layout_constraintHorizontal_bias="0.517"
-            app:layout_constraintStart_toStartOf="@+id/ivImage"
-            app:layout_constraintTop_toBottomOf="@+id/tvRecipeName" />
+        android:background="#D7ECE9">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="30dp"
-            android:layout_marginTop="10dp"
-            android:layout_marginEnd="30dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/tvReviewText">
-
-            <ImageView
-                android:id="@+id/ivProfileImage"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:src="@drawable/ic_baseline_account_circle_24"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-
-            <EditText
-                android:id="@+id/etReview"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:ems="10"
-                android:hint="Add your review..."
-                android:inputType="textMultiLine"
-                android:minHeight="48dp"
-                android:textSize="16sp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.0"
-                app:layout_constraintStart_toEndOf="@+id/ivProfileImage"
-                app:layout_constraintTop_toTopOf="parent" />
+            android:layout_height="match_parent"
+            tools:context=".fragments.RecipeDetailsFragment">
 
             <TextView
-                android:id="@+id/tvRatingText"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="5dp"
-                android:text="Rating"
-                app:layout_constraintStart_toStartOf="@+id/etReview"
-                app:layout_constraintTop_toBottomOf="@+id/etReview" />
-
-            <RatingBar
-                android:id="@+id/rbRating"
-                style="@style/Widget.AppCompat.RatingBar.Small"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="28dp"
-                android:layout_marginTop="6dp"
-                android:clickable="true"
-                android:isIndicator="false"
-                android:numStars="5"
-                android:stepSize="0.5"
-                app:layout_constraintStart_toEndOf="@+id/tvRatingText"
-                app:layout_constraintTop_toBottomOf="@+id/etReview" />
-
-            <Button
-                android:id="@+id/btnPost"
-                android:layout_width="120dp"
-                android:layout_height="50dp"
-                android:layout_marginTop="4dp"
-                android:text="Post Review"
-                android:textSize="12sp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/etReview"
-                tools:ignore="TouchTargetSizeCheck" />
-
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/rvReviews"
+                android:id="@+id/tvInstructionsList"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="30dp"
                 android:layout_marginTop="5dp"
-                app:layout_constraintBottom_toBottomOf="parent"
+                android:layout_marginEnd="30dp"
+                android:fontFamily="monospace"
+                android:inputType="textMultiLine"
+                android:textAlignment="textStart"
+                android:textColor="@color/black"
+                android:textSize="16sp"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/btnPost" />
+                app:layout_constraintTop_toBottomOf="@+id/tvInstructionsText" />
+
+            <TextView
+                android:id="@+id/tvInstructionsText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="30dp"
+                android:layout_marginTop="10dp"
+                android:fontFamily="sans-serif-condensed"
+                android:text="Instructions"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/tvIngredientList" />
+
+            <TextView
+                android:id="@+id/tvCuisine"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="30dp"
+                android:fontFamily="sans-serif-smallcaps"
+                android:text="Cuisine: Asian"
+                android:textColor="@color/black"
+                android:textSize="18sp"
+                app:layout_constraintEnd_toEndOf="@+id/ivImage"
+                app:layout_constraintHorizontal_bias="1.0"
+                app:layout_constraintStart_toEndOf="@+id/tvCookTime"
+                app:layout_constraintTop_toTopOf="@+id/tvCookTime" />
+
+            <TextView
+                android:id="@+id/tvRecipeName"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="5dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginEnd="5dp"
+                android:fontFamily="sans-serif-smallcaps"
+                android:inputType="textMultiLine"
+                android:text="Recipe Title"
+                android:textAlignment="center"
+                android:textColor="@color/black"
+                android:textSize="24sp"
+                android:textStyle="bold"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/ivImage" />
+
+            <ImageView
+                android:id="@+id/ivImage"
+                android:layout_width="415dp"
+                android:layout_height="288dp"
+                android:scaleType="centerCrop"
+                android:src="@android:drawable/ic_menu_gallery"
+                android:transitionName="shared_image"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="1.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/ibBack" />
+
+            <ImageButton
+                android:id="@+id/ibBack"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="8dp"
+                android:background="?attr/homeAsUpIndicator"
+                android:backgroundTint="@color/black"
+                android:onClick="@{(view)->fragmentRecipeDetailsController.goBack()}"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:ignore="TouchTargetSizeCheck,SpeakableTextPresentCheck" />
+
+            <ImageButton
+                android:id="@+id/ibEdit"
+                android:layout_width="34dp"
+                android:layout_height="0dp"
+                android:layout_marginEnd="20dp"
+                android:background="@drawable/ic_baseline_edit_24"
+                android:onClick="@{(view)->fragmentRecipeDetailsController.editRecipe(view)}"
+                app:layout_constraintBottom_toBottomOf="@+id/ibHeart"
+                app:layout_constraintEnd_toStartOf="@+id/ibHeart"
+                app:layout_constraintTop_toTopOf="@+id/ibHeart"
+                tools:ignore="TouchTargetSizeCheck,SpeakableTextPresentCheck" />
+
+            <Button
+                android:id="@+id/btnMade"
+                android:layout_width="114dp"
+                android:layout_height="40dp"
+                android:layout_marginTop="10dp"
+                android:backgroundTint="@color/teal_200"
+                android:onClick="@{(view)->fragmentRecipeDetailsController.findRecipe(made)}"
+                android:text="Make this!"
+                android:textSize="12sp"
+                app:layout_constraintEnd_toEndOf="@+id/tvUploadedBy"
+                app:layout_constraintStart_toStartOf="@+id/tvUploadedBy"
+                app:layout_constraintTop_toBottomOf="@+id/tvUploadedBy"
+                tools:ignore="TouchTargetSizeCheck" />
+
+            <ImageButton
+                android:id="@+id/ibHeart"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_marginEnd="20dp"
+                android:background="@drawable/heart"
+                android:onClick="@{(view)->fragmentRecipeDetailsController.findRecipe(like)}"
+                app:layout_constraintEnd_toStartOf="@+id/ibShare"
+                app:layout_constraintTop_toTopOf="@+id/ibBack"
+                tools:ignore="SpeakableTextPresentCheck,TouchTargetSizeCheck" />
+
+            <TextView
+                android:id="@+id/tvCookTime"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="30dp"
+                android:layout_marginTop="10dp"
+                android:fontFamily="sans-serif-smallcaps"
+                android:text="Cooktime: 15m"
+                android:textColor="@color/black"
+                android:textSize="18sp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/btnMade" />
+
+            <TextView
+                android:id="@+id/tvIngredientText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="30dp"
+                android:layout_marginTop="20dp"
+                android:fontFamily="sans-serif-condensed"
+                android:text="Ingredients"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/tvCookTime" />
+
+            <TextView
+                android:id="@+id/tvIngredientList"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="30dp"
+                android:layout_marginTop="5dp"
+                android:layout_marginEnd="30dp"
+                android:fontFamily="monospace"
+                android:inputType="textMultiLine"
+                android:textColor="@color/black"
+                android:textSize="16sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="@+id/tvIngredientText"
+                app:layout_constraintTop_toBottomOf="@+id/tvIngredientText" />
+
+            <TextView
+                android:id="@+id/tvReviewText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="30dp"
+                android:layout_marginTop="20dp"
+                android:fontFamily="sans-serif-condensed"
+                android:text="Reviews (0)"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/tvInstructionsList" />
+
+            <TextView
+                android:id="@+id/tvUploadedBy"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text="Uploaded by: @username"
+                app:layout_constraintEnd_toEndOf="@+id/ivImage"
+                app:layout_constraintHorizontal_bias="0.517"
+                app:layout_constraintStart_toStartOf="@+id/ivImage"
+                app:layout_constraintTop_toBottomOf="@+id/tvRecipeName" />
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="30dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginEnd="30dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/tvReviewText">
+
+                <ImageView
+                    android:id="@+id/ivProfileImage"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:src="@drawable/ic_baseline_account_circle_24"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <EditText
+                    android:id="@+id/etReview"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:ems="10"
+                    android:hint="Add your review..."
+                    android:inputType="textMultiLine"
+                    android:minHeight="48dp"
+                    android:textSize="16sp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.0"
+                    app:layout_constraintStart_toEndOf="@+id/ivProfileImage"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <TextView
+                    android:id="@+id/tvRatingText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:text="Rating"
+                    app:layout_constraintStart_toStartOf="@+id/etReview"
+                    app:layout_constraintTop_toBottomOf="@+id/etReview" />
+
+                <RatingBar
+                    android:id="@+id/rbRating"
+                    style="@style/Widget.AppCompat.RatingBar.Small"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="28dp"
+                    android:layout_marginTop="6dp"
+                    android:clickable="true"
+                    android:isIndicator="false"
+                    android:numStars="5"
+                    android:stepSize="0.5"
+                    app:layout_constraintStart_toEndOf="@+id/tvRatingText"
+                    app:layout_constraintTop_toBottomOf="@+id/etReview" />
+
+                <Button
+                    android:id="@+id/btnPost"
+                    android:layout_width="120dp"
+                    android:layout_height="50dp"
+                    android:layout_marginTop="4dp"
+                    android:onClick="@{(view)->fragmentRecipeDetailsController.postReview()}"
+                    android:text="Post Review"
+                    android:textSize="12sp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/etReview"
+                    tools:ignore="TouchTargetSizeCheck" />
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/rvReviews"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/btnPost" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <ImageButton
+                android:id="@+id/ibShare"
+                android:layout_width="wrap_content"
+                android:layout_height="0dp"
+                android:layout_marginEnd="10dp"
+                android:background="@android:drawable/ic_menu_share"
+                android:backgroundTint="@color/black"
+                android:onClick="@{(view)->fragmentRecipeDetailsController.showShareAlert()}"
+                app:layout_constraintBottom_toBottomOf="@+id/ibHeart"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/ibHeart" />
+
         </androidx.constraintlayout.widget.ConstraintLayout>
 
-        <ImageButton
-            android:id="@+id/ibShare"
-            android:layout_width="wrap_content"
-            android:layout_height="0dp"
-            android:layout_marginEnd="10dp"
-            android:background="@android:drawable/ic_menu_share"
-            android:backgroundTint="@color/black"
-            app:layout_constraintBottom_toBottomOf="@+id/ibHeart"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/ibHeart" />
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
-
-</ScrollView>
+    </ScrollView>
+</layout>

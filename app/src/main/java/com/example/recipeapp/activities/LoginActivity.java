@@ -3,7 +3,6 @@ package com.example.recipeapp.activities;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.View;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -23,40 +22,25 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         binding = ActivityLoginBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
+        binding.setActivityLoginController(this);
 
         if (ParseUser.getCurrentUser() != null) {
             goMainActivity();
         }
-        binding.btnLogin.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Log.i(TAG, "onClick Login!");
-                loginUser();
-            }
-        });
-        binding.tvSignup.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                goRegister();
-            }
-        });
     }
 
-    private void loginUser() {
+    public void loginUser() {
         Log.i(TAG, "Attempting to login user");
         String username = binding.etUsername.getText().toString();
         String password = binding.etPassword.getText().toString();
-        ParseUser.logInInBackground(username, password, new LogInCallback() {
-            @Override
-            public void done(ParseUser user, ParseException e) {
-                if (e != null) {
-                    Log.e(TAG, "Error with login", e);
-                    return;
-                }
-
-                goMainActivity();
-                Toast.makeText(LoginActivity.this, "Welcome " + ParseUser.getCurrentUser().getUsername(), Toast.LENGTH_SHORT).show();
+        ParseUser.logInInBackground(username, password, (user, e) -> {
+            if (e != null) {
+                Log.e(TAG, "Error with login", e);
+                return;
             }
+
+            goMainActivity();
+            Toast.makeText(LoginActivity.this, "Welcome " + ParseUser.getCurrentUser().getUsername(), Toast.LENGTH_SHORT).show();
         });
     }
 
@@ -66,7 +50,7 @@ public class LoginActivity extends AppCompatActivity {
         finish();
     }
 
-    private void goRegister() {
+    public void goRegister() {
         final Intent intent = new Intent(LoginActivity.this, RegisterActivity.class);
         startActivity(intent);
         finish();

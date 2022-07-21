@@ -1,12 +1,12 @@
-package com.example.recipeapp;
+package com.example.recipeapp.clients;
 
 import android.content.Context;
-import android.util.Log;
 
 import com.codepath.asynchttpclient.AsyncHttpClient;
 import com.codepath.asynchttpclient.RequestHeaders;
 import com.codepath.asynchttpclient.RequestParams;
 import com.codepath.asynchttpclient.callback.JsonHttpResponseHandler;
+import com.example.recipeapp.R;
 
 public class BarcodeAnalyzeClient {
     public static final String BASE_URL = "https://nutritionix-api.p.rapidapi.com/v1_1/item";

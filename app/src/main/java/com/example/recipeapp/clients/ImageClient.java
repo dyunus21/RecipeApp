@@ -1,4 +1,4 @@
-package com.example.recipeapp.models;
+package com.example.recipeapp.clients;
 
 import android.content.Context;
 import android.content.Intent;
@@ -15,6 +15,7 @@ import androidx.core.content.FileProvider;
 import androidx.fragment.app.Fragment;
 
 import com.example.recipeapp.activities.MainActivity;
+import com.example.recipeapp.models.BitmapScaler;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -41,10 +42,9 @@ public class ImageClient extends MainActivity {
     public void launchCamera() {
         final Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         photoFile = getPhotoFileUri(photoFileName);
-
         final Uri fileProvider = FileProvider.getUriForFile(context, "com.example.provider", photoFile);
         intent.putExtra(MediaStore.EXTRA_OUTPUT, fileProvider);
-        if (intent.resolveActivity(fragment.getContext().getPackageManager()) != null) {
+        if (intent.resolveActivity(context.getPackageManager()) != null) {
             fragment.startActivityForResult(intent, CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE);
         }
     }

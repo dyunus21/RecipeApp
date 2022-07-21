@@ -18,17 +18,12 @@ import com.example.recipeapp.adapters.InventoryAdapter;
 import com.example.recipeapp.databinding.FragmentInventoryBinding;
 import com.example.recipeapp.models.Ingredient;
 import com.example.recipeapp.models.User;
-
-import com.google.mlkit.vision.barcode.BarcodeScannerOptions;
-import com.google.mlkit.vision.barcode.common.Barcode;
 import com.parse.ParseException;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
 
-
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 public class InventoryFragment extends Fragment {
     private static final String TAG = "InventoryFragment";
@@ -53,7 +48,7 @@ public class InventoryFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         binding = FragmentInventoryBinding.inflate(getLayoutInflater());
-        binding.setFragmentController(this);
+        binding.setFragmentInventoryController(this);
         return binding.getRoot();
     }
 
@@ -80,23 +75,9 @@ public class InventoryFragment extends Fragment {
         } catch (ParseException e) {
             Log.e(TAG, "No user found");
         }
-
-//        binding.fabAdd.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                goToAddIngredient();
-//            }
-//        });
-
-        binding.ibScan.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                goToBarcodeScan();
-            }
-        });
     }
 
-    private void goToBarcodeScan() {
+    public void goToBarcodeScan() {
         NavHostFragment.findNavController(this).navigate(R.id.barcodeScanFragment);
     }
 

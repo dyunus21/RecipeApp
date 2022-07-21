@@ -27,11 +27,8 @@ import com.example.recipeapp.models.Recipe;
 import com.example.recipeapp.models.User;
 import com.example.recipeapp.utilities.CurrentTimeProvider;
 import com.example.recipeapp.utilities.TimeUtils;
-import com.parse.FindCallback;
-import com.parse.ParseException;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
-import com.parse.SaveCallback;
 
 import java.util.List;
 
@@ -113,23 +110,13 @@ public class SocialFeedAdapter extends RecyclerView.Adapter<SocialFeedAdapter.Vi
                 binding.ibHeart.setBackgroundResource(R.drawable.heart);
             }
 
-            binding.ibHeart.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    likePost();
-                }
-            });
+            binding.ibHeart.setOnClickListener(v -> likePost());
 
             Glide.with(context).load(CURRENT_USER.getProfileImage().getUrl()).circleCrop().into(binding.ivCurrentUserProfileImage);
             binding.rvComments.setLayoutManager(new LinearLayoutManager(context));
             commentsAdapter = new CommentsAdapter(context);
             binding.rvComments.setAdapter(commentsAdapter);
-            binding.btnPostComment.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    postComment();
-                }
-            });
+            binding.btnPostComment.setOnClickListener(v -> postComment());
             refreshComments();
             //TODO: Collapse comments when exceeding certain limit
 
@@ -153,18 +140,15 @@ public class SocialFeedAdapter extends RecyclerView.Adapter<SocialFeedAdapter.Vi
             if (post.getRecipeLinked() != null) {
                 binding.btnGoToRecipe.setVisibility(View.VISIBLE);
             }
-            binding.btnGoToRecipe.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    final Bundle bundle = new Bundle();
-                    bundle.putParcelable(Recipe.class.getSimpleName(), post.getRecipeLinked());
-                    RecipeDetailsFragment recipeDetailsFragment = new RecipeDetailsFragment();
-                    recipeDetailsFragment.setArguments(bundle);
-                    ((AppCompatActivity) context).getSupportFragmentManager()
-                            .beginTransaction()
-                            .replace(R.id.nav_host_fragment, recipeDetailsFragment)
-                            .commit();
-                }
+            binding.btnGoToRecipe.setOnClickListener(v -> {
+                final Bundle bundle = new Bundle();
+                bundle.putParcelable(Recipe.class.getSimpleName(), post.getRecipeLinked());
+                RecipeDetailsFragment recipeDetailsFragment = new RecipeDetailsFragment();
+                recipeDetailsFragment.setArguments(bundle);
+                ((AppCompatActivity) context).getSupportFragmentManager()
+                        .beginTransaction()
+                        .replace(R.id.nav_host_fragment, recipeDetailsFragment)
+                        .commit();
             });
 
             binding.tvPostType.setText(post.getType());
@@ -180,15 +164,12 @@ public class SocialFeedAdapter extends RecyclerView.Adapter<SocialFeedAdapter.Vi
             }
             currentPost.likePost(ParseUser.getCurrentUser());
 
-            currentPost.saveInBackground(new SaveCallback() {
-                @Override
-                public void done(ParseException e) {
-                    if (e != null) {
-                        Log.e(TAG, "Error in liking post" + e);
-                        return;
-                    }
-                    Log.i(TAG, "Successfully saved post");
+            currentPost.saveInBackground(e -> {
+                if (e != null) {
+                    Log.e(TAG, "Error in liking post" + e);
+                    return;
                 }
+                Log.i(TAG, "Successfully saved post");
             });
             binding.tvLikes.setText(currentPost.getLikedBy().size() + " likes");
         }
@@ -199,17 +180,14 @@ public class SocialFeedAdapter extends RecyclerView.Adapter<SocialFeedAdapter.Vi
             query.orderByDescending(Comment.KEY_CREATED_AT);
             query.include(Comment.KEY_AUTHOR);
             query.include(Comment.KEY_DESCRIPTION);
-            query.findInBackground(new FindCallback<Comment>() {
-                @Override
-                public void done(List<Comment> objects, ParseException e) {
-                    if (e != null) {
-                        Log.e(TAG, "Error in fetching comments");
-                        return;
-                    }
-                    commentsAdapter.clear();
-                    commentsAdapter.comments.addAll(objects);
-                    commentsAdapter.notifyDataSetChanged();
+            query.findInBackground((objects, e) -> {
+                if (e != null) {
+                    Log.e(TAG, "Error in fetching comments");
+                    return;
                 }
+                commentsAdapter.clear();
+                commentsAdapter.comments.addAll(objects);
+                commentsAdapter.notifyDataSetChanged();
             });
         }
 
@@ -219,18 +197,15 @@ public class SocialFeedAdapter extends RecyclerView.Adapter<SocialFeedAdapter.Vi
             comment.setAuthor(CURRENT_USER);
             comment.setDescription(body);
             comment.setPost(currentPost);
-            comment.saveInBackground(new SaveCallback() {
-                @Override
-                public void done(ParseException e) {
-                    if (e != null) {
-                        Log.e(TAG, "Error with saving comment! " + e.getMessage());
-                        return;
-                    }
-                    Log.i(TAG, "Successfully added comment");
-                    binding.etComment.setText("");
-                    refreshComments();
-
+            comment.saveInBackground(e -> {
+                if (e != null) {
+                    Log.e(TAG, "Error with saving comment! " + e.getMessage());
+                    return;
                 }
+                Log.i(TAG, "Successfully added comment");
+                binding.etComment.setText("");
+                refreshComments();
+
             });
         }
     }

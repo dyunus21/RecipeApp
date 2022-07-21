@@ -21,5 +21,4 @@ public class BitmapScaler
         return Bitmap.createScaledBitmap(b, (int) (b.getWidth() * factor), height, true);
     }
 
-    // ...
 }

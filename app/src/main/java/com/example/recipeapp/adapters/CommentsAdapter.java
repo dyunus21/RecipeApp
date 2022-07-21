@@ -13,17 +13,16 @@ import com.example.recipeapp.databinding.ItemCommentBinding;
 import com.example.recipeapp.models.Comment;
 import com.example.recipeapp.utilities.CurrentTimeProvider;
 import com.example.recipeapp.utilities.TimeUtils;
-import com.parse.ParseUser;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class CommentsAdapter extends RecyclerView.Adapter<CommentsAdapter.ViewHolder> {
     private static final String TAG = "CommentsAdapter";
-    public List<Comment> comments;
     private final Context context;
-    private ItemCommentBinding item_binding;
     private final TimeUtils timeUtils = new TimeUtils(new CurrentTimeProvider());
+    public List<Comment> comments;
+    private ItemCommentBinding item_binding;
 
     public CommentsAdapter(Context context) {
         this.comments = new ArrayList<>();

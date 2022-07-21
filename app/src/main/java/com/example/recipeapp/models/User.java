@@ -45,16 +45,13 @@ public class User extends ParseObject {
         query.include(User.KEY_RECIPES_LIKED);
         query.include(User.KEY_RECIPES_MADE);
         query.include(User.KEY_RECIPES_UPLOADED);
-        query.getInBackground(currentUser.getObjectId(), new GetCallback<ParseUser>() {
-            @Override
-            public void done(ParseUser object, ParseException e) {
-                if (e != null) {
-                    Log.i(TAG, "Unable to fetch user!", e);
-                    return;
-                }
-                Log.i(TAG, "Successfully fetched user!");
-                user.parseUser = object;
+        query.getInBackground(currentUser.getObjectId(), (object, e) -> {
+            if (e != null) {
+                Log.i(TAG, "Unable to fetch user!", e);
+                return;
             }
+            Log.i(TAG, "Successfully fetched user!");
+            user.parseUser = object;
         });
     }
 
@@ -85,28 +82,6 @@ public class User extends ParseObject {
 
     public void setProfileImage(ParseFile image) {
         parseUser.put(KEY_PROFILE_IMAGE, image);
-    }
-
-    public List<User> getFollowerList() {
-        List<User> followerList = parseUser.getList(KEY_FOLLOWER_LIST);
-        if (followerList == null)
-            return new ArrayList<>();
-        return followerList;
-    }
-
-    public void setFollowerList(List<User> followerList) {
-        parseUser.put(KEY_FOLLOWER_LIST, followerList);
-    }
-
-    public List<User> getFollowingList() {
-        List<User> followingList = parseUser.getList(KEY_FOLLOWING_LIST);
-        if (followingList == null)
-            return new ArrayList<>();
-        return followingList;
-    }
-
-    public void setFollowingList(List<User> followingList) {
-        parseUser.put(KEY_FOLLOWING_LIST, followingList);
     }
 
     public String getIngredientsString() {
@@ -218,15 +193,5 @@ public class User extends ParseObject {
         return;
     }
 
-    public List<Post> postsLiked() {
-        List<Post> postsLiked = parseUser.getList(KEY_POSTS_LIKED);
-        if (postsLiked == null)
-            return new ArrayList<>();
-        return postsLiked;
-    }
-
-    public void setPostsLiked(List<Post> postsLiked) {
-        parseUser.put(KEY_POSTS_LIKED, postsLiked);
-    }
 
 }
