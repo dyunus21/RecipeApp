@@ -97,7 +97,8 @@ public class RecipeSearchFragment extends Fragment {
         binding.rvRecipes.setAdapter(adapter);
         GridLayoutManager gridLayoutManager = new GridLayoutManager(getContext(), 2);
         binding.rvRecipes.setLayoutManager(gridLayoutManager);
-//        setRefresh();
+        // Commented to limit API calls during testing
+        // setRefresh();
 
         binding.svSearch.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
