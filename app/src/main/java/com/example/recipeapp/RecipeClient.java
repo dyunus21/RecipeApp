@@ -49,7 +49,7 @@ public class RecipeClient {
                 params.put("type", parameters.get("MealType"));
             if (!Objects.equals(parameters.get("Cooktime"), ""))
                 params.put("maxReadyTime", parameters.get("Cooktime"));
-            if (Objects.equals(parameters.get("Cooktime"), "true"))
+            if (Objects.equals(parameters.get("switchIngredients"), "true"))
                 params.put("includeIngredients", parameters.get("Ingredients"));
         }
 
