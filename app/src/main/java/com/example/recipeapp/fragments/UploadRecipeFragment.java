@@ -2,19 +2,12 @@ package com.example.recipeapp.fragments;
 
 import static android.app.Activity.RESULT_OK;
 
-import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
 import android.content.Intent;
-import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.ImageDecoder;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
-import android.os.Environment;
-import android.provider.MediaStore;
-import android.provider.OpenableColumns;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -23,7 +16,6 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.core.content.FileProvider;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.fragment.NavHostFragment;
 
@@ -31,7 +23,7 @@ import com.bumptech.glide.Glide;
 import com.example.recipeapp.R;
 import com.example.recipeapp.activities.MainActivity;
 import com.example.recipeapp.databinding.FragmentUploadRecipeBinding;
-import com.example.recipeapp.models.BitmapScaler;
+import com.example.recipeapp.models.ImageClient;
 import com.example.recipeapp.models.Recipe;
 import com.example.recipeapp.models.User;
 import com.parse.DeleteCallback;
@@ -42,10 +34,7 @@ import com.parse.ParseQuery;
 import com.parse.ParseUser;
 import com.parse.SaveCallback;
 
-import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 
@@ -54,12 +43,12 @@ public class UploadRecipeFragment extends Fragment {
     public final static int PICK_PHOTO_CODE = 1046;
     private static final String TAG = "FragmentUploadRecipe";
     private static final User currentUser = new User(ParseUser.getCurrentUser());
-    public String photoFileName = "photo.jpg";
     private File photoFile;
     private Recipe recipe;
     private boolean edited = false;
     private FragmentUploadRecipeBinding binding;
-    private ProgressDialog progressDialogue;
+    private ProgressDialog progressDialog;
+    private ImageClient imageClient;
 
     public UploadRecipeFragment() {
 
@@ -68,8 +57,9 @@ public class UploadRecipeFragment extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         User.getUser(currentUser);
+        imageClient = new ImageClient(this);
         final Bundle bundle = this.getArguments();
-        progressDialogue = new ProgressDialog(getContext());
+        progressDialog = new ProgressDialog(getContext());
         ((MainActivity) getActivity()).getSupportActionBar().setTitle("Upload New Recipe");
         if (bundle != null) {
             edited = true;
@@ -123,20 +113,20 @@ public class UploadRecipeFragment extends Fragment {
         binding.btnTakePic.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                launchCamera();
+                imageClient.launchCamera();
             }
         });
         binding.btnGallery.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                onPickPhoto(v);
+                imageClient.onPickPhoto(v);
             }
         });
         binding.btnPublish.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                progressDialogue.setMessage("Uploading recipe...");
-                progressDialogue.show();
+                progressDialog.setMessage("Uploading recipe...");
+                progressDialog.show();
                 validateRecipe();
             }
         });
@@ -226,7 +216,7 @@ public class UploadRecipeFragment extends Fragment {
                 clearPage();
                 if (!edited)
                     addRecipeToUser(recipe);
-                progressDialogue.dismiss();
+                progressDialog.dismiss();
             }
         });
 
@@ -282,114 +272,22 @@ public class UploadRecipeFragment extends Fragment {
         });
     }
 
-    private void goBackToUpload() {
-        NavHostFragment.findNavController(this).navigate(R.id.uploadFragment);
-    }
-
-    // TODO: Move this to ImageClient later
-    public void onPickPhoto(View view) {
-        Log.i(TAG, "onPickPhoto!");
-        Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-        Log.i(TAG, "start intent for gallery!");
-        startActivityForResult(intent, PICK_PHOTO_CODE);
-
-    }
-
-    public File resizeFile(final Bitmap image) {
-        Bitmap resizedBitmap = BitmapScaler.scaleToFitWidth(image, 800);
-        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
-        resizedBitmap.compress(Bitmap.CompressFormat.JPEG, 40, bytes);
-        File resizedFile = getPhotoFileUri(photoFileName);
-        try {
-            resizedFile.createNewFile();
-            FileOutputStream fos = null;
-            fos = new FileOutputStream(resizedFile);
-            fos.write(bytes.toByteArray());
-            fos.close();
-        } catch (IOException e) {
-            Log.e(TAG, "Unable to create new file ", e);
-        }
-        Log.i(TAG, "File: " + resizedFile);
-        binding.ivImage.setImageBitmap(resizedBitmap);
-        return resizedFile;
-    }
-
-    @SuppressLint("Range")
-    public String getFileName(final Uri uri) {
-        String result = null;
-        if (uri.getScheme().equals("content")) {
-            Cursor cursor = getContext().getContentResolver().query(uri, null, null, null, null);
-            try {
-                if (cursor != null && cursor.moveToFirst()) {
-                    result = cursor.getString(cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME));
-                }
-            } finally {
-                cursor.close();
-            }
-        }
-        if (result == null) {
-            result = uri.getPath();
-            int cut = result.lastIndexOf('/');
-            if (cut != -1) {
-                result = result.substring(cut + 1);
-            }
-        }
-        return result;
-    }
-
-    public File getPhotoFileUri(final String fileName) {
-        File mediaStorageDir = new File(getContext().getExternalFilesDir(Environment.DIRECTORY_PICTURES), TAG);
-
-        if (!mediaStorageDir.exists() && !mediaStorageDir.mkdirs()) {
-            Log.d(TAG, "failed to create directory");
-        }
-
-        return new File(mediaStorageDir.getPath() + File.separator + fileName);
-    }
-
-    public Bitmap loadFromUri(final Uri photoUri) {
-        Bitmap image = null;
-        try {
-            // check version of Android on device
-            if (Build.VERSION.SDK_INT > 27) {
-                ImageDecoder.Source source = ImageDecoder.createSource(getContext().getContentResolver(), photoUri);
-                image = ImageDecoder.decodeBitmap(source);
-            } else {
-                image = MediaStore.Images.Media.getBitmap(getContext().getContentResolver(), photoUri);
-            }
-        } catch (IOException e) {
-            Log.e(TAG, "Unable to load image from URI", e);
-        }
-        return image;
-    }
-
-    private void launchCamera() {
-        final Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        photoFile = getPhotoFileUri(photoFileName);
-
-        final Uri fileProvider = FileProvider.getUriForFile(getContext(), "com.example.provider", photoFile);
-        intent.putExtra(MediaStore.EXTRA_OUTPUT, fileProvider);
-        if (intent.resolveActivity(getContext().getPackageManager()) != null) {
-            this.startActivityForResult(intent, CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE);
-        }
-    }
-
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        photoFile = imageClient.getPhotoFile();
         if (requestCode == CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE) {
             Log.i(TAG, "onActivity result camera");
             if (resultCode == RESULT_OK) {
                 final Bitmap takenImage = BitmapFactory.decodeFile(photoFile.getAbsolutePath());
-                photoFile = resizeFile(takenImage);
+                photoFile = imageClient.resizeFile(takenImage);
                 Log.i(TAG, "File: " + photoFile.toString());
             } else {
                 Toast.makeText(getContext(), "Picture wasn't taken!", Toast.LENGTH_SHORT).show();
             }
         } else if ((data != null) && requestCode == PICK_PHOTO_CODE) {
             final Uri photoUri = data.getData();
-            Bitmap selectedImage = loadFromUri(photoUri);
-            photoFile = getPhotoFileUri(getFileName(photoUri));
-            photoFile = resizeFile(selectedImage);
+            Bitmap selectedImage = imageClient.loadFromUri(photoUri);
+            photoFile = imageClient.resizeFile(selectedImage);
             Log.i(TAG, "File: " + photoFile.toString());
         }
     }
