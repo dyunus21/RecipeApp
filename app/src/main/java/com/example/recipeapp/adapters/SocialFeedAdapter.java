@@ -118,7 +118,6 @@ public class SocialFeedAdapter extends RecyclerView.Adapter<SocialFeedAdapter.Vi
             binding.rvComments.setAdapter(commentsAdapter);
             binding.btnPostComment.setOnClickListener(v -> postComment());
             refreshComments();
-            //TODO: Collapse comments when exceeding certain limit
 
             GestureDetector gestureDetector = new GestureDetector(context.getApplicationContext(), new GestureDetector.SimpleOnGestureListener() {
 

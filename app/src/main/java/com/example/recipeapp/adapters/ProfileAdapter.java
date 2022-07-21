@@ -2,10 +2,12 @@ package com.example.recipeapp.adapters;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.view.GestureDetector;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
+import androidx.constraintlayout.motion.widget.OnSwipe;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.RecyclerView;
 

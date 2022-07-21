@@ -55,7 +55,6 @@ public class User extends ParseObject {
         });
     }
 
-    //TODO: Create a constructor that sets all fields
     public ParseUser getParseUser() {
         return parseUser;
     }
