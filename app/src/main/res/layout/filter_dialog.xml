@@ -85,4 +85,15 @@
         app:layout_constraintBottom_toBottomOf="@+id/etCooktime"
         app:layout_constraintStart_toEndOf="@+id/etCooktime"
         app:layout_constraintTop_toTopOf="@+id/etCooktime" />
+
+    <Switch
+        android:id="@+id/switchIngredients"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:text="Filter by Ingredients Available"
+        android:textSize="20sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/etCooktime" />
 </androidx.constraintlayout.widget.ConstraintLayout>

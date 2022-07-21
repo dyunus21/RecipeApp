@@ -16,6 +16,7 @@ import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.EditText;
 import android.widget.SearchView;
+import android.widget.Switch;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -154,6 +155,9 @@ public class RecipeSearchFragment extends Fragment {
         actvMealType.setAdapter(mealAdapter);
 
         final EditText etCooktime = view.findViewById(R.id.etCooktime);
+
+        final Switch switchIngredients = view.findViewById(R.id.switchIngredients);
+
         alertDialog.setTitle("Choose your preferences");
 
         alertDialog.setPositiveButton("Set Filter", new DialogInterface.OnClickListener() {
@@ -162,6 +166,7 @@ public class RecipeSearchFragment extends Fragment {
                 params.put("Cooktime", etCooktime.getText().toString());
                 params.put("Cuisine", actvCuisine.getText().toString());
                 params.put("MealType", actvMealType.getText().toString());
+                params.put("switchIngredients", String.valueOf(switchIngredients.isChecked()));
 
                 Log.i(TAG, "Max Cooktime: " + etCooktime.getText().toString());
                 Log.i(TAG, "Cuisine text: " + actvCuisine.getText());
