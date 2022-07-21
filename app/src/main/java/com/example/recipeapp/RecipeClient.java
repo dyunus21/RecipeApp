@@ -9,14 +9,16 @@ import com.codepath.asynchttpclient.RequestParams;
 import com.codepath.asynchttpclient.callback.JsonHttpResponseHandler;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.net.MalformedURLException;
 import java.util.Map;
 import java.util.Objects;
 
 import okhttp3.MediaType;
+import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
+import okio.BufferedSource;
+import okio.ByteString;
+import okio.Okio;
 
 public class RecipeClient {
     public static final String BASE_URL = "https://spoonacular-recipe-food-nutrition-v1.p.rapidapi.com";
@@ -24,6 +26,7 @@ public class RecipeClient {
     private static final String TAG = "RecipeClient";
     private final RequestHeaders headers;
     private final Context context;
+    private final AsyncHttpClient client = new AsyncHttpClient();
 
     public RecipeClient(Context context) {
         this.context = context;
@@ -33,8 +36,6 @@ public class RecipeClient {
     }
 
     public void getRecipes(String query, Map<String, String> parameters, JsonHttpResponseHandler handler) throws IOException {
-        final AsyncHttpClient client = new AsyncHttpClient();
-
         final RequestParams params = new RequestParams();
         params.put("query", query);
         params.put("addRecipeInformation", "true");
@@ -56,10 +57,7 @@ public class RecipeClient {
         client.get(BASE_URL + "/recipes/complexSearch", headers, params, handler);
     }
 
-    // Currently only used to extract ingredient list
-    public void getRecipesDetailed(int recipeId, JsonHttpResponseHandler handler) throws IOException {
-        final AsyncHttpClient client = new AsyncHttpClient();
-
+    public void getRecipesDetailed(int recipeId, JsonHttpResponseHandler handler) {
         final RequestParams params = new RequestParams();
         params.put("id", recipeId);
         Log.i(TAG, "RecipeDetailedURL: " + BASE_URL + "/recipes/" + recipeId + "/information");
@@ -67,17 +65,32 @@ public class RecipeClient {
     }
 
     public void getRandomRecipes(JsonHttpResponseHandler handler) throws IOException {
-        final AsyncHttpClient client = new AsyncHttpClient();
         final RequestParams params = new RequestParams();
         params.put("number", 10);
         client.get(BASE_URL + "/recipes/random", headers, params, handler);
     }
 
-    // TODO: Set up body
-    public void getRecipesByImage(File photoFile, JsonHttpResponseHandler handler) throws MalformedURLException, FileNotFoundException {
-        final AsyncHttpClient client = new AsyncHttpClient();
+
+    public void getRecipesByImage(File photoFile, JsonHttpResponseHandler handler) {
         final RequestParams params = new RequestParams();
-        RequestBody body = RequestBody.create(MediaType.parse("image"), photoFile);
-        client.post(BASE_URL + "/food/images/analyze", headers, params, body, handler);
+        try {
+            BufferedSource bufferedSource = Okio.buffer(Okio.source(photoFile));
+            ByteString source = bufferedSource.readByteString();
+            RequestBody body = RequestBody.create(source.toByteArray(), MediaType.get("image/jpg"));
+            RequestBody requestBody = new MultipartBody.Builder()
+                    .setType(MultipartBody.FORM)
+                    .addFormDataPart("file", "photo.jpg", body)
+                    .build();
+            client.post(BASE_URL + "/food/images/analyze", headers, params, requestBody, handler);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    public void getRecipeInformationBulk(String ids, JsonHttpResponseHandler handler) {
+        final RequestParams params = new RequestParams();
+        params.put("ids", ids);
+        client.get(BASE_URL + "/recipes/informationBulk", headers, params, handler);
     }
 }

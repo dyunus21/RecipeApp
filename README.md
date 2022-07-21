@@ -62,7 +62,7 @@ _Version3_
 * [ ] User can follow other users
 
 _Version4_
-* [ ] User can search for a recipe based on image
+* [x] User can search for a recipe based on image
 * [ ] User can be directed to nearby shops that contain unavailable ingredients ([Yelp API](https://www.yelp.com/developers))
 * [ ] User can complete weekly challenges and view leaderboard
 * [ ] Users can view what nearby users/followers are currently eating (Snapchat-like feature) ([Google Maps SDK](https://developers.google.com/maps/documentation/android-sdk/overview))

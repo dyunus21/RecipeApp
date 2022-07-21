@@ -1,7 +1,6 @@
 package com.example.recipeapp.adapters;
 
 import android.content.Context;
-import android.os.Build;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -26,6 +25,7 @@ import com.example.recipeapp.models.User;
 import com.parse.ParseUser;
 
 import java.util.List;
+import java.util.Objects;
 
 class DetailsTransition extends TransitionSet {
     public DetailsTransition() {
@@ -109,7 +109,9 @@ public class RecipeSearchAdapter extends RecyclerView.Adapter<RecipeSearchAdapte
         public void bind(Recipe recipe) {
             currentRecipe = recipe;
             binding.tvTitle.setText(recipe.getTitle());
-            if (recipe.getImageUrl() == null)
+            if (Objects.equals(recipe.getImageUrl(), "") && recipe.getImage() == null)
+                Glide.with(context).load(R.drawable.placeholder_image).into(binding.ivImage);
+            else if (recipe.getImageUrl() == null)
                 Glide.with(context).load(recipe.getImage().getUrl()).into(binding.ivImage);
             else
                 Glide.with(context).load(recipe.getImageUrl()).into(binding.ivImage);

@@ -50,13 +50,17 @@
             android:textColor="@color/black"
             android:textSize="18sp"
             app:layout_constraintEnd_toEndOf="@+id/ivImage"
+            app:layout_constraintHorizontal_bias="1.0"
+            app:layout_constraintStart_toEndOf="@+id/tvCookTime"
             app:layout_constraintTop_toTopOf="@+id/tvCookTime" />
 
         <TextView
             android:id="@+id/tvRecipeName"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_marginStart="5dp"
             android:layout_marginTop="10dp"
+            android:layout_marginEnd="5dp"
             android:fontFamily="sans-serif-smallcaps"
             android:inputType="textMultiLine"
             android:text="Recipe Title"

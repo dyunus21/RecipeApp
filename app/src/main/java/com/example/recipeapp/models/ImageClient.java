@@ -20,12 +20,13 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.Calendar;
 
 public class ImageClient extends MainActivity {
     private static final String TAG = "ImageClient";
     private static final int CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE = 42;
     private final static int PICK_PHOTO_CODE = 1046;
-    public String photoFileName = "photo.jpg";
+    public String photoFileName = Calendar.getInstance().getTime() + ".jpg";
     File photoFile;
     Context context;
     Fragment fragment;

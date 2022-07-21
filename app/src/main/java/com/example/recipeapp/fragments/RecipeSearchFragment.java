@@ -2,6 +2,7 @@ package com.example.recipeapp.fragments;
 
 import static android.app.Activity.RESULT_OK;
 
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -13,10 +14,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.AutoCompleteTextView;
-import android.widget.EditText;
 import android.widget.SearchView;
-import android.widget.Switch;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -30,6 +28,7 @@ import com.codepath.asynchttpclient.callback.JsonHttpResponseHandler;
 import com.example.recipeapp.R;
 import com.example.recipeapp.RecipeClient;
 import com.example.recipeapp.adapters.RecipeSearchAdapter;
+import com.example.recipeapp.databinding.FilterDialogBinding;
 import com.example.recipeapp.databinding.FragmentRecipeSearchBinding;
 import com.example.recipeapp.databinding.ImageSearchDialogBinding;
 import com.example.recipeapp.models.ImageClient;
@@ -45,9 +44,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -67,6 +64,7 @@ public class RecipeSearchFragment extends Fragment {
     private RecipeClient client;
     private ImageClient imageClient;
     private File photoFile;
+    private ProgressDialog progressDialog;  //Replace with shimmer effect
 
 
     public RecipeSearchFragment() {
@@ -88,6 +86,7 @@ public class RecipeSearchFragment extends Fragment {
         recipes = new ArrayList<>();
         adapter = new RecipeSearchAdapter(getContext(), recipes);
         imageClient = new ImageClient(this);
+        progressDialog = new ProgressDialog(getContext());
         User.getUser(currentUser);
     }
 
@@ -106,7 +105,7 @@ public class RecipeSearchFragment extends Fragment {
                 Log.i(TAG, query);
                 try {
                     adapter.clear();
-                    populateRecipes(query);
+                    getRecipesByQuery(query);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -144,33 +143,23 @@ public class RecipeSearchFragment extends Fragment {
     }
 
     public void initFilterDialog() {
-        View view = getLayoutInflater().inflate(R.layout.filter_dialog, null);
-        MaterialAlertDialogBuilder alertDialog = new MaterialAlertDialogBuilder(getContext());
-        final AutoCompleteTextView actvCuisine = view.findViewById(R.id.actvCuisine);
-        ArrayAdapter cuisineAdapter = new ArrayAdapter(getContext(), android.R.layout.simple_dropdown_item_1line, getResources().getStringArray(R.array.cuisine));
-        actvCuisine.setAdapter(cuisineAdapter);
+        FilterDialogBinding filterDialogBinding = FilterDialogBinding.inflate(getLayoutInflater());
+        final MaterialAlertDialogBuilder alertDialog = new MaterialAlertDialogBuilder(getContext());
+        final ArrayAdapter cuisineAdapter = new ArrayAdapter(getContext(), android.R.layout.simple_dropdown_item_1line, getResources().getStringArray(R.array.cuisine));
+        filterDialogBinding.actvCuisine.setAdapter(cuisineAdapter);
 
-        final AutoCompleteTextView actvMealType = view.findViewById(R.id.actvMealType);
         ArrayAdapter mealAdapter = new ArrayAdapter(getContext(), android.R.layout.simple_dropdown_item_1line, getResources().getStringArray(R.array.meal));
-        actvMealType.setAdapter(mealAdapter);
-
-        final EditText etCooktime = view.findViewById(R.id.etCooktime);
-
-        final Switch switchIngredients = view.findViewById(R.id.switchIngredients);
+        filterDialogBinding.actvMealType.setAdapter(mealAdapter);
 
         alertDialog.setTitle("Choose your preferences");
 
         alertDialog.setPositiveButton("Set Filter", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                params.put("Cooktime", etCooktime.getText().toString());
-                params.put("Cuisine", actvCuisine.getText().toString());
-                params.put("MealType", actvMealType.getText().toString());
-                params.put("switchIngredients", String.valueOf(switchIngredients.isChecked()));
-
-                Log.i(TAG, "Max Cooktime: " + etCooktime.getText().toString());
-                Log.i(TAG, "Cuisine text: " + actvCuisine.getText());
-                Log.i(TAG, "Meal type text: " + actvMealType.getText());
+                params.put("Cooktime", filterDialogBinding.etCooktime.getText().toString());
+                params.put("Cuisine", filterDialogBinding.actvCuisine.getText().toString());
+                params.put("MealType", filterDialogBinding.actvMealType.getText().toString());
+                params.put("switchIngredients", String.valueOf(filterDialogBinding.switchIngredients.isChecked()));
                 Log.i(TAG, params.toString());
             }
         }).setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
@@ -179,11 +168,13 @@ public class RecipeSearchFragment extends Fragment {
                 Log.i(TAG, "Cancelled filter");
             }
         });
-        alertDialog.setView(view);
+        alertDialog.setView(filterDialogBinding.getRoot());
         alertDialog.show();
     }
 
     private void initializeScreen() throws IOException {
+        progressDialog.setMessage("Fetching recipes...");
+        progressDialog.show();
         client.getRandomRecipes(new JsonHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Headers headers, JSON json) {
@@ -196,11 +187,11 @@ public class RecipeSearchFragment extends Fragment {
                 }
                 try {
                     adapter.clear();
-                    recipes = Recipe.
-                            getRecipes(jsonArray);
+                    recipes = Recipe.getRecipes(jsonArray);
                     adapter.addAll(recipes);
                     binding.rvRecipes.scrollToPosition(0);
                     binding.swipeContainer.setRefreshing(false);
+                    progressDialog.dismiss();
                 } catch (JSONException e) {
                     Log.e(TAG, "Hit JSON exception", e);
                 }
@@ -208,7 +199,7 @@ public class RecipeSearchFragment extends Fragment {
 
             @Override
             public void onFailure(int statusCode, Headers headers, String response, Throwable throwable) {
-
+                Log.e(TAG, "Unable to fetch random recipes" + throwable.toString());
             }
         });
     }
@@ -219,7 +210,7 @@ public class RecipeSearchFragment extends Fragment {
         materialAlertDialogBuilder.show();
     }
 
-    public void populateRecipes(String query) throws IOException {
+    public void getRecipesByQuery(String query) throws IOException {
 
         ParseQuery<Recipe> parseQuery = ParseQuery.getQuery(Recipe.class);
         parseQuery.whereContains(Recipe.KEY_TITLE, query);
@@ -279,31 +270,74 @@ public class RecipeSearchFragment extends Fragment {
         alertDialogBuilder.setTitle("Preview");
         final ImageSearchDialogBinding imageSearchDialogBinding = ImageSearchDialogBinding.inflate(getLayoutInflater());
         Glide.with(getContext()).load(photoFile).into(imageSearchDialogBinding.ivPreview);
-        alertDialogBuilder.setPositiveButton("Search", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                Log.i(TAG, "Search for recipes based on image");
-                try {
-                    searchRecipesByImage();
-                } catch (MalformedURLException | FileNotFoundException e) {
-                    e.printStackTrace();
-                }
+        alertDialogBuilder.setPositiveButton("Search", (dialog, which) -> {
+            Log.i(TAG, "Search for recipes based on image");
+            try {
+                progressDialog.setMessage("Fetching recipes...");
+                progressDialog.show();
+                searchRecipesByImage();
+            } catch (IOException e) {
+                Log.e(TAG, "Unable to search for recipes based on image", e);
             }
         });
         alertDialogBuilder.setView(imageSearchDialogBinding.getRoot());
         alertDialogBuilder.show();
     }
 
-    private void searchRecipesByImage() throws MalformedURLException, FileNotFoundException {
+    private void searchRecipesByImage() throws IOException {
         client.getRecipesByImage(photoFile, new JsonHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Headers headers, JSON json) {
                 Log.i(TAG, "On sucessss!" + json.toString());
+                JSONArray jsonArray = null;
+                try {
+                    jsonArray = json.jsonObject.getJSONArray("recipes");
+                    createRecipeIdArray(jsonArray);
+                } catch (JSONException e) {
+                    Log.e(TAG, "Unable to fetch recipes from image!", e);
+                }
+
             }
 
             @Override
             public void onFailure(int statusCode, Headers headers, String response, Throwable throwable) {
                 Log.e(TAG, "onFailure " + throwable.toString() + " " + response);
+            }
+        });
+    }
+
+    private void createRecipeIdArray(JSONArray jsonArray) throws JSONException {
+        List<String> recipeIds = new ArrayList<>();
+        for (int i = 0; i < jsonArray.length(); i++) {
+            recipeIds.add(String.valueOf(jsonArray.getJSONObject(i).getInt("id")));
+        }
+        String ids = String.join(",", recipeIds);
+        Log.i(TAG, "recipeId Array: " + ids);
+        getRecipesById(ids);
+    }
+
+    private void getRecipesById(String ids) {
+        client.getRecipeInformationBulk(ids, new JsonHttpResponseHandler() {
+            @Override
+            public void onSuccess(int statusCode, Headers headers, JSON json) {
+                Log.i(TAG, "Successfully Received array of recipe information based on ids" + json.toString());
+                JSONArray jsonArray = json.jsonArray;
+                try {
+                    recipes.addAll(Recipe.getRecipes(jsonArray));
+                } catch (JSONException e) {
+                    Log.e(TAG, "Unable to getRecipes from jsonArray", e);
+                }
+                if (recipes.size() == 0) {
+                    showNoResultsDialog();
+                }
+                adapter.addAll(recipes);
+                progressDialog.dismiss();
+            }
+
+            @Override
+            public void onFailure(int statusCode, Headers headers, String response, Throwable throwable) {
+                Log.e(TAG, "Unable to fetch recipe information by ids" + response);
+
             }
         });
     }
