@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.ColorDrawable;
-import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -17,20 +16,33 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.navigation.NavBackStackEntry;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.NavigationUI;
 
 import com.example.recipeapp.R;
 import com.example.recipeapp.databinding.ActivityMainBinding;
+import com.example.recipeapp.fragments.RecipeSearchFragment;
 import com.example.recipeapp.models.FabAnimation;
+import com.example.recipeapp.models.ImageClient;
+import com.example.recipeapp.models.Recipe;
 import com.example.recipeapp.models.User;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.parse.ParseUser;
 
+import org.parceler.Parcels;
+
+import java.io.File;
+import java.util.List;
+
 public class MainActivity extends AppCompatActivity {
 
     private static final String TAG = "MainActivity";
+    private final static int CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE = 42;
+    private final static int PICK_PHOTO_CODE = 1046;
     public static NavController navController;
     public User CURRENT_USER = new User(ParseUser.getCurrentUser());
     public ActivityMainBinding binding;
@@ -59,7 +71,6 @@ public class MainActivity extends AppCompatActivity {
                 animateFab(v, isRotate);
             }
         });
-//        Log.i(TAG, "Current Fragment: " + getSupportFragmentManager().);
         binding.fabPost.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

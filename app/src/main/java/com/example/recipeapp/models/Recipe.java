@@ -4,13 +4,11 @@ import android.graphics.Bitmap;
 import android.util.Log;
 
 import com.parse.FindCallback;
-import com.parse.GetCallback;
 import com.parse.ParseClassName;
 import com.parse.ParseException;
 import com.parse.ParseFile;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
-import com.parse.ParseUser;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -50,6 +48,9 @@ public class Recipe extends ParseObject {
             else
                 recipe.setCuisineType("None");
 
+            if (results.getJSONObject(i).getJSONArray("analyzedInstructions").length() == 0) {
+                continue;
+            }
             List<String> instructions = new ArrayList<>();
             JSONArray steps = (results.getJSONObject(i).getJSONArray("analyzedInstructions")).getJSONObject(0).getJSONArray("steps");
             for (int j = 0; j < steps.length(); j++) {
@@ -57,6 +58,9 @@ public class Recipe extends ParseObject {
             }
             recipe.setInstructions(instructions);
 
+            if (results.getJSONObject(i).getString("image") == "") {
+                recipe.setImage(null);
+            }
             recipe.setImageUrl(results.getJSONObject(i).getString("image"));
             Log.i(TAG, "Added " + recipe.getTitle());
             recipes.add(recipe);

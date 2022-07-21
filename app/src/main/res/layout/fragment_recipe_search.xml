@@ -1,57 +1,79 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="#D7ECE9"
-    tools:context=".fragments.RecipeSearchFragment">
+    xmlns:tools="http://schemas.android.com/tools">
 
-    <ImageButton
-        android:id="@+id/ibFilter"
-        android:layout_width="35dp"
-        android:layout_height="34dp"
-        android:layout_marginEnd="15dp"
-        android:background="@drawable/ic_baseline_filter_list_24"
-        app:layout_constraintBottom_toBottomOf="@+id/svSearch"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/svSearch" />
+    <data>
 
-    <SearchView
-        android:id="@+id/svSearch"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="10dp"
-        android:layout_marginTop="5dp"
-        android:layout_marginEnd="5dp"
-        android:background="#C3CDCC"
-        android:queryHint="Search for a recipe"
-        app:layout_constraintEnd_toStartOf="@+id/ibFilter"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:queryHint="Find a recipe..." />
+        <variable
+            name="fragmentRecipeSearchController"
+            type="com.example.recipeapp.fragments.RecipeSearchFragment" />
+    </data>
 
-    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-        android:id="@+id/swipeContainer"
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:padding="10dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/svSearch">
+        android:layout_height="match_parent"
+        android:background="#D7ECE9"
+        tools:context=".fragments.RecipeSearchFragment">
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/rvRecipes"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
+        <ImageButton
+            android:id="@+id/ibCamera"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
             android:layout_marginStart="10dp"
+            android:background="@drawable/ic_outline_photo_camera_24"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/svSearch"
+            android:onClick="@{(view)->fragmentRecipeSearchController.initCamera()}"/>
+
+        <ImageButton
+            android:id="@+id/ibFilter"
+            android:layout_width="35dp"
+            android:layout_height="34dp"
+            android:layout_marginEnd="15dp"
+            android:background="@drawable/ic_baseline_filter_list_24"
+            android:onClick="@{(view)->fragmentRecipeSearchController.initFilterDialog()}"
+            app:layout_constraintBottom_toBottomOf="@+id/svSearch"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/svSearch" />
+
+        <SearchView
+            android:id="@+id/svSearch"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="5dp"
             android:layout_marginTop="5dp"
-            android:layout_marginEnd="10dp"
-            android:layout_marginBottom="5dp"
+            android:layout_marginEnd="5dp"
+            android:background="#C3CDCC"
+            android:queryHint="Search for a recipe"
+            app:layout_constraintEnd_toStartOf="@+id/ibFilter"
+            app:layout_constraintStart_toEndOf="@+id/ibCamera"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:queryHint="Find a recipe..." />
+
+        <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+            android:id="@+id/swipeContainer"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:padding="10dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/svSearch" />
-    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
-</androidx.constraintlayout.widget.ConstraintLayout>
+            app:layout_constraintTop_toBottomOf="@+id/svSearch">
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rvRecipes"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="5dp"
+                android:layout_marginEnd="10dp"
+                android:layout_marginBottom="5dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/svSearch" />
+
+        </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

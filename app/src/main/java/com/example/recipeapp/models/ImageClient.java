@@ -1,19 +1,18 @@
 package com.example.recipeapp.models;
 
-import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.ImageDecoder;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Environment;
 import android.provider.MediaStore;
-import android.provider.OpenableColumns;
 import android.util.Log;
 import android.view.View;
+
+import androidx.core.content.FileProvider;
+import androidx.fragment.app.Fragment;
 
 import com.example.recipeapp.activities.MainActivity;
 
@@ -21,25 +20,41 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.Calendar;
 
 public class ImageClient extends MainActivity {
     private static final String TAG = "ImageClient";
-    public int photo_code;
-    public String photoFileName = "photo.jpg";
+    private static final int CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE = 42;
+    private final static int PICK_PHOTO_CODE = 1046;
+    public String photoFileName = Calendar.getInstance().getTime() + ".jpg";
     File photoFile;
     Context context;
+    Fragment fragment;
 
-    public ImageClient(Context context) {
-        this.context = context;
+
+    public ImageClient(Fragment fragment) {
+        this.fragment = fragment;
+        this.context = fragment.getContext();
     }
 
 
-    public void onPickPhoto(View view, int photo_code) {
+    public void launchCamera() {
+        final Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        photoFile = getPhotoFileUri(photoFileName);
+
+        final Uri fileProvider = FileProvider.getUriForFile(context, "com.example.provider", photoFile);
+        intent.putExtra(MediaStore.EXTRA_OUTPUT, fileProvider);
+        if (intent.resolveActivity(fragment.getContext().getPackageManager()) != null) {
+            fragment.startActivityForResult(intent, CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE);
+        }
+    }
+
+
+    public void onPickPhoto(View view) {
         Log.i(TAG, "onPickPhoto!");
         Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
         Log.i(TAG, "start intent for gallery!");
-        this.photo_code = photo_code;
-        ((Activity) context).startActivityForResult(intent, photo_code);
+        fragment.startActivityForResult(intent, PICK_PHOTO_CODE);
 
     }
 
@@ -59,29 +74,6 @@ public class ImageClient extends MainActivity {
         }
         Log.i(TAG, "File: " + resizedFile);
         return resizedFile;
-    }
-
-    @SuppressLint("Range")
-    public String getFileName(Uri uri) {
-        String result = null;
-        if (uri.getScheme().equals("content")) {
-            Cursor cursor = context.getContentResolver().query(uri, null, null, null, null);
-            try {
-                if (cursor != null && cursor.moveToFirst()) {
-                    result = cursor.getString(cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME));
-                }
-            } finally {
-                cursor.close();
-            }
-        }
-        if (result == null) {
-            result = uri.getPath();
-            int cut = result.lastIndexOf('/');
-            if (cut != -1) {
-                result = result.substring(cut + 1);
-            }
-        }
-        return result;
     }
 
     public File getPhotoFileUri(String fileName) {
@@ -108,5 +100,9 @@ public class ImageClient extends MainActivity {
             Log.e(TAG, "Unable to load image from URI", e);
         }
         return image;
+    }
+
+    public File getPhotoFile() {
+        return photoFile;
     }
 }
