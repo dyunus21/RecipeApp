@@ -10,6 +10,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.example.recipeapp.databinding.ItemReviewBinding;
 import com.example.recipeapp.models.Review;
+import com.example.recipeapp.utilities.CurrentTimeProvider;
+import com.example.recipeapp.utilities.TimeUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,6 +19,7 @@ import java.util.List;
 public class ReviewsAdapter extends RecyclerView.Adapter<ReviewsAdapter.ViewHolder> {
     private static final String TAG = "ReviewsAdapter";
     private final Context context;
+    private final TimeUtils timeUtils = new TimeUtils(new CurrentTimeProvider());
     public List<Review> reviews;
     private ItemReviewBinding item_binding;
 
@@ -68,7 +71,7 @@ public class ReviewsAdapter extends RecyclerView.Adapter<ReviewsAdapter.ViewHold
 
         public void bind(Review review) {
             binding.tvUsername.setText("@" + review.getAuthor().getParseUser().getUsername());
-            binding.tvTimestamp.setText(Review.calculateTimeAgo(review.getCreatedAt()));
+            binding.tvTimestamp.setText(timeUtils.calculateTimeAgo(review.getCreatedAt()));
             binding.tvDescription.setText(review.getDescription());
             binding.rbRating.setRating(review.getRating());
             Glide.with(context).load(review.getAuthor().getProfileImage().getUrl()).circleCrop().into(binding.ivProfileImage);

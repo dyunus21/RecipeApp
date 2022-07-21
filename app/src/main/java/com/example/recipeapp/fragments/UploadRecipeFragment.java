@@ -23,16 +23,12 @@ import com.bumptech.glide.Glide;
 import com.example.recipeapp.R;
 import com.example.recipeapp.activities.MainActivity;
 import com.example.recipeapp.databinding.FragmentUploadRecipeBinding;
-import com.example.recipeapp.models.ImageClient;
+import com.example.recipeapp.clients.ImageClient;
 import com.example.recipeapp.models.Recipe;
 import com.example.recipeapp.models.User;
-import com.parse.DeleteCallback;
-import com.parse.GetCallback;
-import com.parse.ParseException;
 import com.parse.ParseFile;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
-import com.parse.SaveCallback;
 
 import java.io.File;
 import java.util.Arrays;
@@ -43,12 +39,12 @@ public class UploadRecipeFragment extends Fragment {
     public final static int PICK_PHOTO_CODE = 1046;
     private static final String TAG = "FragmentUploadRecipe";
     private static final User currentUser = new User(ParseUser.getCurrentUser());
+    public ImageClient imageClient;
     private File photoFile;
     private Recipe recipe;
     private boolean edited = false;
     private FragmentUploadRecipeBinding binding;
     private ProgressDialog progressDialog;
-    private ImageClient imageClient;
 
     public UploadRecipeFragment() {
 
@@ -78,6 +74,7 @@ public class UploadRecipeFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         binding = FragmentUploadRecipeBinding.inflate(getLayoutInflater());
+        binding.setFragmentUploadRecipeController(this);
         return binding.getRoot();
     }
 
@@ -88,67 +85,24 @@ public class UploadRecipeFragment extends Fragment {
         if (edited) {
             binding.btnDelete.setVisibility(View.VISIBLE);
         }
-        binding.btnDelete.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                deleteRecipe();
-            }
-        });
 
         if (recipe.getTitle() != null) {
             initializePage();
         }
-        binding.ibBack.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                binding.ibBack.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        getActivity().onBackPressed();
-                    }
-                });
-            }
-        });
-
-        binding.btnTakePic.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                imageClient.launchCamera();
-            }
-        });
-        binding.btnGallery.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                imageClient.onPickPhoto(v);
-            }
-        });
-        binding.btnPublish.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                progressDialog.setMessage("Uploading recipe...");
-                progressDialog.show();
-                validateRecipe();
-            }
-        });
-
-
     }
 
-    private void deleteRecipe() {
-        recipe.deleteInBackground(new DeleteCallback() {
-            @Override
-            public void done(ParseException e) {
-                if (e != null) {
-                    Log.e(TAG, "Unable to delete recipe: " + recipe.getTitle(), e);
-                    return;
-                }
-                Log.i(TAG, "Successfully deleted recipe" + recipe.getTitle());
-                List<Recipe> uploaded = currentUser.getRecipesUploaded();
-                uploaded.remove(recipe);
-                currentUser.setRecipesUploaded(uploaded);
-                currentUser.saveInBackground();
-                NavHostFragment.findNavController(getParentFragment()).navigate(R.id.recipeSearchFragment);
+    public void deleteRecipe() {
+        recipe.deleteInBackground(e -> {
+            if (e != null) {
+                Log.e(TAG, "Unable to delete recipe: " + recipe.getTitle(), e);
+                return;
             }
+            Log.i(TAG, "Successfully deleted recipe" + recipe.getTitle());
+            List<Recipe> uploaded = currentUser.getRecipesUploaded();
+            uploaded.remove(recipe);
+            currentUser.setRecipesUploaded(uploaded);
+            currentUser.saveInBackground();
+            NavHostFragment.findNavController(getParentFragment()).navigate(R.id.recipeSearchFragment);
         });
     }
 
@@ -170,7 +124,9 @@ public class UploadRecipeFragment extends Fragment {
         return;
     }
 
-    private void validateRecipe() {
+    public void validateRecipe() {
+        progressDialog.setMessage("Uploading recipe...");
+        progressDialog.show();
         final String title = binding.etRecipeName.getText().toString();
         final String cuisineType = binding.etCuisine.getText().toString();
         final int cooktime = Integer.parseInt(binding.etCooktime.getText().toString());
@@ -204,20 +160,17 @@ public class UploadRecipeFragment extends Fragment {
         if (photoFile != null)
             recipe.setImage(new ParseFile(photoFile));
         Log.i(TAG, "Finished inputting recipe details");
-        recipe.saveInBackground(new SaveCallback() {
-            @Override
-            public void done(ParseException e) {
-                if (e != null) {
-                    Log.e(TAG, "Error with saving recipe", e);
-                    Toast.makeText(getContext(), "Unable to save recipe!", Toast.LENGTH_SHORT).show();
-                    return;
-                }
-                Log.i(TAG, "Successfully saved recipe: " + recipe.getTitle());
-                clearPage();
-                if (!edited)
-                    addRecipeToUser(recipe);
-                progressDialog.dismiss();
+        recipe.saveInBackground(e -> {
+            if (e != null) {
+                Log.e(TAG, "Error with saving recipe", e);
+                Toast.makeText(getContext(), "Unable to save recipe!", Toast.LENGTH_SHORT).show();
+                return;
             }
+            Log.i(TAG, "Successfully saved recipe: " + recipe.getTitle());
+            clearPage();
+            if (!edited)
+                addRecipeToUser(recipe);
+            progressDialog.dismiss();
         });
 
     }
@@ -243,12 +196,7 @@ public class UploadRecipeFragment extends Fragment {
         query.include(Recipe.KEY_IMAGE);
         query.include(Recipe.KEY_IMAGE_URL);
         query.include(Recipe.KEY_REVIEWS);
-        query.getInBackground(recipe.getObjectId(), new GetCallback<Recipe>() {
-            @Override
-            public void done(Recipe object, ParseException e) {
-                setRecipe(object);
-            }
-        });
+        query.getInBackground(recipe.getObjectId(), (object, e) -> setRecipe(object));
     }
 
     private void setRecipe(Recipe object) {
@@ -261,14 +209,11 @@ public class UploadRecipeFragment extends Fragment {
         if (!uploaded.contains(recipe))
             uploaded.add(recipe);
         currentUser.setRecipesUploaded(uploaded);
-        currentUser.getParseUser().saveInBackground(new SaveCallback() {
-            @Override
-            public void done(ParseException e) {
-                if (e != null) {
-                    Log.e(TAG, "Error in saving recipe to user uploaded recipe array", e);
-                }
-                Log.i(TAG, "Successfully saved recipe to user recipe array");
+        currentUser.getParseUser().saveInBackground(e -> {
+            if (e != null) {
+                Log.e(TAG, "Error in saving recipe to user uploaded recipe array", e);
             }
+            Log.i(TAG, "Successfully saved recipe to user recipe array");
         });
     }
 
@@ -291,4 +236,9 @@ public class UploadRecipeFragment extends Fragment {
             Log.i(TAG, "File: " + photoFile.toString());
         }
     }
+
+    public void goBack() {
+        getActivity().onBackPressed();
+    }
+
 }

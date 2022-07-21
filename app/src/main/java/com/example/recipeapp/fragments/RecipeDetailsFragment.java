@@ -1,6 +1,5 @@
 package com.example.recipeapp.fragments;
 
-import android.content.DialogInterface;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -11,13 +10,12 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
-import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.bumptech.glide.Glide;
 import com.codepath.asynchttpclient.callback.JsonHttpResponseHandler;
 import com.example.recipeapp.R;
-import com.example.recipeapp.RecipeClient;
+import com.example.recipeapp.clients.RecipeClient;
 import com.example.recipeapp.activities.MainActivity;
 import com.example.recipeapp.adapters.ReviewsAdapter;
 import com.example.recipeapp.databinding.FragmentRecipeDetailsBinding;
@@ -26,11 +24,8 @@ import com.example.recipeapp.models.Recipe;
 import com.example.recipeapp.models.Review;
 import com.example.recipeapp.models.User;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
-import com.parse.FindCallback;
-import com.parse.ParseException;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
-import com.parse.SaveCallback;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -43,7 +38,6 @@ import okhttp3.Headers;
 
 public class RecipeDetailsFragment extends Fragment {
     private static final String TAG = "RecipeDetailsFragment";
-    private final boolean recipeInDatabase = false;
     private final User currentUser = new User(ParseUser.getCurrentUser());
     private FragmentRecipeDetailsBinding binding;
     private Recipe recipe;
@@ -116,38 +110,17 @@ public class RecipeDetailsFragment extends Fragment {
             binding.tvUploadedBy.setText("Uploaded by: @username");
         }
 
-        binding.ibBack.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                getActivity().onBackPressed();
-            }
-        });
-
         // TODO: button does not change color to indicate liked recipes because ids differ each session
         if (currentUser.isLikedbyCurrentUser(recipe)) {
             binding.ibHeart.setBackgroundResource(R.drawable.heart_filled);
         } else {
             binding.ibHeart.setBackgroundResource(R.drawable.heart);
         }
-        binding.ibHeart.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                findRecipe("like");
-            }
-        });
-
         if (currentUser.isMadebyCurrentUser(recipe)) {
-            // TODO Change Image button color to gray
             binding.btnMade.setText("I Made it!");
         } else {
             binding.btnMade.setText("Make it!");
         }
-        binding.btnMade.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                findRecipe("made");
-            }
-        });
         if (recipe.getRecipeId() == 0 && ParseUser.getCurrentUser().hasSameId(recipe.getAuthor().getParseUser())) {
             binding.ibEdit.setVisibility(View.VISIBLE);
         } else {
@@ -157,57 +130,41 @@ public class RecipeDetailsFragment extends Fragment {
         binding.rvReviews.setLayoutManager(new LinearLayoutManager(getContext()));
         binding.rvReviews.setAdapter(reviewsAdapter);
         queryReviews();
-        binding.btnPost.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                postReview();
-            }
-        });
-
-        binding.ibShare.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                MaterialAlertDialogBuilder alertDialogBuilder = new MaterialAlertDialogBuilder(getContext());
-                alertDialogBuilder.setMessage("Do you want to share this recipe?");
-                alertDialogBuilder.setPositiveButton("Share", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        final Bundle bundle = new Bundle();
-                        bundle.putParcelable(Recipe.class.getSimpleName(), recipe);
-                        UploadPostFragment uploadPostFragment = new UploadPostFragment();
-                        uploadPostFragment.setArguments(bundle);
-                        getFragmentManager()
-                                .beginTransaction()
-                                .replace(R.id.nav_host_fragment, uploadPostFragment)
-                                .commit();
-                    }
-                });
-                alertDialogBuilder.show();
-            }
-        });
-
     }
 
-    private void postReview() {
+    public void showShareAlert() {
+        MaterialAlertDialogBuilder alertDialogBuilder = new MaterialAlertDialogBuilder(getContext());
+        alertDialogBuilder.setMessage("Do you want to share this recipe?");
+        alertDialogBuilder.setPositiveButton("Share", (dialog, which) -> {
+            final Bundle bundle = new Bundle();
+            bundle.putParcelable(Recipe.class.getSimpleName(), recipe);
+            UploadPostFragment uploadPostFragment = new UploadPostFragment();
+            uploadPostFragment.setArguments(bundle);
+            getFragmentManager()
+                    .beginTransaction()
+                    .replace(R.id.nav_host_fragment, uploadPostFragment)
+                    .commit();
+        });
+        alertDialogBuilder.show();
+    }
+
+    public void postReview() {
         String description = binding.etReview.getText().toString();
         Review review = new Review();
         review.setAuthor(currentUser);
         review.setDescription(description);
         review.setRecipe(recipe);
         review.setRating(binding.rbRating.getRating());
-        review.saveInBackground(new SaveCallback() {
-            @Override
-            public void done(ParseException e) {
-                if (e != null) {
-                    Log.e(TAG, "Error with saving review! " + e.getMessage());
-                    return;
-                }
-                Log.i(TAG, "Successfully added review");
-                binding.etReview.setText("");
-                binding.rbRating.setRating(0);
-                binding.ivProfileImage.setImageResource(0);
-                queryReviews();
+        review.saveInBackground(e -> {
+            if (e != null) {
+                Log.e(TAG, "Error with saving review! " + e.getMessage());
+                return;
             }
+            Log.i(TAG, "Successfully added review");
+            binding.etReview.setText("");
+            binding.rbRating.setRating(0);
+            binding.ivProfileImage.setImageResource(0);
+            queryReviews();
         });
     }
 
@@ -219,18 +176,15 @@ public class RecipeDetailsFragment extends Fragment {
         query.include(Review.KEY_DESCRIPTION);
         query.include(Review.KEY_RATING);
         query.include(Review.KEY_RECIPE);
-        query.findInBackground(new FindCallback<Review>() {
-            @Override
-            public void done(List<Review> objects, ParseException e) {
-                if (e != null) {
-                    Log.e(TAG, "Error in fetching reviews");
-                    return;
-                }
-                reviewsAdapter.clear();
-                reviews = objects;
-                reviewsAdapter.addAll(reviews);
-                binding.tvReviewText.setText("Reviews(" + reviews.size() + ")");
+        query.findInBackground((objects, e) -> {
+            if (e != null) {
+                Log.e(TAG, "Error in fetching reviews");
+                return;
             }
+            reviewsAdapter.clear();
+            reviews = objects;
+            reviewsAdapter.addAll(reviews);
+            binding.tvReviewText.setText("Reviews(" + reviews.size() + ")");
         });
     }
 
@@ -248,24 +202,21 @@ public class RecipeDetailsFragment extends Fragment {
         if (recipe.getRecipeId() == 0) {
             query.whereEqualTo(Recipe.KEY_OBJECT_ID, recipe.getObjectId());
         }
-        query.findInBackground(new FindCallback<Recipe>() {
-            @Override
-            public void done(List<Recipe> objects, ParseException e) {
-                if (e != null) {
-                    Log.e(TAG, "Error in finding recipe!");
-                    return;
-                }
-                Log.i(TAG, "Recipes found: " + objects.toString());
-                if (objects.size() == 0) {
-                    addRecipeToDatabase(action);
-                } else if (action.equals("like")) {
-                    likeRecipe();
-                } else if (action.equals("made")) {
-                    madeRecipe();
-                } else {
-                    recipe = objects.get(0);
-                    Log.i(TAG, "Recipe: " + recipe.getTitle());
-                }
+        query.findInBackground((objects, e) -> {
+            if (e != null) {
+                Log.e(TAG, "Error in finding recipe!");
+                return;
+            }
+            Log.i(TAG, "Recipes found: " + objects.toString());
+            if (objects.size() == 0) {
+                addRecipeToDatabase(action);
+            } else if (action.equals("like")) {
+                likeRecipe();
+            } else if (action.equals("made")) {
+                madeRecipe();
+            } else {
+                recipe = objects.get(0);
+                Log.i(TAG, "Recipe: " + recipe.getTitle());
             }
         });
     }
@@ -280,15 +231,12 @@ public class RecipeDetailsFragment extends Fragment {
 
         currentUser.madeRecipe(recipe);
 
-        currentUser.getParseUser().saveInBackground(new SaveCallback() {
-            @Override
-            public void done(ParseException e) {
-                if (e != null) {
-                    Log.e(TAG, "Error in setting recipe to made" + e);
-                    return;
-                }
-                Log.i(TAG, currentUser.getParseUser().getUsername() + " made recipe: " + recipe.getTitle());
+        currentUser.getParseUser().saveInBackground(e -> {
+            if (e != null) {
+                Log.e(TAG, "Error in setting recipe to made" + e);
+                return;
             }
+            Log.i(TAG, currentUser.getParseUser().getUsername() + " made recipe: " + recipe.getTitle());
         });
     }
 
@@ -301,34 +249,28 @@ public class RecipeDetailsFragment extends Fragment {
         }
         currentUser.likeRecipe(recipe);
 
-        currentUser.getParseUser().saveInBackground(new SaveCallback() {
-            @Override
-            public void done(ParseException e) {
-                if (e != null) {
-                    Log.e(TAG, "Error in liking recipe" + e);
-                    return;
-                }
-                Log.i(TAG, currentUser.getParseUser().getUsername() + " liked recipe: " + recipe.getTitle());
+        currentUser.getParseUser().saveInBackground(e -> {
+            if (e != null) {
+                Log.e(TAG, "Error in liking recipe" + e);
+                return;
             }
+            Log.i(TAG, currentUser.getParseUser().getUsername() + " liked recipe: " + recipe.getTitle());
         });
     }
 
     private void addRecipeToDatabase(String action) {
         Log.i(TAG, "Adding recipe to database: " + recipe.getTitle());
         recipe.put("uploaded", true);
-        recipe.saveInBackground(new SaveCallback() {
-            @Override
-            public void done(ParseException e) {
-                if (e != null) {
-                    Log.e(TAG, "Error in saving current recipe");
-                    return;
-                }
-                Log.i(TAG, "New Recipe saved in database!");
-                if (action.equals("like")) {
-                    likeRecipe();
-                } else {
-                    madeRecipe();
-                }
+        recipe.saveInBackground(e -> {
+            if (e != null) {
+                Log.e(TAG, "Error in saving current recipe");
+                return;
+            }
+            Log.i(TAG, "New Recipe saved in database!");
+            if (action.equals("like")) {
+                likeRecipe();
+            } else {
+                madeRecipe();
             }
         });
     }
@@ -368,8 +310,8 @@ public class RecipeDetailsFragment extends Fragment {
         Log.i(TAG, "ingredients: " + ingredients);
     }
 
-
-    public void goBackToSearch() {
-        NavHostFragment.findNavController(this).navigate(R.id.recipeSearchFragment);
+    public void goBack() {
+        getActivity().onBackPressed();
     }
+
 }

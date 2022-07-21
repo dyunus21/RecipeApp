@@ -21,7 +21,7 @@ import com.example.recipeapp.R;
 import com.example.recipeapp.activities.MainActivity;
 import com.example.recipeapp.adapters.ProfileAdapter;
 import com.example.recipeapp.databinding.FragmentProfileBinding;
-import com.example.recipeapp.models.ImageClient;
+import com.example.recipeapp.clients.ImageClient;
 import com.example.recipeapp.models.Recipe;
 import com.example.recipeapp.models.User;
 import com.google.android.material.tabs.TabLayout;

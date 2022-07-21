@@ -1,7 +1,7 @@
 package com.example.recipeapp.utilities
 
 import android.text.format.DateUtils
-import java.util.Date
+import java.util.*
 
 class TimeUtils(private val currentTimeProvider: CurrentTimeProvider) {
     fun calculateTimeAgo(createdAt: Date): String {

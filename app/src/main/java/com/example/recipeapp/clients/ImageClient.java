@@ -1,4 +1,4 @@
-package com.example.recipeapp.models;
+package com.example.recipeapp.clients;
 
 import android.content.Context;
 import android.content.Intent;
@@ -15,6 +15,7 @@ import androidx.core.content.FileProvider;
 import androidx.fragment.app.Fragment;
 
 import com.example.recipeapp.activities.MainActivity;
+import com.example.recipeapp.models.BitmapScaler;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;

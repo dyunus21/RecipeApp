@@ -10,10 +10,6 @@ import androidx.camera.core.ImageAnalysis;
 import androidx.camera.core.ImageProxy;
 
 import com.example.recipeapp.fragments.BarcodeScanFragment;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
 import com.google.mlkit.common.MlKitException;
 import com.google.mlkit.vision.barcode.BarcodeScanner;
 import com.google.mlkit.vision.barcode.BarcodeScannerOptions;
@@ -42,24 +38,14 @@ public class BarcodeAnalyzer implements ImageAnalysis.Analyzer {
             InputImage inputImage = InputImage.fromMediaImage(img, image.getImageInfo().getRotationDegrees());
             BarcodeScannerOptions options = new BarcodeScannerOptions.Builder().setBarcodeFormats(Barcode.FORMAT_UPC_A).build();
             BarcodeScanner scanner = BarcodeScanning.getClient(options);
-            scanner.process(inputImage).addOnSuccessListener(new OnSuccessListener<List<Barcode>>() {
-                        @Override
-                        public void onSuccess(List<Barcode> barcodes) {
-                            Log.i(TAG, "Success barcode, ");
-                            analyzeBarcodes(barcodes, inputImage);
-                        }
+            scanner.process(inputImage).addOnSuccessListener(barcodes -> {
+                        Log.i(TAG, "Success barcode, ");
+                        analyzeBarcodes(barcodes, inputImage);
                     })
-                    .addOnFailureListener(new OnFailureListener() {
-                        @Override
-                        public void onFailure(@NonNull Exception e) {
-                            Log.e(TAG, "Failed to scan barcode", e);
-                        }
-                    }).addOnCompleteListener(new OnCompleteListener<List<Barcode>>() {
-                        @Override
-                        public void onComplete(@NonNull Task<List<Barcode>> task) {
-                            Log.i(TAG, "Complete barcode");
-                            image.close();
-                        }
+                    .addOnFailureListener(e -> Log.e(TAG, "Failed to scan barcode", e))
+                    .addOnCompleteListener(task -> {
+                        Log.i(TAG, "Complete barcode");
+                        image.close();
                     });
         }
 

@@ -59,12 +59,7 @@ public class SocialFeedFragment extends Fragment {
         final LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
         binding.rvPosts.setLayoutManager(linearLayoutManager);
 
-        binding.swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                queryPosts(null);
-            }
-        });
+        binding.swipeContainer.setOnRefreshListener(() -> queryPosts(null));
         queryPosts(null);
         binding.swipeContainer.setColorSchemeResources(android.R.color.holo_blue_bright,
                 android.R.color.holo_green_light,
@@ -92,19 +87,16 @@ public class SocialFeedFragment extends Fragment {
             query.whereLessThanOrEqualTo(Post.KEY_CREATED_AT, time);
         }
         query.addDescendingOrder("createdAt");
-        query.findInBackground(new FindCallback<Post>() {
-            @Override
-            public void done(List<Post> objects, ParseException e) {
-                if (e != null) {
-                    Log.e(TAG, "Error in querying posts! ", e);
-                    return;
-                }
-                adapter.clear();
-                postList.addAll(objects);
-                adapter.notifyDataSetChanged();
-                binding.rvPosts.scrollToPosition(0);
-                binding.swipeContainer.setRefreshing(false);
+        query.findInBackground((objects, e) -> {
+            if (e != null) {
+                Log.e(TAG, "Error in querying posts! ", e);
+                return;
             }
+            adapter.clear();
+            postList.addAll(objects);
+            adapter.notifyDataSetChanged();
+            binding.rvPosts.scrollToPosition(0);
+            binding.swipeContainer.setRefreshing(false);
         });
     }
 }

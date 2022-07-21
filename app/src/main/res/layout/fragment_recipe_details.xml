@@ -8,6 +8,14 @@
         <variable
             name="fragmentRecipeDetailsController"
             type="com.example.recipeapp.fragments.RecipeDetailsFragment" />
+
+        <variable
+            name="made"
+            type="String" />
+
+        <variable
+            name="like"
+            type="String" />
     </data>
 
     <ScrollView
@@ -101,7 +109,7 @@
                 android:layout_marginTop="8dp"
                 android:background="?attr/homeAsUpIndicator"
                 android:backgroundTint="@color/black"
-                android:onClick="@{(view)->fragmentRecipeDetailsController.goBackToSearch()}"
+                android:onClick="@{(view)->fragmentRecipeDetailsController.goBack()}"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 tools:ignore="TouchTargetSizeCheck,SpeakableTextPresentCheck" />
@@ -124,6 +132,7 @@
                 android:layout_height="40dp"
                 android:layout_marginTop="10dp"
                 android:backgroundTint="@color/teal_200"
+                android:onClick="@{(view)->fragmentRecipeDetailsController.findRecipe(made)}"
                 android:text="Make this!"
                 android:textSize="12sp"
                 app:layout_constraintEnd_toEndOf="@+id/tvUploadedBy"
@@ -137,6 +146,7 @@
                 android:layout_height="30dp"
                 android:layout_marginEnd="20dp"
                 android:background="@drawable/heart"
+                android:onClick="@{(view)->fragmentRecipeDetailsController.findRecipe(like)}"
                 app:layout_constraintEnd_toStartOf="@+id/ibShare"
                 app:layout_constraintTop_toTopOf="@+id/ibBack"
                 tools:ignore="SpeakableTextPresentCheck,TouchTargetSizeCheck" />
@@ -266,6 +276,7 @@
                     android:layout_width="120dp"
                     android:layout_height="50dp"
                     android:layout_marginTop="4dp"
+                    android:onClick="@{(view)->fragmentRecipeDetailsController.postReview()}"
                     android:text="Post Review"
                     android:textSize="12sp"
                     app:layout_constraintEnd_toEndOf="parent"
@@ -289,6 +300,7 @@
                 android:layout_marginEnd="10dp"
                 android:background="@android:drawable/ic_menu_share"
                 android:backgroundTint="@color/black"
+                android:onClick="@{(view)->fragmentRecipeDetailsController.showShareAlert()}"
                 app:layout_constraintBottom_toBottomOf="@+id/ibHeart"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="@+id/ibHeart" />

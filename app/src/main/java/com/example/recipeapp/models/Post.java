@@ -19,7 +19,6 @@ public class Post extends ParseObject {
     public static final String KEY_DESCRIPTION = "description";
     public static final String KEY_TITLE = "title";
     public static final String KEY_LIKED_BY = "likedBy";
-    public static final String KEY_COMMENTS = "comments";
     public static final String KEY_TYPE = "type";
     public static final String KEY_RECIPE_LINKED = "recipeLinked";
 
@@ -99,17 +98,6 @@ public class Post extends ParseObject {
         likedBy.add(currentUser);
         setLikedBy(likedBy);
         return;
-    }
-
-    public List<Comment> getComments() {
-        List<Comment> comments = getList(KEY_COMMENTS);
-        if (comments == null)
-            return new ArrayList<>();
-        return comments;
-    }
-
-    public void setComments(List<Comment> comments) {
-        put(KEY_COMMENTS, comments);
     }
 
     public String getType() {

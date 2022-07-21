@@ -24,7 +24,7 @@ import androidx.navigation.fragment.NavHostFragment;
 
 import com.bumptech.glide.Glide;
 import com.codepath.asynchttpclient.callback.JsonHttpResponseHandler;
-import com.example.recipeapp.BarcodeAnalyzeClient;
+import com.example.recipeapp.clients.BarcodeAnalyzeClient;
 import com.example.recipeapp.R;
 import com.example.recipeapp.databinding.CameraDialogBinding;
 import com.example.recipeapp.databinding.FragmentBarcodeScanBinding;

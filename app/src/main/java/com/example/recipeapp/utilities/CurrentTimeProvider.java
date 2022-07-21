@@ -6,6 +6,7 @@ public class CurrentTimeProvider {
     public CurrentTimeProvider() {
 
     }
+
     public long getCurrentTime() {
         return System.currentTimeMillis();
     }

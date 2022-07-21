@@ -1,4 +1,4 @@
-package com.example.recipeapp;
+package com.example.recipeapp.clients;
 
 import android.content.Context;
 import android.util.Log;
@@ -7,6 +7,7 @@ import com.codepath.asynchttpclient.AsyncHttpClient;
 import com.codepath.asynchttpclient.RequestHeaders;
 import com.codepath.asynchttpclient.RequestParams;
 import com.codepath.asynchttpclient.callback.JsonHttpResponseHandler;
+import com.example.recipeapp.R;
 
 import java.io.File;
 import java.io.IOException;
@@ -64,7 +65,7 @@ public class RecipeClient {
         client.get(BASE_URL + "/recipes/" + recipeId + "/information", headers, params, handler);
     }
 
-    public void getRandomRecipes(JsonHttpResponseHandler handler) throws IOException {
+    public void getRandomRecipes(JsonHttpResponseHandler handler) {
         final RequestParams params = new RequestParams();
         params.put("number", 10);
         client.get(BASE_URL + "/recipes/random", headers, params, handler);
