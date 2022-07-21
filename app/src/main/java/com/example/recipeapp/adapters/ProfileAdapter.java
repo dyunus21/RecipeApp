@@ -60,7 +60,6 @@ public class ProfileAdapter extends RecyclerView.Adapter<ProfileAdapter.ViewHold
 
     public class ViewHolder extends RecyclerView.ViewHolder {
         private final ItemProfileRecipeBinding binding;
-        private Recipe currentRecipe;
 
         public ViewHolder(@NonNull ItemProfileRecipeBinding itemView) {
             super(itemView.getRoot());
@@ -68,7 +67,6 @@ public class ProfileAdapter extends RecyclerView.Adapter<ProfileAdapter.ViewHold
         }
 
         public void bind(Recipe recipe) {
-            currentRecipe = recipe;
             binding.tvRecipeName.setText(recipe.getTitle());
 
             String url = recipe.getImageUrl() == null ? recipe.getImage().getUrl() : recipe.getImageUrl();

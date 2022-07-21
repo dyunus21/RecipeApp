@@ -13,10 +13,6 @@ import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
 import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.transition.ChangeBounds;
-import androidx.transition.ChangeImageTransform;
-import androidx.transition.ChangeTransform;
-import androidx.transition.TransitionSet;
 
 import com.bumptech.glide.Glide;
 import com.codepath.asynchttpclient.callback.JsonHttpResponseHandler;
@@ -157,14 +153,6 @@ public class RecipeDetailsFragment extends Fragment {
         } else {
             binding.ibEdit.setVisibility(View.GONE);
         }
-        binding.ibEdit.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                final Bundle bundle = new Bundle();
-                bundle.putParcelable(Recipe.class.getSimpleName(), recipe);
-                v.setOnClickListener(Navigation.createNavigateOnClickListener(R.id.action_recipeDetailsFragment_to_uploadPostFragment, bundle));
-            }
-        });
         Glide.with(getContext()).load(currentUser.getProfileImage().getUrl()).circleCrop().into(binding.ivProfileImage);
         binding.rvReviews.setLayoutManager(new LinearLayoutManager(getContext()));
         binding.rvReviews.setAdapter(reviewsAdapter);
@@ -246,7 +234,13 @@ public class RecipeDetailsFragment extends Fragment {
         });
     }
 
-    private void findRecipe(String action) {
+    public void editRecipe(View view) {
+        final Bundle bundle = new Bundle();
+        bundle.putParcelable(Recipe.class.getSimpleName(), recipe);
+        view.setOnClickListener(Navigation.createNavigateOnClickListener(R.id.action_recipeDetailsFragment_to_uploadPostFragment, bundle));
+    }
+
+    public void findRecipe(String action) {
         ParseQuery<Recipe> query = ParseQuery.getQuery(Recipe.class);
         query.include(Recipe.KEY_RECIPE_ID);
         query.include(Recipe.KEY_AUTHOR);
@@ -375,7 +369,7 @@ public class RecipeDetailsFragment extends Fragment {
     }
 
 
-    public void goBackToSearch(View view) {
+    public void goBackToSearch() {
         NavHostFragment.findNavController(this).navigate(R.id.recipeSearchFragment);
     }
 }

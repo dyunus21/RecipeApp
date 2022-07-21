@@ -3,7 +3,6 @@ package com.example.recipeapp.adapters;
 import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
-import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
@@ -64,20 +63,17 @@ public class RecipeSearchAdapter extends RecyclerView.Adapter<RecipeSearchAdapte
         bundle.putParcelable(Recipe.class.getSimpleName(), recipe);
         RecipeDetailsFragment details = new RecipeDetailsFragment();
 
-        holder.itemView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                details.setSharedElementEnterTransition(new DetailsTransition());
-                details.setEnterTransition(new Fade());
-                details.setExitTransition(new Fade());
-                details.setSharedElementReturnTransition(new DetailsTransition());
-                ((MainActivity) context).getSupportFragmentManager()
-                        .beginTransaction()
-                        .addSharedElement(holder.binding.ivImage, "shared_image")
-                        .replace(R.id.nav_host_fragment, details)
-                        .addToBackStack(null)
-                        .commit();
-            }
+        holder.itemView.setOnClickListener(v -> {
+            details.setSharedElementEnterTransition(new DetailsTransition());
+            details.setEnterTransition(new Fade());
+            details.setExitTransition(new Fade());
+            details.setSharedElementReturnTransition(new DetailsTransition());
+            ((MainActivity) context).getSupportFragmentManager()
+                    .beginTransaction()
+                    .addSharedElement(holder.binding.ivImage, "shared_image")
+                    .replace(R.id.nav_host_fragment, details)
+                    .addToBackStack(null)
+                    .commit();
         });
         holder.itemView.setOnClickListener(Navigation.createNavigateOnClickListener(R.id.action_recipeSearchFragment_to_recipeDetailsFragment, bundle));
     }

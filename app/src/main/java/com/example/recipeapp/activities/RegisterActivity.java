@@ -22,11 +22,8 @@ import com.bumptech.glide.Glide;
 import com.example.recipeapp.databinding.ActivityRegisterBinding;
 import com.example.recipeapp.models.BitmapScaler;
 import com.example.recipeapp.models.User;
-import com.parse.ParseException;
 import com.parse.ParseFile;
 import com.parse.ParseUser;
-import com.parse.SaveCallback;
-import com.parse.SignUpCallback;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -49,30 +46,10 @@ public class RegisterActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         binding = ActivityRegisterBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
-
-        binding.btnSignup.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Log.i(TAG, "onClick Register!");
-                registerUser();
-            }
-        });
-        binding.tvLogin.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                goLogin();
-            }
-        });
-        binding.ivProfileImage.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                onPickPhoto(v);
-            }
-        });
-
+        binding.setActivityRegisterController(this);
     }
 
-    private void registerUser() {
+    public void registerUser() {
         Log.i(TAG, "Attempting to register user");
         User user = new User(new ParseUser());
         user.getParseUser().setEmail(binding.etEmail.getText().toString());
@@ -80,43 +57,37 @@ public class RegisterActivity extends AppCompatActivity {
         user.setLastName(binding.etLastName.getText().toString());
         user.getParseUser().setUsername(binding.etUsername.getText().toString());
         user.getParseUser().setPassword(binding.etPassword.getText().toString());
-        registerUser(user);
+        registerUserInParse(user);
 
     }
 
-    private void registerUser(final User user) {
-        user.getParseUser().signUpInBackground(new SignUpCallback() {
-            @Override
-            public void done(ParseException e) {
-                if (e != null) {
-                    Log.e(TAG, "Issue with registering user!", e);
-                    Toast.makeText(RegisterActivity.this, "Unable to register user!", Toast.LENGTH_SHORT).show();
-                    return;
-                }
-                Log.i(TAG, "Successfully registered user");
-                if (photoFile != null) {
-                    setProfileImage(user);
-                }
-                goMainActivity();
-                Toast.makeText(RegisterActivity.this, "Welcome " + ParseUser.getCurrentUser().getUsername(), Toast.LENGTH_SHORT).show();
+    private void registerUserInParse(final User user) {
+        user.getParseUser().signUpInBackground(e -> {
+            if (e != null) {
+                Log.e(TAG, "Issue with registering user!", e);
+                Toast.makeText(RegisterActivity.this, "Unable to register user!", Toast.LENGTH_SHORT).show();
+                return;
             }
+            Log.i(TAG, "Successfully registered user");
+            if (photoFile != null) {
+                setProfileImage(user);
+            }
+            goMainActivity();
+            Toast.makeText(RegisterActivity.this, "Welcome " + ParseUser.getCurrentUser().getUsername(), Toast.LENGTH_SHORT).show();
         });
     }
 
     private void setProfileImage(final User user) {
         user.setProfileImage(new ParseFile(photoFile));
-        user.getParseUser().saveInBackground(new SaveCallback() {
-            @Override
-            public void done(ParseException e) {
-                if (e != null) {
-                    Log.e(TAG, "Issue with saving profile image!", e);
-                    Toast.makeText(RegisterActivity.this, "Unable to save profile image. Please try again!", Toast.LENGTH_SHORT).show();
-                    return;
-                } else {
-                    Toast.makeText(RegisterActivity.this, "Successfully saved profile image!", Toast.LENGTH_SHORT).show();
-                }
-
+        user.getParseUser().saveInBackground(e -> {
+            if (e != null) {
+                Log.e(TAG, "Issue with saving profile image!", e);
+                Toast.makeText(RegisterActivity.this, "Unable to save profile image. Please try again!", Toast.LENGTH_SHORT).show();
+                return;
+            } else {
+                Toast.makeText(RegisterActivity.this, "Successfully saved profile image!", Toast.LENGTH_SHORT).show();
             }
+
         });
     }
 
@@ -214,7 +185,7 @@ public class RegisterActivity extends AppCompatActivity {
         finish();
     }
 
-    private void goLogin() {
+    public void goLogin() {
         Intent intent = new Intent(RegisterActivity.this, LoginActivity.class);
         startActivity(intent);
         finish();

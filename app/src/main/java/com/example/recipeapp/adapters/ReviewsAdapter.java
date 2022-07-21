@@ -60,7 +60,6 @@ public class ReviewsAdapter extends RecyclerView.Adapter<ReviewsAdapter.ViewHold
 
     public class ViewHolder extends RecyclerView.ViewHolder {
         public ItemReviewBinding binding;
-        private Review review;
 
         public ViewHolder(@NonNull ItemReviewBinding itemView) {
             super(itemView.getRoot());

@@ -17,12 +17,9 @@ import com.example.recipeapp.activities.MainActivity;
 import com.example.recipeapp.databinding.FragmentAddIngredientBinding;
 import com.example.recipeapp.models.Ingredient;
 import com.example.recipeapp.models.User;
-import com.parse.ParseException;
 import com.parse.ParseUser;
-import com.parse.SaveCallback;
 
 import java.util.List;
-import java.util.Map;
 
 
 public class AddIngredientFragment extends Fragment {
@@ -45,6 +42,7 @@ public class AddIngredientFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         binding = FragmentAddIngredientBinding.inflate(getLayoutInflater());
+        binding.setFragmentAddIngredientController(this);
 
         return binding.getRoot();
     }
@@ -52,15 +50,9 @@ public class AddIngredientFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        binding.btnAdd.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                validateInput();
-            }
-        });
     }
 
-    private void validateInput() {
+    public void validateInput() {
         String name = binding.etName.getText().toString();
         String count = binding.etCount.getText().toString();
         String unit = binding.etUnit.getText().toString();
@@ -74,33 +66,27 @@ public class AddIngredientFragment extends Fragment {
     private void addIngredient(final String name, final String count, final String unit) {
         Ingredient ingredient = new Ingredient();
         ingredient.initialize(name, Integer.parseInt(count), unit);
-        ingredient.saveInBackground(new SaveCallback() {
-            @Override
-            public void done(ParseException e) {
-                if (e != null) {
-                    Log.e(TAG, "Error in adding ingredient!", e);
+        ingredient.saveInBackground(e -> {
+            if (e != null) {
+                Log.e(TAG, "Error in adding ingredient!", e);
+                return;
+            }
+            List<Ingredient> ingredientList = CURRENT_USER.getIngredientArray();
+            ingredientList.add(ingredient);
+
+
+            CURRENT_USER.setIngredientArray(ingredientList);
+            CURRENT_USER.getParseUser().saveInBackground(e1 -> {
+                if (e1 != null) {
+                    Log.e(TAG, "Error in adding ingredient to user!", e1);
                     return;
                 }
-                List<Ingredient> ingredientList = CURRENT_USER.getIngredientArray();
-                ingredientList.add(ingredient);
-
-
-                CURRENT_USER.setIngredientArray(ingredientList);
-                CURRENT_USER.getParseUser().saveInBackground(new SaveCallback() {
-                    @Override
-                    public void done(ParseException e) {
-                        if (e != null) {
-                            Log.e(TAG, "Error in adding ingredient to user!", e);
-                            return;
-                        }
-                        Log.i(TAG, "Saved ingredient to user's ingredient list!");
-                        binding.etName.setText("");
-                        binding.etCount.setText("");
-                        binding.etUnit.setText("");
-                        goToInventory();
-                    }
-                });
-            }
+                Log.i(TAG, "Saved ingredient to user's ingredient list!");
+                binding.etName.setText("");
+                binding.etCount.setText("");
+                binding.etUnit.setText("");
+                goToInventory();
+            });
         });
 
     }
