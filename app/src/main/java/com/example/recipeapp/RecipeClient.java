@@ -35,7 +35,7 @@ public class RecipeClient {
         headers.put("X-RapidAPI-Host", HOST);
     }
 
-    public void getRecipes(String query, Map<String, String> parameters, JsonHttpResponseHandler handler) throws IOException {
+    public void getRecipes(final String query, final Map<String, String> parameters, final JsonHttpResponseHandler handler) {
         final RequestParams params = new RequestParams();
         params.put("query", query);
         params.put("addRecipeInformation", "true");
@@ -57,7 +57,7 @@ public class RecipeClient {
         client.get(BASE_URL + "/recipes/complexSearch", headers, params, handler);
     }
 
-    public void getRecipesDetailed(int recipeId, JsonHttpResponseHandler handler) {
+    public void getRecipesDetailed(final int recipeId, final JsonHttpResponseHandler handler) {
         final RequestParams params = new RequestParams();
         params.put("id", recipeId);
         Log.i(TAG, "RecipeDetailedURL: " + BASE_URL + "/recipes/" + recipeId + "/information");
@@ -71,7 +71,7 @@ public class RecipeClient {
     }
 
 
-    public void getRecipesByImage(File photoFile, JsonHttpResponseHandler handler) {
+    public void getRecipesByImage(final File photoFile, final JsonHttpResponseHandler handler) {
         final RequestParams params = new RequestParams();
         try {
             BufferedSource bufferedSource = Okio.buffer(Okio.source(photoFile));
@@ -88,7 +88,7 @@ public class RecipeClient {
 
     }
 
-    public void getRecipeInformationBulk(String ids, JsonHttpResponseHandler handler) {
+    public void getRecipeInformationBulk(final String ids, final JsonHttpResponseHandler handler) {
         final RequestParams params = new RequestParams();
         params.put("ids", ids);
         client.get(BASE_URL + "/recipes/informationBulk", headers, params, handler);
