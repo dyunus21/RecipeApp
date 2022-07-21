@@ -8,9 +8,22 @@ import com.codepath.asynchttpclient.RequestHeaders;
 import com.codepath.asynchttpclient.RequestParams;
 import com.codepath.asynchttpclient.callback.JsonHttpResponseHandler;
 
+import java.io.BufferedInputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.net.MalformedURLException;
 import java.util.Map;
 import java.util.Objects;
+
+import okhttp3.MediaType;
+import okhttp3.MultipartBody;
+import okhttp3.RequestBody;
+import okio.ByteString;
 
 public class RecipeClient {
     public static final String BASE_URL = "https://spoonacular-recipe-food-nutrition-v1.p.rapidapi.com";
@@ -35,6 +48,8 @@ public class RecipeClient {
         params.put("instructionsRequired", "true");
         params.put("sortDirection", "asc");
         params.put("fillIngredients", "true");
+
+        // TODO: If sort by ingredient is toggled, add this param
 //        params.put("includeIngredients", parameters.get("Ingredients"));
         if (parameters.size() > 1) {
             if (!Objects.equals(parameters.get("Cuisine"), ""))
@@ -60,9 +75,16 @@ public class RecipeClient {
 
     public void getRandomRecipes(JsonHttpResponseHandler handler) throws IOException {
         final AsyncHttpClient client = new AsyncHttpClient();
-
         final RequestParams params = new RequestParams();
         params.put("number", 10);
         client.get(BASE_URL + "/recipes/random", headers, params, handler);
+    }
+
+    // TODO: Set up body
+    public void getRecipesByImage(File photoFile, JsonHttpResponseHandler handler) throws MalformedURLException, FileNotFoundException {
+        final AsyncHttpClient client = new AsyncHttpClient();
+        final RequestParams params = new RequestParams();
+        RequestBody body = RequestBody.create(MediaType.parse("image"),photoFile);
+        client.post(BASE_URL + "/food/images/analyze", headers, params,body,handler);
     }
 }

@@ -44,7 +44,9 @@ import org.json.JSONArray;
 import org.json.JSONException;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -276,10 +278,29 @@ public class RecipeSearchFragment extends Fragment {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 Log.i(TAG, "Search for recipes based on image");
+                try {
+                    searchRecipesByImage();
+                } catch (MalformedURLException | FileNotFoundException e) {
+                    e.printStackTrace();
+                }
             }
         });
         alertDialogBuilder.setView(imageSearchDialogBinding.getRoot());
         alertDialogBuilder.show();
+    }
+
+    private void searchRecipesByImage() throws MalformedURLException, FileNotFoundException {
+        client.getRecipesByImage(photoFile, new JsonHttpResponseHandler() {
+            @Override
+            public void onSuccess(int statusCode, Headers headers, JSON json) {
+                Log.i(TAG, "On sucessss!" + json.toString());
+            }
+
+            @Override
+            public void onFailure(int statusCode, Headers headers, String response, Throwable throwable) {
+                Log.e(TAG, "onFailure " + throwable.toString() + " " + response);
+            }
+        });
     }
 
     @Override

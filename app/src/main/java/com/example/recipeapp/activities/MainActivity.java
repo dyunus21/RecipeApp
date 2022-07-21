@@ -144,25 +144,4 @@ public class MainActivity extends AppCompatActivity {
         super.onBackPressed();
     }
 
-
-    // TODO: Continue later
-//    @Override
-//    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-//        super.onActivityResult(requestCode, resultCode, data);
-//        List<NavBackStackEntry> m = navController.getVisibleEntries().getValue();
-//        if (requestCode == CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE) {
-//            Log.i(TAG, "onActivity result camera");
-//            String currentFragmentLabel = (String) m.get(0).getDestination().getLabel();
-//            if (resultCode == RESULT_OK) {
-//                if(currentFragmentLabel.equals("fragment_recipe_search")) {
-//                    Log.i(TAG, "Recipe Search Fragment");
-//                }
-//
-//            }
-//        } else {
-//            Toast.makeText(this, "Picture wasn't taken!", Toast.LENGTH_SHORT).show();
-//        }
-//    }
-
-
 }
