@@ -60,6 +60,8 @@ _Version3_
 * [ ] User can view a demo of app before account creation
 * [x] User can scan food barcode to update inventory
 * [ ] User can follow other users
+* [x] Implement JUnit testing for utilities
+* [x] Add Databinding support for cleaner Activities and Fragments
 
 _Version4_
 * [x] User can search for a recipe based on image
@@ -67,6 +69,7 @@ _Version4_
 * [ ] User can complete weekly challenges and view leaderboard
 * [ ] Users can view what nearby users/followers are currently eating (Snapchat-like feature) ([Google Maps SDK](https://developers.google.com/maps/documentation/android-sdk/overview))
 * [ ] Users can translate recipes to different languages ([Google Translate API](https://cloud.google.com/translate))
+* [x] Explore Kotlin usage
 
 ### 2. Screen Archetypes
 
