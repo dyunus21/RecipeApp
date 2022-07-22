@@ -27,6 +27,7 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import com.bumptech.glide.Glide;
 import com.codepath.asynchttpclient.callback.JsonHttpResponseHandler;
 import com.example.recipeapp.R;
+import com.example.recipeapp.activities.MainActivity;
 import com.example.recipeapp.adapters.RecipeSearchAdapter;
 import com.example.recipeapp.clients.ImageClient;
 import com.example.recipeapp.clients.RecipeClient;
@@ -92,13 +93,19 @@ public class RecipeSearchFragment extends Fragment {
     }
 
     @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        ((MainActivity)getActivity()).getSupportActionBar().show();
+    }
+
+    @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
+        ((MainActivity)getActivity()).getSupportActionBar().hide();
         binding.rvRandomRecipes.setAdapter(adapter);
         binding.rvRandomRecipes.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
         // Commented to limit API calls during testing
-        setRefresh();
+        // setRefresh();
 
         binding.svSearch.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override

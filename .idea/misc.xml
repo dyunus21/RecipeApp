@@ -13,6 +13,7 @@
         <entry key="app/src/main/res/drawable/ic_outline_rectangle_24.xml" value="0.3475" />
         <entry key="app/src/main/res/drawable/rounded_button.xml" value="0.31" />
         <entry key="app/src/main/res/drawable/rounded_rectangle.xml" value="0.26413726806640625" />
+        <entry key="app/src/main/res/drawable/rounded_rectangle_teal.xml" value="0.3315" />
         <entry key="app/src/main/res/layout/activity_login.xml" value="0.3145833333333333" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.2661900838216146" />
         <entry key="app/src/main/res/layout/activity_main2.xml" value="0.14235055724417425" />
@@ -29,7 +30,7 @@
         <entry key="app/src/main/res/layout/fragment_login.xml" value="0.19022327367810235" />
         <entry key="app/src/main/res/layout/fragment_profile.xml" value="0.22063140869140627" />
         <entry key="app/src/main/res/layout/fragment_recipe_details.xml" value="0.2771453857421875" />
-        <entry key="app/src/main/res/layout/fragment_recipe_search.xml" value="0.4231719970703125" />
+        <entry key="app/src/main/res/layout/fragment_recipe_search.xml" value="0.20568927789934355" />
         <entry key="app/src/main/res/layout/fragment_register.xml" value="0.41893115942028986" />
         <entry key="app/src/main/res/layout/fragment_social_feed.xml" value="0.2346684773763021" />
         <entry key="app/src/main/res/layout/fragment_upload.xml" value="0.17231343587239584" />
@@ -40,7 +41,7 @@
         <entry key="app/src/main/res/layout/item_ingredient.xml" value="0.5932203389830508" />
         <entry key="app/src/main/res/layout/item_post.xml" value="0.19701538085937498" />
         <entry key="app/src/main/res/layout/item_profile_recipe.xml" value="0.30928802490234375" />
-        <entry key="app/src/main/res/layout/item_recipe_card.xml" value="0.5921737670898437" />
+        <entry key="app/src/main/res/layout/item_recipe_card.xml" value="0.44064178466796866" />
         <entry key="app/src/main/res/layout/item_review.xml" value="0.44718969473567033" />
         <entry key="app/src/main/res/layout/modal_bottom_sheet_content.xml" value="0.2606122821780807" />
         <entry key="app/src/main/res/menu/menu_bottom_navigation.xml" value="0.32760416666666664" />
