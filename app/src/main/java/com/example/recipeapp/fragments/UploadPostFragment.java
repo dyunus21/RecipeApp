@@ -20,6 +20,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import com.bumptech.glide.Glide;
 import com.example.recipeapp.R;
 import com.example.recipeapp.activities.MainActivity;
 import com.example.recipeapp.databinding.FragmentUploadPostBinding;
@@ -155,6 +156,7 @@ public class UploadPostFragment extends Fragment implements AdapterView.OnItemSe
             if (resultCode == RESULT_OK) {
                 final Bitmap takenImage = BitmapFactory.decodeFile(photoFile.getAbsolutePath());
                 photoFile = imageClient.resizeFile(takenImage);
+                Glide.with(getContext()).load(photoFile).into(binding.ivImage);
                 Log.i(TAG, "File: " + photoFile.toString());
             } else {
                 Toast.makeText(getContext(), "Picture wasn't taken!", Toast.LENGTH_SHORT).show();
@@ -163,6 +165,7 @@ public class UploadPostFragment extends Fragment implements AdapterView.OnItemSe
             final Uri photoUri = data.getData();
             Bitmap selectedImage = imageClient.loadFromUri(photoUri);
             photoFile = imageClient.resizeFile(selectedImage);
+            Glide.with(getContext()).load(photoFile).into(binding.ivImage);
             Log.i(TAG, "File: " + photoFile.toString());
         }
     }

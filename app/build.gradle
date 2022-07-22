@@ -88,4 +88,7 @@ dependencies {
 
     // Animations
     implementation 'com.facebook.shimmer:shimmer:0.5.0'
+
+    //UI
+    implementation 'com.makeramen:roundedimageview:2.3.0'
 }

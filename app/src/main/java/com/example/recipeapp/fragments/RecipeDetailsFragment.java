@@ -69,6 +69,7 @@ public class RecipeDetailsFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         binding = FragmentRecipeDetailsBinding.inflate(getLayoutInflater());
+        binding.setFragmentRecipeDetailsController(this);
         return binding.getRoot();
     }
 
