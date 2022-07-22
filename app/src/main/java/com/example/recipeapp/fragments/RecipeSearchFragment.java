@@ -21,17 +21,18 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.bumptech.glide.Glide;
 import com.codepath.asynchttpclient.callback.JsonHttpResponseHandler;
 import com.example.recipeapp.R;
-import com.example.recipeapp.clients.RecipeClient;
 import com.example.recipeapp.adapters.RecipeSearchAdapter;
+import com.example.recipeapp.clients.ImageClient;
+import com.example.recipeapp.clients.RecipeClient;
 import com.example.recipeapp.databinding.FilterDialogBinding;
 import com.example.recipeapp.databinding.FragmentRecipeSearchBinding;
 import com.example.recipeapp.databinding.ImageSearchDialogBinding;
-import com.example.recipeapp.clients.ImageClient;
 import com.example.recipeapp.models.Recipe;
 import com.example.recipeapp.models.User;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
@@ -94,11 +95,10 @@ public class RecipeSearchFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        binding.rvRecipes.setAdapter(adapter);
-        GridLayoutManager gridLayoutManager = new GridLayoutManager(getContext(), 2);
-        binding.rvRecipes.setLayoutManager(gridLayoutManager);
+        binding.rvRandomRecipes.setAdapter(adapter);
+        binding.rvRandomRecipes.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
         // Commented to limit API calls during testing
-        // setRefresh();
+        setRefresh();
 
         binding.svSearch.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
@@ -106,6 +106,11 @@ public class RecipeSearchFragment extends Fragment {
                 Log.i(TAG, query);
                 try {
                     adapter.clear();
+                    binding.rvRecipes.setAdapter(adapter);
+                    GridLayoutManager gridLayoutManager = new GridLayoutManager(getContext(), 2);
+                    binding.rvRecipes.setLayoutManager(gridLayoutManager);
+                    binding.rvRandomRecipes.setVisibility(View.GONE);
+                    binding.textView.setVisibility(View.GONE);
                     getRecipesByQuery(query);
                 } catch (IOException e) {
                     e.printStackTrace();
@@ -190,7 +195,7 @@ public class RecipeSearchFragment extends Fragment {
                     adapter.clear();
                     recipes = Recipe.getRecipes(jsonArray);
                     adapter.addAll(recipes);
-                    binding.rvRecipes.scrollToPosition(0);
+                    binding.rvRandomRecipes.scrollToPosition(0);
                     binding.swipeContainer.setRefreshing(false);
                     progressDialog.dismiss();
                 } catch (JSONException e) {
