@@ -8,13 +8,14 @@
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rvComments"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
         android:layout_marginStart="10dp"
         android:layout_marginTop="10dp"
         android:layout_marginEnd="20dp"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tvDescription" />
+        app:layout_constraintTop_toBottomOf="@+id/ibHeart" />
 
     <TextView
         android:id="@+id/tvDescription"
@@ -22,30 +23,40 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
         android:layout_marginEnd="20dp"
-        android:textColor="@android:color/black"
         android:textSize="16sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="@+id/ivProfileImage"
-        app:layout_constraintTop_toBottomOf="@+id/ibHeart"
+        app:layout_constraintTop_toBottomOf="@+id/btnGoToRecipe"
         tools:text="Description ..." />
 
     <ImageView
         android:id="@+id/ivProfileImage"
-        android:layout_width="25dp"
-        android:layout_height="25dp"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
         android:layout_marginStart="10dp"
         android:layout_marginTop="15dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/ic_baseline_account_circle_24" />
 
+    <Button
+        android:id="@+id/tvPostType"
+        style="@style/Widget.Material3.Button.IconButton.Filled.Tonal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="2dp"
+        android:backgroundTint="@color/recipe_tag"
+        android:text="Recipe"
+        app:layout_constraintBottom_toBottomOf="@+id/tvSharedText"
+        app:layout_constraintStart_toEndOf="@+id/tvSharedText"
+        app:layout_constraintTop_toTopOf="@+id/tvSharedText" />
+
     <TextView
         android:id="@+id/tvUsername"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
         android:layout_marginStart="10dp"
-        android:text="Username"
-        android:textColor="@color/black"
+        android:text="\@dyunus"
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="@+id/ivProfileImage"
         app:layout_constraintStart_toEndOf="@+id/ivProfileImage"
@@ -56,64 +67,68 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="25dp"
-        android:text="Timestamp"
+        android:fontFamily="sans-serif-thin"
+        android:text="2m"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toEndOf="@+id/tvPostType"
         app:layout_constraintTop_toTopOf="@+id/tvUsername" />
 
     <ImageView
         android:id="@+id/ivImage"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="300dp"
         android:layout_marginTop="10dp"
         android:scaleType="centerCrop"
-        app:layout_constraintEnd_toEndOf="@+id/tvTimestamp"
-        app:layout_constraintStart_toStartOf="@+id/tvUsername"
-        app:layout_constraintTop_toBottomOf="@+id/tvPostType"
-        app:srcCompat="@drawable/placeholder_image" />
+        android:src="@drawable/placeholder_image"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tvTitle" />
 
     <ImageButton
         android:id="@+id/ibHeart"
         android:layout_width="20dp"
         android:layout_height="20dp"
         android:layout_marginStart="20dp"
+        android:layout_marginTop="10dp"
         android:background="@drawable/heart"
         app:layout_constraintStart_toStartOf="@+id/ivImage"
-        app:layout_constraintTop_toBottomOf="@+id/tvLikes" />
-
-    <ImageButton
-        android:id="@+id/ibShare"
-        android:layout_width="20dp"
-        android:layout_height="20dp"
-        android:layout_marginStart="20dp"
-        android:background="@android:drawable/ic_menu_share"
-        android:backgroundTint="@color/black"
-        app:layout_constraintStart_toEndOf="@+id/ibHeart"
-        app:layout_constraintTop_toBottomOf="@+id/tvLikes" />
+        app:layout_constraintTop_toBottomOf="@+id/tvDescription" />
 
     <TextView
         android:id="@+id/tvLikes"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="0 likes"
+        android:layout_height="0dp"
+        android:layout_marginStart="5dp"
+        android:text="99"
         android:textColor="@android:color/black"
+        android:textSize="18sp"
         android:textStyle="bold"
-        app:layout_constraintEnd_toEndOf="@+id/ibHeart"
-        app:layout_constraintStart_toStartOf="@+id/ibHeart"
-        app:layout_constraintTop_toBottomOf="@+id/btnGoToRecipe" />
+        app:layout_constraintBottom_toBottomOf="@+id/ibHeart"
+        app:layout_constraintStart_toEndOf="@+id/ibHeart"
+        app:layout_constraintTop_toTopOf="@+id/ibHeart" />
 
-    <EditText
-        android:id="@+id/etComment"
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/tilComment"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="10dp"
-        android:layout_marginTop="10dp"
-        android:layout_marginEnd="50dp"
-        android:ems="10"
-        android:hint="Add a Comment..."
-        android:inputType="textPersonName"
+        android:layout_marginStart="5dp"
+        android:layout_marginTop="5dp"
+        android:hint="Add a comment..."
+        app:boxStrokeWidth="0dp"
         app:layout_constraintEnd_toEndOf="@+id/rvComments"
         app:layout_constraintStart_toEndOf="@+id/ivCurrentUserProfileImage"
-        app:layout_constraintTop_toBottomOf="@+id/rvComments" />
+        app:layout_constraintTop_toBottomOf="@+id/rvComments">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/etComment"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="2dp"
+            android:background="@drawable/rounded_button"
+            android:backgroundTint="@color/light_teal" />
+
+    </com.google.android.material.textfield.TextInputLayout>
 
     <Button
         android:id="@+id/btnPostComment"
@@ -121,59 +136,68 @@
         android:layout_height="37dp"
         android:text="Post"
         android:textSize="10sp"
-        app:layout_constraintBottom_toBottomOf="@+id/etComment"
+        app:layout_constraintBottom_toBottomOf="@+id/tilComment"
         app:layout_constraintEnd_toEndOf="@+id/rvComments"
         app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toEndOf="@+id/etComment"
-        app:layout_constraintTop_toBottomOf="@+id/rvComments" />
+        app:layout_constraintStart_toEndOf="@+id/tilComment"
+        app:layout_constraintTop_toBottomOf="@+id/tilComment" />
 
     <ImageView
         android:id="@+id/ivCurrentUserProfileImage"
-        android:layout_width="25dp"
-        android:layout_height="25dp"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
         android:layout_marginStart="10dp"
-        app:layout_constraintBottom_toBottomOf="@+id/etComment"
+        app:layout_constraintBottom_toBottomOf="@+id/tilComment"
         app:layout_constraintStart_toStartOf="@+id/rvComments"
-        app:layout_constraintTop_toBottomOf="@+id/rvComments"
+        app:layout_constraintTop_toTopOf="@+id/tilComment"
         app:srcCompat="@drawable/ic_baseline_account_circle_24" />
 
     <TextView
         android:id="@+id/tvTitle"
+        style="@style/Title"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="10dp"
         android:layout_marginTop="10dp"
-        android:layout_marginEnd="10dp"
-        android:fontFamily="sans-serif-smallcaps"
-        android:text="Title"
+        android:inputType="textMultiLine"
+        android:text="Sugar Cookies"
         android:textAlignment="center"
         android:textColor="@color/black"
-        android:textSize="20sp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/ivProfileImage"
         app:layout_constraintTop_toBottomOf="@+id/tvUsername" />
 
     <Button
         android:id="@+id/btnGoToRecipe"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="10dp"
-        android:layout_marginEnd="10dp"
-        android:text="Go to Recipe"
+        android:layout_marginStart="100dp"
+        android:layout_marginEnd="100dp"
+        android:text="View Recipe"
         android:visibility="gone"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/ivImage" />
 
     <TextView
-        android:id="@+id/tvPostType"
+        android:id="@+id/tvSharedText"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="5dp"
-        android:background="@android:color/darker_gray"
-        android:text="Type"
-        app:layout_constraintEnd_toEndOf="@+id/tvTitle"
-        app:layout_constraintStart_toStartOf="@+id/tvTitle"
-        app:layout_constraintTop_toBottomOf="@+id/tvTitle" />
+        android:layout_height="0dp"
+        android:layout_marginStart="5dp"
+        android:text="shared a "
+        app:layout_constraintBottom_toBottomOf="@+id/tvUsername"
+        app:layout_constraintStart_toEndOf="@+id/tvUsername"
+        app:layout_constraintTop_toTopOf="@+id/tvUsername" />
+
+    <View
+        android:id="@+id/divider3"
+        android:layout_width="492dp"
+        android:layout_height="1dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp"
+        android:background="?android:attr/listDivider"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tilComment" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
