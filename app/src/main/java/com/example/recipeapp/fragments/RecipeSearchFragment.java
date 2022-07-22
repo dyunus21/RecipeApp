@@ -19,6 +19,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.view.ViewCompat;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -36,6 +37,7 @@ import com.example.recipeapp.databinding.FragmentRecipeSearchBinding;
 import com.example.recipeapp.databinding.ImageSearchDialogBinding;
 import com.example.recipeapp.models.Recipe;
 import com.example.recipeapp.models.User;
+import com.google.android.material.chip.Chip;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.parse.FindCallback;
 import com.parse.ParseException;
@@ -161,17 +163,25 @@ public class RecipeSearchFragment extends Fragment {
         final ArrayAdapter cuisineAdapter = new ArrayAdapter(getContext(), android.R.layout.simple_dropdown_item_1line, getResources().getStringArray(R.array.cuisine));
         filterDialogBinding.actvCuisine.setAdapter(cuisineAdapter);
 
-        ArrayAdapter mealAdapter = new ArrayAdapter(getContext(), android.R.layout.simple_dropdown_item_1line, getResources().getStringArray(R.array.meal));
-        filterDialogBinding.actvMealType.setAdapter(mealAdapter);
-
-        alertDialog.setTitle("Choose your preferences");
+        for (String s : getResources().getStringArray(R.array.meal)) {
+            Chip chip = new Chip(getContext(),null, com.google.android.material.R.attr.chipStyle);
+            chip.setText(s);
+            chip.setClickable(true);
+            chip.setCheckable(true);
+            chip.setFocusable(true);
+            chip.setId(ViewCompat.generateViewId());
+            filterDialogBinding.cgMealType.addView(chip);
+        }
 
         alertDialog.setPositiveButton("Set Filter", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 params.put("Cooktime", filterDialogBinding.etCooktime.getText().toString());
                 params.put("Cuisine", filterDialogBinding.actvCuisine.getText().toString());
-                params.put("MealType", filterDialogBinding.actvMealType.getText().toString());
+                List<Integer> checkedChipIds = filterDialogBinding.cgMealType.getCheckedChipIds();
+                String mealType = ((Chip)(filterDialogBinding.cgMealType.findViewById(checkedChipIds.get(0)))).getText().toString();
+                Log.i(TAG,"Meal type selected! " + mealType);
+                params.put("MealType", mealType);
                 params.put("switchIngredients", String.valueOf(filterDialogBinding.switchIngredients.isChecked()));
                 Log.i(TAG, params.toString());
             }
