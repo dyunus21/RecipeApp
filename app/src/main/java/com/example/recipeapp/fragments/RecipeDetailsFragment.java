@@ -195,6 +195,7 @@ public class RecipeDetailsFragment extends Fragment {
         view.setOnClickListener(Navigation.createNavigateOnClickListener(R.id.action_recipeDetailsFragment_to_uploadPostFragment, bundle));
     }
 
+    // TODO: Fix databinding of this function
     public void findRecipe(String action) {
         ParseQuery<Recipe> query = ParseQuery.getQuery(Recipe.class);
         query.include(Recipe.KEY_RECIPE_ID);

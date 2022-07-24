@@ -1,0 +1,13 @@
+Filter Dialog UI in progress
+# Please enter the commit message for your changes. Lines starting
+# with '#' will be ignored, and an empty message aborts the commit.
+#
+# On branch RecipeSearch
+# Your branch is up to date with 'origin/RecipeSearch'.
+#
+# Changes to be committed:
+#	modified:   .idea/misc.xml
+#	modified:   app/src/main/java/com/example/recipeapp/fragments/RecipeSearchFragment.java
+#	modified:   app/src/main/res/layout/filter_dialog.xml
+#	modified:   app/src/main/res/layout/item_recipe_card.xml
+#
