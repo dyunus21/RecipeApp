@@ -249,65 +249,66 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="30dp"
                 android:layout_marginEnd="30dp"
+                android:layout_marginBottom="10dp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent">
 
                 <ImageView
                     android:id="@+id/ivProfileImage"
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_marginTop="5dp"
                     android:src="@drawable/ic_baseline_account_circle_24"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
-                <EditText
-                    android:id="@+id/etReview"
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/tilReview"
                     android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:ems="10"
-                    android:hint="Add your review..."
-                    android:inputType="textMultiLine"
-                    android:minHeight="48dp"
-                    android:textSize="16sp"
+                    android:layout_height="61dp"
+                    android:layout_marginStart="5dp"
+                    android:hint="Add a review..."
+                    app:boxStrokeWidth="0dp"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintHorizontal_bias="0.0"
                     app:layout_constraintStart_toEndOf="@+id/ivProfileImage"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    app:layout_constraintTop_toTopOf="parent">
 
-                <TextView
-                    android:id="@+id/tvRatingText"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="5dp"
-                    android:text="Rating"
-                    app:layout_constraintStart_toStartOf="@+id/etReview"
-                    app:layout_constraintTop_toBottomOf="@+id/etReview" />
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/etReview"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/rounded_button"
+                        android:backgroundTint="@color/light_teal"
+                        android:inputType="textMultiLine" />
+
+                </com.google.android.material.textfield.TextInputLayout>
 
                 <RatingBar
                     android:id="@+id/rbRating"
-                    style="@style/Widget.AppCompat.RatingBar.Small"
+                    style="@style/Widget.AppCompat.RatingBar.Indicator"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="28dp"
                     android:layout_marginTop="6dp"
                     android:clickable="true"
                     android:isIndicator="false"
                     android:numStars="5"
                     android:stepSize="0.5"
-                    app:layout_constraintStart_toEndOf="@+id/tvRatingText"
-                    app:layout_constraintTop_toBottomOf="@+id/etReview" />
+                    app:layout_constraintStart_toStartOf="@+id/tilReview"
+                    app:layout_constraintTop_toBottomOf="@+id/tilReview" />
 
                 <Button
                     android:id="@+id/btnPost"
-                    android:layout_width="120dp"
-                    android:layout_height="50dp"
-                    android:layout_marginTop="4dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="0dp"
                     android:onClick="@{(view)->fragmentRecipeDetailsController.postReview()}"
-                    android:text="Post Review"
+                    android:text="Post"
                     android:textSize="12sp"
+                    app:layout_constraintBottom_toBottomOf="@+id/rbRating"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/etReview"
+                    app:layout_constraintHorizontal_bias="1.0"
+                    app:layout_constraintStart_toEndOf="@+id/rbRating"
+                    app:layout_constraintTop_toTopOf="@+id/rbRating"
                     tools:ignore="TouchTargetSizeCheck" />
 
                 <androidx.recyclerview.widget.RecyclerView

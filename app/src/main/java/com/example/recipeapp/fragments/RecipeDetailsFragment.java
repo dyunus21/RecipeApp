@@ -137,11 +137,11 @@ public class RecipeDetailsFragment extends Fragment {
         queryReviews();
     }
 
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        ((MainActivity) getActivity()).getSupportActionBar().show();
-    }
+//    @Override
+//    public void onDestroyView() {
+//        super.onDestroyView();
+//        ((MainActivity) getActivity()).getSupportActionBar().show();
+//    }
 
     private void setUpTabs() {
         binding.tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
