@@ -117,9 +117,9 @@ public class RecipeDetailsFragment extends Fragment {
 
         // TODO: button does not change color to indicate liked recipes because ids differ each session
         if (currentUser.isLikedbyCurrentUser(recipe)) {
-            binding.ibHeart.setBackgroundResource(R.drawable.heart_filled);
+            binding.ibHeart.setBackgroundResource(R.drawable.ic_baseline_favorite_24);
         } else {
-            binding.ibHeart.setBackgroundResource(R.drawable.heart);
+            binding.ibHeart.setBackgroundResource(R.drawable.ic_baseline_favorite_border_24);
         }
         if (currentUser.isMadebyCurrentUser(recipe)) {
             binding.btnMade.setText("I Made it!");
@@ -292,9 +292,9 @@ public class RecipeDetailsFragment extends Fragment {
 
     private void likeRecipe() {
         if (currentUser.isLikedbyCurrentUser(recipe)) {
-            binding.ibHeart.setBackgroundResource(R.drawable.heart);
+            binding.ibHeart.setBackgroundResource(R.drawable.ic_baseline_favorite_border_24);
         } else {
-            binding.ibHeart.setBackgroundResource(R.drawable.heart_filled);
+            binding.ibHeart.setBackgroundResource(R.drawable.ic_baseline_favorite_24);
         }
         currentUser.likeRecipe(recipe);
 
