@@ -22,9 +22,9 @@
             android:layout_height="50dp"
             android:layout_marginStart="10dp"
             android:background="@drawable/ic_outline_photo_camera_24"
+            android:onClick="@{(view)->fragmentRecipeSearchController.initCamera()}"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/svSearch"
-            android:onClick="@{(view)->fragmentRecipeSearchController.initCamera()}"/>
+            app:layout_constraintTop_toTopOf="@+id/svSearch" />
 
         <ImageButton
             android:id="@+id/ibFilter"

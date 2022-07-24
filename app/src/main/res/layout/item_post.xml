@@ -110,12 +110,13 @@
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/tilComment"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
+        android:layout_height="61dp"
         android:layout_marginStart="5dp"
         android:layout_marginTop="5dp"
         android:hint="Add a comment..."
         app:boxStrokeWidth="0dp"
         app:layout_constraintEnd_toEndOf="@+id/rvComments"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toEndOf="@+id/ivCurrentUserProfileImage"
         app:layout_constraintTop_toBottomOf="@+id/rvComments">
 
@@ -129,18 +130,6 @@
 
     </com.google.android.material.textfield.TextInputLayout>
 
-    <Button
-        android:id="@+id/btnPostComment"
-        android:layout_width="0dp"
-        android:layout_height="37dp"
-        android:text="Post"
-        android:textSize="10sp"
-        app:layout_constraintBottom_toBottomOf="@+id/tilComment"
-        app:layout_constraintEnd_toEndOf="@+id/rvComments"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toEndOf="@+id/tilComment"
-        app:layout_constraintTop_toBottomOf="@+id/tilComment" />
-
     <ImageView
         android:id="@+id/ivCurrentUserProfileImage"
         android:layout_width="30dp"
@@ -150,6 +139,17 @@
         app:layout_constraintStart_toStartOf="@+id/rvComments"
         app:layout_constraintTop_toTopOf="@+id/tilComment"
         app:srcCompat="@drawable/ic_baseline_account_circle_24" />
+
+    <Button
+        android:id="@+id/btnPostComment"
+        android:layout_width="wrap_content"
+        android:layout_height="37dp"
+        android:background="@android:color/transparent"
+        android:text="Post"
+        android:textColor="@android:color/holo_blue_dark"
+        app:layout_constraintBottom_toBottomOf="@+id/tilComment"
+        app:layout_constraintEnd_toEndOf="@+id/tilComment"
+        app:layout_constraintTop_toTopOf="@+id/tilComment" />
 
     <TextView
         android:id="@+id/tvTitle"
