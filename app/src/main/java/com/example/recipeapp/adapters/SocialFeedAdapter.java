@@ -105,9 +105,9 @@ public class SocialFeedAdapter extends RecyclerView.Adapter<SocialFeedAdapter.Vi
             List<ParseUser> likedBy = post.getLikedBy();
             binding.tvLikes.setText(likedBy.size() + " likes");
             if (post.isLikedbyCurrentUser(ParseUser.getCurrentUser())) {
-                binding.ibHeart.setBackgroundResource(R.drawable.heart_filled);
+                binding.ibHeart.setBackgroundResource(R.drawable.ic_baseline_favorite_24);
             } else {
-                binding.ibHeart.setBackgroundResource(R.drawable.heart);
+                binding.ibHeart.setBackgroundResource(R.drawable.ic_baseline_favorite_border_24);
             }
 
             binding.ibHeart.setOnClickListener(v -> likePost());
@@ -157,9 +157,9 @@ public class SocialFeedAdapter extends RecyclerView.Adapter<SocialFeedAdapter.Vi
 
         private void likePost() {
             if (currentPost.isLikedbyCurrentUser(ParseUser.getCurrentUser())) {
-                binding.ibHeart.setBackgroundResource(R.drawable.heart);
+                binding.ibHeart.setBackgroundResource(R.drawable.ic_baseline_favorite_border_24);
             } else {
-                binding.ibHeart.setBackgroundResource(R.drawable.heart_filled);
+                binding.ibHeart.setBackgroundResource(R.drawable.ic_baseline_favorite_24);
             }
             currentPost.likePost(ParseUser.getCurrentUser());
 
