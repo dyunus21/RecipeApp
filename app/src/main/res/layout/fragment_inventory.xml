@@ -48,7 +48,7 @@
             android:layout_height="0dp"
             android:backgroundTint="@color/teal_700"
             android:clickable="true"
-            android:onClick="@{(view)->fragmentInventoryController.goToAddIngredient()}"
+            android:onClick="@{(view)->fragmentInventoryController.showAddIngredientDialog()}"
             android:text="Add"
             android:textColor="@color/white"
             app:fabSize="mini"

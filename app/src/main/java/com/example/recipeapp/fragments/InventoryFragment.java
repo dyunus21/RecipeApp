@@ -7,6 +7,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -97,19 +98,22 @@ public class InventoryFragment extends Fragment {
         NavHostFragment.findNavController(this).navigate(R.id.barcodeScanFragment);
     }
 
-    public void goToAddIngredient() {
+    public void showAddIngredientDialog() {
         MaterialAlertDialogBuilder alertDialogBuilder = new MaterialAlertDialogBuilder(getContext());
         AddIngredientDialogBinding ingredientDialogBinding = AddIngredientDialogBinding.inflate(getLayoutInflater());
         alertDialogBuilder.setView(ingredientDialogBinding.getRoot());
+        final ArrayAdapter unitsAdapter = new ArrayAdapter(getContext(), android.R.layout.simple_dropdown_item_1line, getResources().getStringArray(R.array.units));
+        ingredientDialogBinding.actvUnit.setAdapter(unitsAdapter);
         alertDialogBuilder.setPositiveButton("Add", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 progressDialog.show();
                 String name = ingredientDialogBinding.etName.getText().toString();
                 String count = ingredientDialogBinding.etCount.getText().toString();
-                String unit = ingredientDialogBinding.etUnit.getText().toString();
+                String unit = ingredientDialogBinding.actvUnit.getText().toString();
                 if (name.isEmpty() || count.isEmpty() || unit.isEmpty()) {
                     Toast.makeText(getContext(), "Fields cannot be empty!", Toast.LENGTH_SHORT).show();
+                    progressDialog.dismiss();
                     return;
                 }
                 addIngredient(name, count, unit);

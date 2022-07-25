@@ -47,5 +47,20 @@
         <item>Question</item>
         <item>Recipe</item>
     </string-array>
+    <string-array name="units">
+        <item>tsp</item>
+        <item>tbsp</item>
+        <item>cups</item>
+        <item>whole</item>
+        <item>ml</item>
+        <item>liters</item>
+        <item>gallons</item>
+        <item>lb</item>
+        <item>oz</item>
+        <item>fl. oz</item>
+        <item>tsp</item>
+        <item>g</item>
+        <item>kg</item>
+    </string-array>
     <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>
