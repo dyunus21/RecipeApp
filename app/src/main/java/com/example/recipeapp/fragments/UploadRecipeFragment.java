@@ -12,6 +12,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -81,7 +82,7 @@ public class UploadRecipeFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
+        binding.actvCuisine.setAdapter(new ArrayAdapter<String>(getContext(), android.R.layout.simple_dropdown_item_1line,getResources().getStringArray(R.array.cuisine)));
         if (edited) {
             binding.btnDelete.setVisibility(View.VISIBLE);
         }
@@ -109,7 +110,7 @@ public class UploadRecipeFragment extends Fragment {
     private void initializePage() {
         binding.etRecipeName.setText(recipe.getTitle());
         Glide.with(getContext()).load(recipe.getImage().getUrl()).into(binding.ivImage);
-        binding.etCuisine.setText(recipe.getCuisineType());
+        binding.actvCuisine.setText(recipe.getCuisineType());
         binding.etCooktime.setText(String.valueOf(recipe.getCooktime()));
         String instructions = "";
         for (int i = 0; i < recipe.getInstructions().size(); i++) {
@@ -128,7 +129,7 @@ public class UploadRecipeFragment extends Fragment {
         progressDialog.setMessage("Uploading recipe...");
         progressDialog.show();
         final String title = binding.etRecipeName.getText().toString();
-        final String cuisineType = binding.etCuisine.getText().toString();
+        final String cuisineType = binding.actvCuisine.getText().toString();
         final int cooktime = Integer.parseInt(binding.etCooktime.getText().toString());
         final String ingredients = binding.etIngredientList.getText().toString();
         final String instructions = binding.etInstructions.getText().toString();
@@ -177,7 +178,7 @@ public class UploadRecipeFragment extends Fragment {
 
     private void clearPage() {
         binding.etRecipeName.setText("");
-        binding.etCuisine.setText("");
+        binding.actvCuisine.setText("");
         binding.etCooktime.setText("");
         binding.etIngredientList.setText("");
         binding.etInstructions.setText("");
