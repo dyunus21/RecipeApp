@@ -1,10 +1,14 @@
 package com.example.recipeapp.fragments;
 
+import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -15,9 +19,12 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import com.example.recipeapp.R;
 import com.example.recipeapp.activities.MainActivity;
 import com.example.recipeapp.adapters.InventoryAdapter;
+import com.example.recipeapp.databinding.AddIngredientDialogBinding;
 import com.example.recipeapp.databinding.FragmentInventoryBinding;
+import com.example.recipeapp.models.Comment;
 import com.example.recipeapp.models.Ingredient;
 import com.example.recipeapp.models.User;
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.parse.ParseException;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
@@ -31,6 +38,7 @@ public class InventoryFragment extends Fragment {
     private List<Ingredient> ingredientList;
     private InventoryAdapter adapter;
     private User currentUser;
+    private ProgressDialog progressDialog;
 
     public InventoryFragment() {
 
@@ -40,8 +48,9 @@ public class InventoryFragment extends Fragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         ingredientList = new ArrayList<>();
+        progressDialog = new ProgressDialog(getContext());
         adapter = new InventoryAdapter(getContext(), ingredientList);
-        ((MainActivity) getActivity()).getSupportActionBar().setTitle("Inventory");
+
     }
 
     @Override
@@ -53,7 +62,14 @@ public class InventoryFragment extends Fragment {
     }
 
     @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        ((MainActivity) getActivity()).getSupportActionBar().show();
+    }
+
+    @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        ((MainActivity) getActivity()).getSupportActionBar().hide();
         super.onViewCreated(view, savedInstanceState);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
         binding.rvIngredients.setAdapter(adapter);
@@ -75,13 +91,62 @@ public class InventoryFragment extends Fragment {
         } catch (ParseException e) {
             Log.e(TAG, "No user found");
         }
+        binding.tvNumIngredients.setText(ingredientList.size() + " items");
     }
 
     public void goToBarcodeScan() {
         NavHostFragment.findNavController(this).navigate(R.id.barcodeScanFragment);
     }
 
-    public void goToAddIngredient() {
-        NavHostFragment.findNavController(this).navigate(R.id.addIngredientFragment);
+    public void showAddIngredientDialog() {
+        MaterialAlertDialogBuilder alertDialogBuilder = new MaterialAlertDialogBuilder(getContext());
+        AddIngredientDialogBinding ingredientDialogBinding = AddIngredientDialogBinding.inflate(getLayoutInflater());
+        alertDialogBuilder.setView(ingredientDialogBinding.getRoot());
+        final ArrayAdapter unitsAdapter = new ArrayAdapter(getContext(), android.R.layout.simple_dropdown_item_1line, getResources().getStringArray(R.array.units));
+        ingredientDialogBinding.actvUnit.setAdapter(unitsAdapter);
+        alertDialogBuilder.setPositiveButton("Add", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                progressDialog.show();
+                String name = ingredientDialogBinding.etName.getText().toString();
+                String count = ingredientDialogBinding.etCount.getText().toString();
+                String unit = ingredientDialogBinding.actvUnit.getText().toString();
+                if (name.isEmpty() || count.isEmpty() || unit.isEmpty()) {
+                    Toast.makeText(getContext(), "Fields cannot be empty!", Toast.LENGTH_SHORT).show();
+                    progressDialog.dismiss();
+                    return;
+                }
+                addIngredient(name, count, unit);
+            }
+        });
+        alertDialogBuilder.setNegativeButton("Cancel", (dialog, which) -> dialog.dismiss());
+        alertDialogBuilder.show();
     }
+
+    private void addIngredient(final String name, final String count, final String unit) {
+        Ingredient ingredient = new Ingredient();
+        ingredient.initialize(name, Integer.parseInt(count), unit);
+        ingredient.saveInBackground(e -> {
+            if (e != null) {
+                Log.e(TAG, "Error in adding ingredient!", e);
+                return;
+            }
+            List<Ingredient> ingredientList = currentUser.getIngredientArray();
+            adapter.clear();
+            ingredientList.add(ingredient);
+            adapter.addAll(ingredientList);
+            binding.tvNumIngredients.setText(ingredientList.size() + " items");
+            progressDialog.dismiss();
+            currentUser.setIngredientArray(ingredientList);
+            currentUser.getParseUser().saveInBackground(e1 -> {
+                if (e1 != null) {
+                    Log.e(TAG, "Error in adding ingredient to user!", e1);
+                    return;
+                }
+                Log.i(TAG, "Saved ingredient to user's ingredient list!");
+            });
+        });
+
+    }
+
 }

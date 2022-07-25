@@ -19,12 +19,13 @@
 
         <TextView
             android:id="@+id/tvInventoryText"
+            style="@style/Title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
             android:text="Inventory"
-            android:textSize="28sp"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.1"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -35,35 +36,49 @@
             android:layout_marginStart="30dp"
             android:layout_marginTop="20dp"
             android:layout_marginEnd="30dp"
-            android:layout_marginBottom="75dp"
-            android:background="#DDFFFC"
+            android:layout_marginBottom="20dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/tvInventoryText" />
+            app:layout_constraintTop_toBottomOf="@+id/ibScan" />
 
-        <com.google.android.material.floatingactionbutton.FloatingActionButton
+        <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
             android:id="@+id/fabAdd"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
+            android:layout_width="104dp"
+            android:layout_height="0dp"
+            android:backgroundTint="@color/teal_700"
             android:clickable="true"
-            android:onClick="@{(view)->fragmentInventoryController.goToAddIngredient()}"
-            android:src="@drawable/ic_baseline_add_24"
+            android:onClick="@{(view)->fragmentInventoryController.showAddIngredientDialog()}"
+            android:text="Add"
+            android:textColor="@color/white"
             app:fabSize="mini"
+            app:icon="@drawable/ic_baseline_add_24"
+            app:iconGravity="textEnd"
+            app:iconTint="@color/white"
+            app:layout_constraintBottom_toBottomOf="@+id/ibScan"
             app:layout_constraintEnd_toEndOf="@+id/rvIngredients"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="@+id/ibScan"
+            app:rippleColor="@color/light_teal" />
 
         <ImageButton
             android:id="@+id/ibScan"
-            android:layout_width="40dp"
-            android:layout_height="0dp"
-            android:layout_marginStart="20dp"
-            android:background="@drawable/ic_baseline_qr_code_scanner_24"
+            android:layout_width="82dp"
+            android:layout_height="52dp"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/ic_baseline_barcode_scanner"
             android:onClick="@{(view)->fragmentInventoryController.goToBarcodeScan()}"
-            app:layout_constraintBottom_toBottomOf="@+id/fabAdd"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/fabAdd" />
+            app:layout_constraintStart_toStartOf="@+id/tvNumIngredients"
+            app:layout_constraintTop_toBottomOf="@+id/tvNumIngredients" />
+
+        <TextView
+            android:id="@+id/tvNumIngredients"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:fontFamily="serif-monospace"
+            android:text="6 items"
+            app:layout_constraintStart_toStartOf="@+id/tvInventoryText"
+            app:layout_constraintTop_toBottomOf="@+id/tvInventoryText" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

@@ -14,7 +14,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="@+id/tvDescription"
-        app:layout_constraintTop_toBottomOf="@+id/ibHeart" />
+        app:layout_constraintTop_toBottomOf="@+id/tvDescription" />
 
     <TextView
         android:id="@+id/tvDescription"
@@ -25,7 +25,7 @@
         android:textSize="16sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="@+id/ivProfileImage"
-        app:layout_constraintTop_toBottomOf="@+id/btnGoToRecipe"
+        app:layout_constraintTop_toBottomOf="@+id/ibHeart"
         tools:text="Description ..." />
 
     <ImageView
@@ -86,13 +86,13 @@
 
     <ImageButton
         android:id="@+id/ibHeart"
-        android:layout_width="20dp"
-        android:layout_height="20dp"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
         android:layout_marginStart="20dp"
         android:layout_marginTop="10dp"
-        android:background="@drawable/heart"
+        android:background="@drawable/ic_baseline_favorite_border_24"
         app:layout_constraintStart_toStartOf="@+id/ivImage"
-        app:layout_constraintTop_toBottomOf="@+id/tvDescription" />
+        app:layout_constraintTop_toBottomOf="@+id/btnGoToRecipe" />
 
     <TextView
         android:id="@+id/tvLikes"
