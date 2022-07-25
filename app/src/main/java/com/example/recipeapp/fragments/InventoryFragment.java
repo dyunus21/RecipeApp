@@ -1,5 +1,6 @@
 package com.example.recipeapp.fragments;
 
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -15,9 +16,11 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import com.example.recipeapp.R;
 import com.example.recipeapp.activities.MainActivity;
 import com.example.recipeapp.adapters.InventoryAdapter;
+import com.example.recipeapp.databinding.AddIngredientDialogBinding;
 import com.example.recipeapp.databinding.FragmentInventoryBinding;
 import com.example.recipeapp.models.Ingredient;
 import com.example.recipeapp.models.User;
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.parse.ParseException;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
@@ -82,6 +85,17 @@ public class InventoryFragment extends Fragment {
     }
 
     public void goToAddIngredient() {
-        NavHostFragment.findNavController(this).navigate(R.id.addIngredientFragment);
+        MaterialAlertDialogBuilder alertDialogBuilder = new MaterialAlertDialogBuilder(getContext());
+        AddIngredientDialogBinding ingredientDialogBinding = AddIngredientDialogBinding.inflate(getLayoutInflater());
+        alertDialogBuilder.setView(ingredientDialogBinding.getRoot());
+        alertDialogBuilder.setPositiveButton("Add", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                // Other functions to add ingredient
+            }
+        });
+        alertDialogBuilder.setNegativeButton("Cancel", (dialog, which) -> dialog.dismiss());
+        alertDialogBuilder.show();
+//        NavHostFragment.findNavController(this).navigate(R.id.addIngredientFragment);
     }
 }
