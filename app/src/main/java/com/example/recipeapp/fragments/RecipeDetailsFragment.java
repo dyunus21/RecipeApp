@@ -24,6 +24,7 @@ import com.example.recipeapp.models.Recipe;
 import com.example.recipeapp.models.Review;
 import com.example.recipeapp.models.User;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
+import com.google.android.material.tabs.TabLayout;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
 
@@ -76,9 +77,12 @@ public class RecipeDetailsFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        ((MainActivity) getActivity()).getSupportActionBar().hide();
+        showIngredients();
+        setUpTabs();
         binding.tvRecipeName.setText(recipe.getTitle());
-        binding.tvCookTime.setText("Cooktime: " + recipe.getCooktime() + " mins");
-        binding.tvCuisine.setText("Cuisine: " + recipe.getCuisineType());
+        binding.tvCookTime.setText(recipe.getCooktime() + " mins");
+        binding.tvCuisine.setText(recipe.getCuisineType());
         String url = recipe.getImageUrl() == null ? recipe.getImage().getUrl() : recipe.getImageUrl();
         Glide.with(getContext()).load(url).into(binding.ivImage);
         if (recipe.getRecipeId() != 0) {
@@ -113,9 +117,9 @@ public class RecipeDetailsFragment extends Fragment {
 
         // TODO: button does not change color to indicate liked recipes because ids differ each session
         if (currentUser.isLikedbyCurrentUser(recipe)) {
-            binding.ibHeart.setBackgroundResource(R.drawable.heart_filled);
+            binding.ibHeart.setBackgroundResource(R.drawable.ic_baseline_favorite_24);
         } else {
-            binding.ibHeart.setBackgroundResource(R.drawable.heart);
+            binding.ibHeart.setBackgroundResource(R.drawable.ic_baseline_favorite_border_24);
         }
         if (currentUser.isMadebyCurrentUser(recipe)) {
             binding.btnMade.setText("I Made it!");
@@ -131,6 +135,49 @@ public class RecipeDetailsFragment extends Fragment {
         binding.rvReviews.setLayoutManager(new LinearLayoutManager(getContext()));
         binding.rvReviews.setAdapter(reviewsAdapter);
         queryReviews();
+    }
+
+//    @Override
+//    public void onDestroyView() {
+//        super.onDestroyView();
+//        ((MainActivity) getActivity()).getSupportActionBar().show();
+//    }
+
+    private void setUpTabs() {
+        binding.tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+            @Override
+            public void onTabSelected(TabLayout.Tab tab) {
+                if (tab == binding.tabLayout.getTabAt(0)) {
+                    showIngredients();
+                } else if (tab == binding.tabLayout.getTabAt(1)) {
+                    showInstructions();
+                }
+            }
+
+            @Override
+            public void onTabUnselected(TabLayout.Tab tab) {
+
+            }
+
+            @Override
+            public void onTabReselected(TabLayout.Tab tab) {
+                if (tab == binding.tabLayout.getTabAt(0)) {
+                    showIngredients();
+                } else if (tab == binding.tabLayout.getTabAt(1)) {
+                    showInstructions();
+                }
+            }
+        });
+    }
+
+    private void showInstructions() {
+        binding.tvInstructionsList.setVisibility(View.VISIBLE);
+        binding.tvIngredientList.setVisibility(View.GONE);
+    }
+
+    private void showIngredients() {
+        binding.tvIngredientList.setVisibility(View.VISIBLE);
+        binding.tvInstructionsList.setVisibility(View.GONE);
     }
 
     public void showShareAlert() {
@@ -245,9 +292,9 @@ public class RecipeDetailsFragment extends Fragment {
 
     private void likeRecipe() {
         if (currentUser.isLikedbyCurrentUser(recipe)) {
-            binding.ibHeart.setBackgroundResource(R.drawable.heart);
+            binding.ibHeart.setBackgroundResource(R.drawable.ic_baseline_favorite_border_24);
         } else {
-            binding.ibHeart.setBackgroundResource(R.drawable.heart_filled);
+            binding.ibHeart.setBackgroundResource(R.drawable.ic_baseline_favorite_24);
         }
         currentUser.likeRecipe(recipe);
 
