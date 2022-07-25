@@ -20,10 +20,10 @@ People are commonly faced with a difficult decision to decide what to cook. Part
 - **Market:** Anyone who wants to cook a meal, particularly new cooks (Ex: college students). User-oriented recipe database attracts cooks who wants to try out signature recipes.
 - **Habit:** Users can use this app daily to diversify their meals. They can also share their daily meals among their followers. Potential leaderboard and challenges might also attract users to app. Push notifications can also remind users to utilize app.
 - **Scope:** 
-    - **Version 1** would allow users to filter recipes and upload their recipes to update database. Users can keep track of their ingredient inventory through barcode scanning or manual input.
+    - **Version 1** would allow users to filter recipes and upload their recipes to update database. Users can keep track of their ingredient inventory through manual ingredient input.
     - **Version 2** would integrate a social media platform where users can post their recipes or challenges they face while cooking.
-    - **Version 3** would include daily/weekly challenges along with a leaderboard based on app usage. 
-    - **Version 4 (Stretch)** would include chatbots and an AI recipe recommendation service  (Similar to Netflix). Users can view nearby shops with particular ingredients. Users can view nearby users' meals timeline.
+    - **Version 3** would include more user interactions with recipe and posts.
+    - **Version 4 (Stretch)** would include ability for users to scan barcode to add ingredient and scan an image to search for recipes.
 
 ## Product Spec
 
@@ -53,23 +53,19 @@ _Version2_
 
 **Optional Nice-to-have Stories**
 
-_Version3_
+_Version3_ (Stretch)
 * [x] User can edit previously uploaded recipes
 * [x] Initial search screen displays random/recommended recipes
 * [x] User can share recipes directly to social feed
-* [ ] User can view a demo of app before account creation
-* [x] User can scan food barcode to update inventory
-* [ ] User can follow other users
 * [x] Implement JUnit testing for utilities
 * [x] Add Databinding support for cleaner Activities and Fragments
 
-_Version4_
+_Version4_ (Stretch)
+* [x] User can scan food barcode to update inventory
 * [x] User can search for a recipe based on image
-* [ ] User can be directed to nearby shops that contain unavailable ingredients ([Yelp API](https://www.yelp.com/developers))
-* [ ] User can complete weekly challenges and view leaderboard
-* [ ] Users can view what nearby users/followers are currently eating (Snapchat-like feature) ([Google Maps SDK](https://developers.google.com/maps/documentation/android-sdk/overview))
-* [ ] Users can translate recipes to different languages ([Google Translate API](https://cloud.google.com/translate))
 * [x] Explore Kotlin usage
+* [ ] Implement navigation drawer in Profile fragment
+* [ ] User can view a demo of app before account creation
 
 ### 2. Screen Archetypes
 
@@ -94,7 +90,7 @@ _Version4_
     * Users can post recipes/questions/challenges in the social media platform
 * Profile
     * Users can view user profiles
-    * Users can view user-uploaded recipes in user profile
+    * Users can view user-uploaded recipes/posts in user profile
     * Users can logout
 
 ### 3. Navigation
