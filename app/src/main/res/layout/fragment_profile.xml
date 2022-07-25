@@ -9,34 +9,38 @@
 
 
     <TextView
-        android:id="@+id/tvMadeCount"
+        android:id="@+id/tvPostCount"
+        style="@style/Title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
         android:text="0"
-        android:textSize="16sp"
-        app:layout_constraintBottom_toTopOf="@+id/tvRecipeMade"
-        app:layout_constraintEnd_toEndOf="@+id/tvRecipeMade"
-        app:layout_constraintStart_toStartOf="@+id/tvRecipeMade" />
+        app:layout_constraintEnd_toEndOf="@+id/tvPostsText"
+        app:layout_constraintHorizontal_bias="0.555"
+        app:layout_constraintStart_toStartOf="@+id/tvPostsText"
+        app:layout_constraintTop_toBottomOf="@+id/tvUsername" />
 
     <TextView
-        android:id="@+id/tvRecipeMade"
+        android:id="@+id/tvPostsText"
+        style="@style/Title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="5dp"
-        android:text=" Recipes Made"
+        android:layout_marginTop="5dp"
+        android:layout_marginEnd="100dp"
+        android:text="Posts"
         android:textAlignment="center"
-        app:layout_constraintBottom_toBottomOf="@+id/tvRecipeText"
+        android:textColor="@color/teal_700"
+        android:textSize="24sp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/tvRecipeText"
-        app:layout_constraintTop_toTopOf="@+id/tvRecipeText" />
+        app:layout_constraintTop_toBottomOf="@+id/tvPostCount" />
 
     <ImageView
         android:id="@+id/ivProfileImage"
         android:layout_width="110dp"
         android:layout_height="108dp"
-        android:layout_marginStart="20dp"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="30dp"
         android:src="@drawable/profile_placeholder"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -44,113 +48,110 @@
         android:id="@+id/tvUsername"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="20dp"
-        android:layout_marginTop="5dp"
-        android:text="Username"
-        android:textColor="@color/black"
+        android:text="\@dyunus"
+        android:textColor="@android:color/darker_gray"
         android:textSize="18sp"
-        android:textStyle="bold"
-        app:layout_constraintStart_toEndOf="@+id/ivProfileImage"
-        app:layout_constraintTop_toTopOf="@+id/ivProfileImage" />
+        app:layout_constraintEnd_toEndOf="@+id/tvFullname"
+        app:layout_constraintHorizontal_bias="0.481"
+        app:layout_constraintStart_toStartOf="@+id/tvFullname"
+        app:layout_constraintTop_toBottomOf="@+id/tvFullname" />
 
     <TextView
         android:id="@+id/tvChangeProfileImage"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
         android:text="Change Profile Image"
+        app:layout_constraintBottom_toTopOf="@+id/ivProfileImage"
         app:layout_constraintEnd_toEndOf="@+id/ivProfileImage"
+        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="@+id/ivProfileImage"
-        app:layout_constraintTop_toBottomOf="@+id/ivProfileImage"
         tools:textAlignment="center" />
 
     <TextView
         android:id="@+id/tvFullname"
+        style="@style/Title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="20dp"
-        android:layout_marginTop="10dp"
-        android:text="Full Name"
-        android:textSize="20sp"
-        app:layout_constraintStart_toEndOf="@+id/ivProfileImage"
-        app:layout_constraintTop_toBottomOf="@+id/tvUsername" />
+        android:layout_marginTop="20dp"
+        android:text="Diya Yunus"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="@+id/ivProfileImage"
+        app:layout_constraintStart_toStartOf="@+id/ivProfileImage"
+        app:layout_constraintTop_toBottomOf="@+id/ivProfileImage" />
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rvUploadedRecipes"
+        android:id="@+id/rvPosts"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="@+id/rvRecipes"
+        app:layout_constraintEnd_toEndOf="@+id/rvRecipes"
+        app:layout_constraintStart_toStartOf="@+id/rvRecipes"
+        app:layout_constraintTop_toTopOf="@+id/rvRecipes" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rvRecipes"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_marginStart="20dp"
-        android:layout_marginTop="5dp"
+        android:layout_marginTop="10dp"
         android:layout_marginEnd="20dp"
-        android:layout_marginBottom="75dp"
+        android:layout_marginBottom="10dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tabLayout" />
+        app:layout_constraintTop_toBottomOf="@+id/tabLayout" >
+
+    </androidx.recyclerview.widget.RecyclerView>
 
     <TextView
         android:id="@+id/tvRecipeCount"
+        style="@style/Title"
         android:layout_width="wrap_content"
         android:layout_height="0dp"
+        android:layout_marginTop="10dp"
         android:text="0"
-        android:textSize="16sp"
-        app:layout_constraintBottom_toTopOf="@+id/tvRecipeText"
         app:layout_constraintEnd_toEndOf="@+id/tvRecipeText"
-        app:layout_constraintStart_toStartOf="@+id/tvRecipeText" />
+        app:layout_constraintHorizontal_bias="0.536"
+        app:layout_constraintStart_toStartOf="@+id/tvRecipeText"
+        app:layout_constraintTop_toBottomOf="@+id/tvUsername" />
 
     <TextView
         android:id="@+id/tvRecipeText"
+        style="@style/Title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="30dp"
-        android:text=" Recipes Uploaded"
+        android:layout_marginStart="100dp"
+        android:layout_marginTop="5dp"
+        android:text="Recipes"
         android:textAlignment="center"
-        app:layout_constraintStart_toStartOf="@+id/tvFullname"
-        app:layout_constraintTop_toBottomOf="@+id/tvFullname" />
+        android:textColor="@color/teal_700"
+        android:textSize="24sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tvRecipeCount" />
 
     <com.google.android.material.tabs.TabLayout
         android:id="@+id/tabLayout"
+        style="@style/Widget.MaterialComponents.TabLayout.Colored"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="50dp"
+        android:layout_marginTop="30dp"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tvChangeProfileImage">
+        app:layout_constraintTop_toBottomOf="@+id/tvRecipeText">
 
         <com.google.android.material.tabs.TabItem
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Uploaded Recipes" />
+            android:text="Recipes" />
 
         <com.google.android.material.tabs.TabItem
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Liked Recipes" />
-
-        <com.google.android.material.tabs.TabItem
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Made Recipes" />
+            android:text="Posts" />
 
     </com.google.android.material.tabs.TabLayout>
 
-<!--    <androidx.constraintlayout.motion.widget.MotionLayout-->
-<!--        android:id="@+id/motionLayout"-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="0dp"-->
-<!--        app:layoutDescription="@xml/profilescene"-->
-<!--        app:layout_constraintBottom_toBottomOf="parent"-->
-<!--        app:layout_constraintEnd_toEndOf="parent"-->
-<!--        app:layout_constraintStart_toStartOf="parent"-->
-<!--        app:layout_constraintTop_toBottomOf="@+id/rvUploadedRecipes"-->
-<!--        tools:showPaths="true">-->
-
-<!--        <ImageView-->
-<!--            android:id="@+id/imageView"-->
-<!--            android:layout_width="wrap_content"-->
-<!--            android:layout_height="wrap_content">-->
-
-<!--        </ImageView>-->
-<!--    </androidx.constraintlayout.motion.widget.MotionLayout>-->
 
 </androidx.constraintlayout.widget.ConstraintLayout>

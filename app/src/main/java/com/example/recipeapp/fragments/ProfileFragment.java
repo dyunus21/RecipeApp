@@ -14,17 +14,23 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.GridLayoutManager;
 
 import com.bumptech.glide.Glide;
 import com.example.recipeapp.R;
 import com.example.recipeapp.activities.MainActivity;
+import com.example.recipeapp.adapters.PostsAdapter;
 import com.example.recipeapp.adapters.ProfileAdapter;
+import com.example.recipeapp.adapters.RecipeSearchAdapter;
 import com.example.recipeapp.databinding.FragmentProfileBinding;
 import com.example.recipeapp.clients.ImageClient;
+import com.example.recipeapp.models.Comment;
+import com.example.recipeapp.models.Post;
 import com.example.recipeapp.models.Recipe;
 import com.example.recipeapp.models.User;
 import com.google.android.material.tabs.TabLayout;
+import com.parse.FindCallback;
+import com.parse.ParseException;
 import com.parse.ParseFile;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
@@ -40,8 +46,10 @@ public class ProfileFragment extends Fragment {
     private final User CURRENT_USER = new User(ParseUser.getCurrentUser());
     private File photoFile;
     private FragmentProfileBinding binding;
-    private ProfileAdapter adapter;
+    private RecipeSearchAdapter recipeSearchAdapter;
+    private PostsAdapter postsAdapter;
     private List<Recipe> recipes;
+    private List<Post> posts;
     private ImageClient imageClient;
 
     public ProfileFragment() {
@@ -59,7 +67,9 @@ public class ProfileFragment extends Fragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         recipes = new ArrayList<>();
-        adapter = new ProfileAdapter(getContext(), recipes);
+        recipeSearchAdapter = new RecipeSearchAdapter(getContext(), recipes);
+        posts = new ArrayList<>();
+        // postsAdapter = new PostsAdapter(getContext(), posts);
         imageClient = new ImageClient(this);
         User.getUser(CURRENT_USER);
         ((MainActivity) getActivity()).getSupportActionBar().setTitle("Profile");
@@ -74,9 +84,15 @@ public class ProfileFragment extends Fragment {
         setProfileImage();
         binding.tvChangeProfileImage.setOnClickListener(v -> imageClient.onPickPhoto(v));
         binding.tvRecipeCount.setText(String.valueOf(CURRENT_USER.getRecipesUploaded().size()));
-        binding.tvMadeCount.setText(String.valueOf(CURRENT_USER.getRecipesMade().size()));
-        binding.rvUploadedRecipes.setLayoutManager(new LinearLayoutManager(getContext()));
-        binding.rvUploadedRecipes.setAdapter(adapter);
+
+        binding.tvPostCount.setText(String.valueOf(posts.size()));
+
+        binding.rvRecipes.setLayoutManager(new GridLayoutManager(getContext(),2));
+        binding.rvRecipes.setAdapter(recipeSearchAdapter);
+
+        binding.rvPosts.setLayoutManager(new GridLayoutManager(getContext(),2));
+        binding.rvPosts.setAdapter(postsAdapter);
+
         setUpTabs();
 
     }
@@ -86,11 +102,9 @@ public class ProfileFragment extends Fragment {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
                 if (tab == binding.tabLayout.getTabAt(0)) {
-                    queryRecipes("uploaded");
+                    queryRecipes();
                 } else if (tab == binding.tabLayout.getTabAt(1)) {
-                    queryRecipes("liked");
-                } else if (tab == binding.tabLayout.getTabAt(2)) {
-                    queryRecipes("made");
+                    queryPosts();
                 }
             }
 
@@ -102,28 +116,40 @@ public class ProfileFragment extends Fragment {
             @Override
             public void onTabReselected(TabLayout.Tab tab) {
                 if (tab == binding.tabLayout.getTabAt(0)) {
-                    queryRecipes("uploaded");
+                    queryRecipes();
                 } else if (tab == binding.tabLayout.getTabAt(1)) {
-                    queryRecipes("liked");
-                } else if (tab == binding.tabLayout.getTabAt(2)) {
-                    queryRecipes("made");
+                    queryPosts();
                 }
             }
         });
     }
 
-    private void queryRecipes(String type) {
-        ParseQuery<Recipe> query = ParseQuery.getQuery(Recipe.class);
-        adapter.clear();
-        if (type.equals("uploaded")) {
-            recipes = CURRENT_USER.getRecipesUploaded();
-        } else if (type.equals("liked")) {
-            recipes = CURRENT_USER.getRecipesLiked();
-        } else if (type.equals("made")) {
-            recipes = CURRENT_USER.getRecipesMade();
-        }
+    private void queryPosts() {
+        ParseQuery<Post> query = ParseQuery.getQuery("Post");
+        query.whereEqualTo(Post.KEY_AUTHOR,CURRENT_USER);
+        query.include(Post.KEY_TITLE);
+        query.include(Post.KEY_AUTHOR);
+        query.include(Post.KEY_IMAGE);
+        query.orderByDescending(Post.KEY_CREATED_AT);
+        query.findInBackground(new FindCallback<Post>() {
+            @Override
+            public void done(List<Post> objects, ParseException e) {
+                if (e!=null) {
+                    Log.e(TAG, "Unable to fetch posts",e);
+                    return;
+                }
+                posts = objects;
+                postsAdapter.addAll(posts);
+            }
+        });
+
+    }
+
+    private void queryRecipes() {
+        recipeSearchAdapter.clear();
+        recipes = CURRENT_USER.getRecipesUploaded();
         Log.i(TAG, recipes.toString());
-        adapter.addAll(recipes);
+        recipeSearchAdapter.addAll(recipes);
         return;
     }
 
