@@ -23,8 +23,8 @@ import androidx.navigation.fragment.NavHostFragment;
 import com.bumptech.glide.Glide;
 import com.example.recipeapp.R;
 import com.example.recipeapp.activities.MainActivity;
-import com.example.recipeapp.databinding.FragmentUploadRecipeBinding;
 import com.example.recipeapp.clients.ImageClient;
+import com.example.recipeapp.databinding.FragmentUploadRecipeBinding;
 import com.example.recipeapp.models.Recipe;
 import com.example.recipeapp.models.User;
 import com.parse.ParseFile;
@@ -57,7 +57,6 @@ public class UploadRecipeFragment extends Fragment {
         imageClient = new ImageClient(this);
         final Bundle bundle = this.getArguments();
         progressDialog = new ProgressDialog(getContext());
-        ((MainActivity) getActivity()).getSupportActionBar().setTitle("Upload New Recipe");
         if (bundle != null) {
             edited = true;
             recipe = bundle.getParcelable("Recipe");
@@ -82,7 +81,8 @@ public class UploadRecipeFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        binding.actvCuisine.setAdapter(new ArrayAdapter<String>(getContext(), android.R.layout.simple_dropdown_item_1line,getResources().getStringArray(R.array.cuisine)));
+        ((MainActivity) getActivity()).getSupportActionBar().setTitle("Upload New Recipe");
+        binding.actvCuisine.setAdapter(new ArrayAdapter<>(getContext(), android.R.layout.simple_dropdown_item_1line, getResources().getStringArray(R.array.cuisine)));
         if (edited) {
             binding.btnDelete.setVisibility(View.VISIBLE);
         }
@@ -226,6 +226,7 @@ public class UploadRecipeFragment extends Fragment {
             if (resultCode == RESULT_OK) {
                 final Bitmap takenImage = BitmapFactory.decodeFile(photoFile.getAbsolutePath());
                 photoFile = imageClient.resizeFile(takenImage);
+                Glide.with(getContext()).load(photoFile).into(binding.ivImage);
                 Log.i(TAG, "File: " + photoFile.toString());
             } else {
                 Toast.makeText(getContext(), "Picture wasn't taken!", Toast.LENGTH_SHORT).show();
@@ -234,6 +235,7 @@ public class UploadRecipeFragment extends Fragment {
             final Uri photoUri = data.getData();
             Bitmap selectedImage = imageClient.loadFromUri(photoUri);
             photoFile = imageClient.resizeFile(selectedImage);
+            Glide.with(getContext()).load(photoFile).into(binding.ivImage);
             Log.i(TAG, "File: " + photoFile.toString());
         }
     }

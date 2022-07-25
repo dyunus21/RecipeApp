@@ -20,37 +20,28 @@
             android:layout_height="match_parent"
             tools:context=".fragments.UploadRecipeFragment">
 
-            <TextView
-                android:id="@+id/tvUploadText"
-                style="@style/Title"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="20dp"
-                android:text="Upload Recipe"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-
             <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/tilRecipeName"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="30dp"
-                android:layout_marginTop="30dp"
+                android:layout_marginTop="20dp"
                 android:layout_marginEnd="30dp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/tvUploadText"
                 android:hint="Recipe Name"
                 app:counterEnabled="true"
                 app:counterMaxLength="50"
-                android:id="@+id/tilRecipeName">
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:startIconDrawable="@drawable/ic_baseline_title_24"
+                app:startIconTint="@color/teal_700">
+
                 <EditText
                     android:id="@+id/etRecipeName"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:ems="10"
-                    android:inputType="textPersonName"
-                    />
+                    android:inputType="textPersonName" />
             </com.google.android.material.textfield.TextInputLayout>
 
 
@@ -59,6 +50,7 @@
                 android:layout_width="283dp"
                 android:layout_height="172dp"
                 android:layout_marginTop="5dp"
+                android:scaleType="centerCrop"
                 android:src="@drawable/placeholder_image"
                 app:layout_constraintEnd_toEndOf="@+id/tvUploadImageText"
                 app:layout_constraintStart_toStartOf="@+id/tvUploadImageText"
@@ -66,10 +58,12 @@
 
             <Button
                 android:id="@+id/btnTakePic"
-                android:layout_width="60dp"
-                android:layout_height="50dp"
+                android:layout_width="57dp"
+                android:layout_height="52dp"
                 android:layout_marginStart="50dp"
+                android:layout_marginTop="5dp"
                 android:background="@drawable/ic_outline_photo_camera_24"
+                android:onClick="@{(view)->fragmentUploadRecipeController.imageClient.launchCamera()}"
                 app:layout_constraintStart_toStartOf="@+id/ivImage"
                 app:layout_constraintTop_toBottomOf="@+id/ivImage" />
 
@@ -87,12 +81,14 @@
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/tilCuisine"
                 style="@style/Widget.Material3.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
-                android:layout_width="173dp"
+                android:layout_width="179dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="30dp"
                 android:hint="Cuisine Type"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="@+id/tilCooktime">
+                app:layout_constraintTop_toTopOf="@+id/tilCooktime"
+                app:startIconDrawable="@drawable/ic_baseline_restaurant_menu_24"
+                app:startIconTint="@color/teal_700">
 
                 <AutoCompleteTextView
                     android:id="@+id/actvCuisine"
@@ -111,11 +107,14 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="5dp"
+                android:layout_marginTop="10dp"
                 android:layout_marginEnd="30dp"
                 android:hint="Cooktime (mins)"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/tilCuisine"
-                app:layout_constraintTop_toBottomOf="@+id/btnGallery">
+                app:layout_constraintTop_toBottomOf="@+id/btnGallery"
+                app:startIconDrawable="@drawable/ic_baseline_access_time_24"
+                app:startIconTint="@color/teal_700">
 
                 <EditText
                     android:id="@+id/etCooktime"
@@ -126,35 +125,54 @@
                     android:inputType="number" />
             </com.google.android.material.textfield.TextInputLayout>
 
-            <EditText
-                android:id="@+id/etIngredientList"
-                android:layout_width="0dp"
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/tilIngredients"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="30dp"
-                android:layout_marginTop="5dp"
+                android:layout_marginTop="10dp"
                 android:layout_marginEnd="30dp"
-                android:ems="10"
-                android:gravity="start|top"
-                android:hint="Ingredient List: \n 1. 1 cup of sugar \n 2. 1 apple \n ..."
-                android:inputType="textMultiLine"
+                android:hint="Ingredient List:"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/tilCuisine" />
+                app:layout_constraintTop_toBottomOf="@+id/tilCuisine"
+                app:startIconDrawable="@drawable/ic_baseline_checklist_ingredient"
+                app:startIconTint="@color/teal_700">
 
-            <EditText
-                android:id="@+id/etInstructions"
-                android:layout_width="0dp"
+                <EditText
+                    android:id="@+id/etIngredientList"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:ems="10"
+                    android:inputType="textMultiLine"
+                    android:lines="5" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/tilInstructions"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="30dp"
-                android:layout_marginTop="5dp"
+                android:layout_marginTop="10dp"
                 android:layout_marginEnd="30dp"
-                android:ems="10"
                 android:gravity="start|top"
-                android:hint="Instructions: \n Gather all ingredients \n Mix the butter and eggs together \n ..."
-                android:inputType="textMultiLine"
+                android:hint="Instructions:"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/etIngredientList" />
+                app:layout_constraintTop_toBottomOf="@+id/tilIngredients"
+                app:startIconDrawable="@drawable/ic_baseline_format_list_instructions_24"
+                app:startIconTint="@color/teal_700">
+
+                <EditText
+                    android:id="@+id/etInstructions"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:ems="10"
+                    android:inputType="textMultiLine"
+                    android:lines="5" />
+            </com.google.android.material.textfield.TextInputLayout>
+
 
             <TextView
                 android:id="@+id/tvUploadImageText"
@@ -171,11 +189,14 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
+                android:layout_marginEnd="20dp"
                 android:onClick="@{(view)->fragmentUploadRecipeController.validateRecipe()}"
                 android:text="Publish"
+                app:icon="@drawable/ic_baseline_post_add_24"
                 app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="1.0"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/etInstructions" />
+                app:layout_constraintTop_toBottomOf="@+id/tilInstructions" />
 
             <Button
                 android:id="@+id/btnDelete"
