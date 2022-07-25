@@ -7,87 +7,85 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="@android:color/white"
         android:gravity="center_horizontal"
         android:orientation="vertical"
         android:scrollbarAlwaysDrawVerticalTrack="true"
         android:scrollbars="vertical">
 
-        <TextView
-            android:id="@+id/tvCuisineText"
-            android:layout_width="157dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="15dp"
-            android:text="Cuisine:"
-            android:textColor="@color/teal_700"
-            android:textSize="20sp"
-            app:layout_constraintBottom_toBottomOf="@+id/actvCuisine"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/actvCuisine" />
-
-        <AutoCompleteTextView
-            android:id="@+id/actvCuisine"
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/tilCuisine"
+            style="@style/Widget.Material3.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="5dp"
             android:layout_marginTop="10dp"
             android:layout_marginEnd="5dp"
             android:hint="Cuisine Type"
+            app:boxBackgroundColor="@color/light_teal"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/tvMealType"
-            app:layout_constraintTop_toBottomOf="@+id/tvFilter" />
+            app:layout_constraintStart_toStartOf="@+id/tvMealType"
+            app:layout_constraintTop_toBottomOf="@+id/tvFilter">
+
+            <AutoCompleteTextView
+                android:id="@+id/actvCuisine"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:inputType="none" />
+
+        </com.google.android.material.textfield.TextInputLayout>
 
         <TextView
             android:id="@+id/tvMealType"
-            android:layout_width="157dp"
-            android:layout_height="27dp"
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
             android:layout_marginStart="15dp"
             android:layout_marginTop="10dp"
             android:text="Meal Type:"
             android:textColor="@color/teal_700"
             android:textSize="20sp"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/actvCuisine" />
+            app:layout_constraintTop_toBottomOf="@+id/tilCuisine" />
 
-        <TextView
-            android:id="@+id/tvCooktimeText"
-            android:layout_width="0dp"
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/tilCooktime"
+            android:layout_width="220dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="15dp"
-            android:text="Max CookTime:"
-            android:textColor="@color/teal_700"
-            android:textSize="20sp"
-            app:layout_constraintBottom_toBottomOf="@+id/etCooktime"
-            app:layout_constraintEnd_toEndOf="@+id/tvMealType"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/etCooktime" />
-
-        <EditText
-            android:id="@+id/etCooktime"
-            android:layout_width="149dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="5dp"
             android:layout_marginBottom="10dp"
-            android:ems="10"
-            android:hint="Cooktime"
-            android:inputType="number"
+            android:hint="Max Cooktime"
+            app:boxBackgroundColor="@color/light_teal"
             app:layout_constraintBottom_toTopOf="@id/switchIngredients"
-            app:layout_constraintStart_toEndOf="@+id/tvCooktimeText" />
+            app:layout_constraintEnd_toEndOf="@+id/tilCuisine"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="@+id/tvMealType"
+            app:layout_constraintTop_toBottomOf="@+id/cgMealType">
+
+            <EditText
+                android:id="@+id/etCooktime"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:ems="10"
+                android:inputType="number" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
 
         <TextView
             android:id="@+id/tvMins"
-            android:layout_width="wrap_content"
+            android:layout_width="44dp"
             android:layout_height="wrap_content"
+            android:layout_marginEnd="5dp"
             android:text="mins"
             android:textColor="@color/teal_700"
             android:textSize="20sp"
-            app:layout_constraintBottom_toBottomOf="@+id/etCooktime"
-            app:layout_constraintStart_toEndOf="@+id/etCooktime"
-            app:layout_constraintTop_toTopOf="@+id/etCooktime" />
+            app:layout_constraintBottom_toBottomOf="@+id/tilCooktime"
+            app:layout_constraintEnd_toEndOf="@+id/tilCooktime"
+            app:layout_constraintTop_toTopOf="@+id/tilCooktime" />
 
         <Switch
             android:id="@+id/switchIngredients"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
             android:text="Filter by Ingredients Available"
             android:textColor="@color/teal_700"
             android:textSize="20sp"
@@ -112,11 +110,11 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
             android:layout_marginBottom="10dp"
-            app:layout_constraintBottom_toTopOf="@+id/etCooktime"
+            app:layout_constraintBottom_toTopOf="@+id/tilCooktime"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toStartOf="@+id/tvCooktimeText"
-            app:layout_constraintTop_toBottomOf="@+id/tvMealType">
+            app:layout_constraintStart_toStartOf="@+id/tvMealType"
+            app:layout_constraintTop_toBottomOf="@+id/tvMealType"
+            app:singleSelection="true">
 
         </com.google.android.material.chip.ChipGroup>
     </androidx.constraintlayout.widget.ConstraintLayout>

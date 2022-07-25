@@ -9,17 +9,17 @@
         android:id="@+id/ivProfileImage"
         android:layout_width="25dp"
         android:layout_height="25dp"
+        android:layout_marginStart="10dp"
         android:visibility="visible"
         app:layout_constraintBottom_toBottomOf="@+id/constraintLayout2"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/constraintLayout2"
-        tools:layout_editor_absoluteX="10dp"
         tools:srcCompat="@drawable/ic_baseline_account_circle_24" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/constraintLayout2"
         android:layout_width="0dp"
         android:layout_height="match_parent"
-        android:background="@color/light_gray"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/ivProfileImage"

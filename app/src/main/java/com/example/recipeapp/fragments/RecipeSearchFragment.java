@@ -19,6 +19,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.content.ContextCompat;
 import androidx.core.view.ViewCompat;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
@@ -97,13 +98,13 @@ public class RecipeSearchFragment extends Fragment {
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        ((MainActivity)getActivity()).getSupportActionBar().show();
+        ((MainActivity) getActivity()).getSupportActionBar().show();
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        ((MainActivity)getActivity()).getSupportActionBar().hide();
+        ((MainActivity) getActivity()).getSupportActionBar().hide();
         binding.rvRandomRecipes.setAdapter(adapter);
         binding.rvRandomRecipes.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
         // Commented to limit API calls during testing
@@ -164,23 +165,28 @@ public class RecipeSearchFragment extends Fragment {
         filterDialogBinding.actvCuisine.setAdapter(cuisineAdapter);
 
         for (String s : getResources().getStringArray(R.array.meal)) {
-            Chip chip = new Chip(getContext(),null, com.google.android.material.R.attr.chipStyle);
+            Chip chip = new Chip(getContext(), null, com.google.android.material.R.attr.chipStyle);
             chip.setText(s);
             chip.setClickable(true);
             chip.setCheckable(true);
             chip.setFocusable(true);
+            chip.setChipBackgroundColor(ContextCompat.getColorStateList(getContext(), R.color.chip_selector));
             chip.setId(ViewCompat.generateViewId());
             filterDialogBinding.cgMealType.addView(chip);
         }
 
-        alertDialog.setPositiveButton("Set Filter", new DialogInterface.OnClickListener() {
+        alertDialog.setPositiveButton("Set filter", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 params.put("Cooktime", filterDialogBinding.etCooktime.getText().toString());
                 params.put("Cuisine", filterDialogBinding.actvCuisine.getText().toString());
+                String mealType = "";
                 List<Integer> checkedChipIds = filterDialogBinding.cgMealType.getCheckedChipIds();
-                String mealType = ((Chip)(filterDialogBinding.cgMealType.findViewById(checkedChipIds.get(0)))).getText().toString();
-                Log.i(TAG,"Meal type selected! " + mealType);
+                if (!checkedChipIds.isEmpty()) {
+                    Chip chip = ((Chip) (filterDialogBinding.cgMealType.findViewById(checkedChipIds.get(0))));
+                    mealType = chip.getText().toString();
+                    Log.i(TAG, "Meal type selected! " + mealType);
+                }
                 params.put("MealType", mealType);
                 params.put("switchIngredients", String.valueOf(filterDialogBinding.switchIngredients.isChecked()));
                 Log.i(TAG, params.toString());
