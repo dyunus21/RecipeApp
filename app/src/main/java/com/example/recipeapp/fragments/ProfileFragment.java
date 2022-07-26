@@ -50,7 +50,9 @@ public class ProfileFragment extends Fragment implements NavigationView.OnNaviga
     private final User CURRENT_USER = new User(ParseUser.getCurrentUser());
     private File photoFile;
     private FragmentProfileBinding binding;
+    @Nullable
     private RecipeSearchAdapter recipeSearchAdapter;
+    @Nullable
     private PostsAdapter postsAdapter;
     private List<Recipe> recipes;
     private List<Post> posts;
@@ -61,8 +63,9 @@ public class ProfileFragment extends Fragment implements NavigationView.OnNaviga
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(final @NonNull LayoutInflater inflater,
+                             @NonNull final ViewGroup container,
+                             @Nullable final Bundle savedInstanceState) {
         binding = FragmentProfileBinding.inflate(getLayoutInflater());
         return binding.getRoot();
     }
@@ -106,7 +109,7 @@ public class ProfileFragment extends Fragment implements NavigationView.OnNaviga
     private void setUpTabs() {
         binding.tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
-            public void onTabSelected(TabLayout.Tab tab) {
+            public void onTabSelected(@NonNull TabLayout.Tab tab) {
                 if (tab == binding.tabLayout.getTabAt(0)) {
                     queryRecipes();
                     binding.rvRecipes.setVisibility(View.VISIBLE);
@@ -119,12 +122,12 @@ public class ProfileFragment extends Fragment implements NavigationView.OnNaviga
             }
 
             @Override
-            public void onTabUnselected(TabLayout.Tab tab) {
+            public void onTabUnselected(@NonNull TabLayout.Tab tab) {
 
             }
 
             @Override
-            public void onTabReselected(TabLayout.Tab tab) {
+            public void onTabReselected(@NonNull TabLayout.Tab tab) {
                 if (tab == binding.tabLayout.getTabAt(0)) {
                     queryRecipes();
                     binding.rvRecipes.setVisibility(View.VISIBLE);
@@ -187,7 +190,7 @@ public class ProfileFragment extends Fragment implements NavigationView.OnNaviga
     }
 
     @Override
-    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+    public void onActivityResult(final int requestCode, final int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         photoFile = imageClient.getPhotoFile();
         if ((data != null) && requestCode == PICK_PHOTO_CODE) {
@@ -200,13 +203,13 @@ public class ProfileFragment extends Fragment implements NavigationView.OnNaviga
     }
 
     @Override
-    public void onPrepareOptionsMenu(@NonNull Menu menu) {
+    public void onPrepareOptionsMenu(@NonNull final Menu menu) {
         menu.findItem(R.id.navigation_drawer).setVisible(true);
         super.onPrepareOptionsMenu(menu);
     }
 
     @Override
-    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+    public boolean onOptionsItemSelected(@NonNull final MenuItem item) {
         if (item.getItemId() == R.id.navigation_drawer) {
             if (binding.navigationDrawerView.getVisibility() == View.VISIBLE)
                 binding.navigationDrawerView.setVisibility(View.GONE);
@@ -248,7 +251,7 @@ public class ProfileFragment extends Fragment implements NavigationView.OnNaviga
     }
 
     @Override
-    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+    public boolean onNavigationItemSelected(@NonNull final MenuItem item) {
         // TODO: Update navigation
         if (item.getItemId() == R.id.likedRecipes) {
             NavHostFragment.findNavController(this).navigate(R.id.socialFeedFragment);
