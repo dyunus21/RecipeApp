@@ -1,5 +1,6 @@
 package com.example.recipeapp.fragments;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
@@ -19,6 +20,7 @@ import androidx.recyclerview.widget.GridLayoutManager;
 
 import com.bumptech.glide.Glide;
 import com.example.recipeapp.R;
+import com.example.recipeapp.activities.LoginActivity;
 import com.example.recipeapp.activities.MainActivity;
 import com.example.recipeapp.adapters.PostsAdapter;
 import com.example.recipeapp.adapters.RecipeSearchAdapter;
@@ -27,6 +29,7 @@ import com.example.recipeapp.databinding.FragmentProfileBinding;
 import com.example.recipeapp.models.Post;
 import com.example.recipeapp.models.Recipe;
 import com.example.recipeapp.models.User;
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.tabs.TabLayout;
 import com.parse.ParseFile;
 import com.parse.ParseQuery;
@@ -83,16 +86,15 @@ public class ProfileFragment extends Fragment {
         binding.tvChangeProfileImage.setOnClickListener(v -> imageClient.onPickPhoto(v));
         binding.tvRecipeCount.setText(String.valueOf(CURRENT_USER.getRecipesUploaded().size()));
 
-
         binding.rvRecipes.setLayoutManager(new GridLayoutManager(getContext(), 2));
         binding.rvRecipes.setAdapter(recipeSearchAdapter);
 
         binding.rvPosts.setLayoutManager(new GridLayoutManager(getContext(), 3));
         binding.rvPosts.setAdapter(postsAdapter);
         queryPosts();
-
         setUpTabs();
-
+        binding.tabLayout.getTabAt(0).select();
+        binding.logout.setOnClickListener(v -> showLogoutAlert());
     }
 
     private void setUpTabs() {
@@ -193,7 +195,6 @@ public class ProfileFragment extends Fragment {
 
     @Override
     public void onPrepareOptionsMenu(@NonNull Menu menu) {
-        menu.findItem(R.id.logout).setVisible(true);
         menu.findItem(R.id.navigation_drawer).setVisible(true);
         super.onPrepareOptionsMenu(menu);
     }
@@ -207,5 +208,31 @@ public class ProfileFragment extends Fragment {
                 binding.navigationDrawerView.setVisibility(View.VISIBLE);
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    public void showLogoutAlert() {
+        MaterialAlertDialogBuilder alertDialogBuilder = new MaterialAlertDialogBuilder(getContext());
+        alertDialogBuilder.setTitle("Logout from app?");
+        alertDialogBuilder.setMessage("You will need to log back in to access the app!");
+        alertDialogBuilder.setPositiveButton("Logout", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                logoutUser();
+            }
+        });
+        alertDialogBuilder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        });
+        alertDialogBuilder.show();
+    }
+
+    public void logoutUser() {
+        Log.i(TAG, "Attempting to logout user!");
+        ParseUser.logOut();
+        final Intent intent = new Intent(getContext(), LoginActivity.class);
+        startActivity(intent);
     }
 }

@@ -87,37 +87,31 @@ public class MainActivity extends AppCompatActivity {
         return true;
     }
 
-    @Override
-    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        if (item.getItemId() == R.id.logout) {
-            MaterialAlertDialogBuilder alertDialogBuilder = new MaterialAlertDialogBuilder(this);
-            alertDialogBuilder.setTitle("Logout from app?");
-            alertDialogBuilder.setMessage("You will need to log back in to access the app!");
-            alertDialogBuilder.setPositiveButton("Logout", new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    logoutUser();
-                }
-            });
-            alertDialogBuilder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    dialog.dismiss();
-                }
-            });
-            alertDialogBuilder.show();
-            return true;
-        }
-        return super.onOptionsItemSelected(item);
-    }
+//    @Override
+//    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+//        if (item.getItemId() == R.id.logout) {
+//            MaterialAlertDialogBuilder alertDialogBuilder = new MaterialAlertDialogBuilder(this);
+//            alertDialogBuilder.setTitle("Logout from app?");
+//            alertDialogBuilder.setMessage("You will need to log back in to access the app!");
+//            alertDialogBuilder.setPositiveButton("Logout", new DialogInterface.OnClickListener() {
+//                @Override
+//                public void onClick(DialogInterface dialog, int which) {
+//                    logoutUser();
+//                }
+//            });
+//            alertDialogBuilder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+//                @Override
+//                public void onClick(DialogInterface dialog, int which) {
+//                    dialog.dismiss();
+//                }
+//            });
+//            alertDialogBuilder.show();
+//            return true;
+//        }
+//        return super.onOptionsItemSelected(item);
+//    }
 
-    public void logoutUser() {
-        Log.i(TAG, "Attempting to logout user!");
-        ParseUser.logOut();
-        final Intent intent = new Intent(this, LoginActivity.class);
-        startActivity(intent);
 
-    }
 
     @Override
     public boolean onSupportNavigateUp() {

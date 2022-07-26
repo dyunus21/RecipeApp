@@ -2,6 +2,7 @@ package com.example.recipeapp.adapters;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 
@@ -21,6 +22,7 @@ import com.example.recipeapp.databinding.ItemRecipeCardBinding;
 import com.example.recipeapp.fragments.RecipeDetailsFragment;
 import com.example.recipeapp.models.Recipe;
 import com.example.recipeapp.models.User;
+import com.parse.ParseException;
 import com.parse.ParseUser;
 
 import java.util.List;
@@ -58,7 +60,11 @@ public class RecipeSearchAdapter extends RecyclerView.Adapter<RecipeSearchAdapte
     @Override
     public void onBindViewHolder(@NonNull final ViewHolder holder, int position) {
         final Recipe recipe = recipesList.get(position);
-        holder.bind(recipe);
+        try {
+            holder.bind(recipe);
+        } catch (ParseException e) {
+            Log.e(TAG, "Unable to bind recipe", e);
+        }
         final Bundle bundle = new Bundle();
         bundle.putParcelable(Recipe.class.getSimpleName(), recipe);
         RecipeDetailsFragment details = new RecipeDetailsFragment();
@@ -102,7 +108,8 @@ public class RecipeSearchAdapter extends RecyclerView.Adapter<RecipeSearchAdapte
             this.binding = itemView;
         }
 
-        public void bind(Recipe recipe) {
+        public void bind(Recipe recipe) throws ParseException {
+            recipe.fetchIfNeeded();
             currentRecipe = recipe;
             binding.tvTitle.setText(recipe.getTitle());
             if (Objects.equals(recipe.getImageUrl(), "") && recipe.getImage() == null)

@@ -20,6 +20,9 @@
             </menu>
 
         </item>
+    </group>
+    <group
+        android:id="@+id/groupPosts">
         <item
             android:id="@+id/PostsTitle"
             android:title="Posts">
@@ -32,5 +35,13 @@
         </item>
 
     </group>
+
+<!--    <group-->
+<!--        android:id="@+id/groupSettings">-->
+<!--        <item-->
+<!--            android:id="@+id/logout"-->
+<!--            android:icon="@drawable/ic_baseline_logout_24"-->
+<!--            android:title="Log out"></item>-->
+<!--    </group>-->
 
 </menu>
