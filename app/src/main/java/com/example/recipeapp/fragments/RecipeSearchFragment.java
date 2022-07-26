@@ -107,8 +107,11 @@ public class RecipeSearchFragment extends Fragment {
         ((MainActivity) getActivity()).getSupportActionBar().hide();
         binding.rvRandomRecipes.setAdapter(adapter);
         binding.rvRandomRecipes.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
+        binding.rvRecipes.setAdapter(adapter);
+        GridLayoutManager gridLayoutManager = new GridLayoutManager(getContext(), 2);
+        binding.rvRecipes.setLayoutManager(gridLayoutManager);
         // Commented to limit API calls during testing
-        // setRefresh();
+         setRefresh();
 
         binding.svSearch.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
@@ -120,6 +123,7 @@ public class RecipeSearchFragment extends Fragment {
                     GridLayoutManager gridLayoutManager = new GridLayoutManager(getContext(), 2);
                     binding.rvRecipes.setLayoutManager(gridLayoutManager);
                     binding.rvRandomRecipes.setVisibility(View.GONE);
+                    binding.rvRecipes.setVisibility(View.VISIBLE);
                     binding.textView.setVisibility(View.GONE);
                     getRecipesByQuery(query);
                 } catch (IOException e) {
@@ -137,14 +141,12 @@ public class RecipeSearchFragment extends Fragment {
     }
 
     private void setRefresh() {
-        binding.swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                try {
-                    initializeScreen();
-                } catch (IOException e) {
-                    Log.e(TAG, "Unable to initialize screen");
-                }
+        binding.rvRecipes.setVisibility(View.GONE);
+        binding.swipeContainer.setOnRefreshListener(() -> {
+            try {
+                initializeScreen();
+            } catch (IOException e) {
+                Log.e(TAG, "Unable to initialize screen");
             }
         });
         try {
@@ -175,28 +177,20 @@ public class RecipeSearchFragment extends Fragment {
             filterDialogBinding.cgMealType.addView(chip);
         }
 
-        alertDialog.setPositiveButton("Set filter", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                params.put("Cooktime", filterDialogBinding.etCooktime.getText().toString());
-                params.put("Cuisine", filterDialogBinding.actvCuisine.getText().toString());
-                String mealType = "";
-                List<Integer> checkedChipIds = filterDialogBinding.cgMealType.getCheckedChipIds();
-                if (!checkedChipIds.isEmpty()) {
-                    Chip chip = ((Chip) (filterDialogBinding.cgMealType.findViewById(checkedChipIds.get(0))));
-                    mealType = chip.getText().toString();
-                    Log.i(TAG, "Meal type selected! " + mealType);
-                }
-                params.put("MealType", mealType);
-                params.put("switchIngredients", String.valueOf(filterDialogBinding.switchIngredients.isChecked()));
-                Log.i(TAG, params.toString());
+        alertDialog.setPositiveButton("Set filter", (dialog, which) -> {
+            params.put("Cooktime", filterDialogBinding.etCooktime.getText().toString());
+            params.put("Cuisine", filterDialogBinding.actvCuisine.getText().toString());
+            String mealType = "";
+            List<Integer> checkedChipIds = filterDialogBinding.cgMealType.getCheckedChipIds();
+            if (!checkedChipIds.isEmpty()) {
+                Chip chip = ((Chip) (filterDialogBinding.cgMealType.findViewById(checkedChipIds.get(0))));
+                mealType = chip.getText().toString();
+                Log.i(TAG, "Meal type selected! " + mealType);
             }
-        }).setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                Log.i(TAG, "Cancelled filter");
-            }
-        });
+            params.put("MealType", mealType);
+            params.put("switchIngredients", String.valueOf(filterDialogBinding.switchIngredients.isChecked()));
+            Log.i(TAG, params.toString());
+        }).setNegativeButton("Cancel", (dialog, which) -> Log.i(TAG, "Cancelled filter"));
         alertDialog.setView(filterDialogBinding.getRoot());
         alertDialog.show();
     }
@@ -352,13 +346,17 @@ public class RecipeSearchFragment extends Fragment {
                 Log.i(TAG, "Successfully Received array of recipe information based on ids" + json.toString());
                 JSONArray jsonArray = json.jsonArray;
                 try {
-                    recipes.addAll(Recipe.getRecipes(jsonArray));
+                    recipes = Recipe.getRecipes(jsonArray);
                 } catch (JSONException e) {
                     Log.e(TAG, "Unable to getRecipes from jsonArray", e);
                 }
                 if (recipes.size() == 0) {
                     showNoResultsDialog();
                 }
+                adapter.clear();
+                binding.rvRecipes.setVisibility(View.VISIBLE);
+                binding.rvRandomRecipes.setVisibility(View.GONE);
+                binding.textView.setVisibility(View.GONE);
                 adapter.addAll(recipes);
                 progressDialog.dismiss();
             }
