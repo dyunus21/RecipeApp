@@ -1,27 +1,23 @@
 package com.example.recipeapp.fragments;
 
 import android.os.Bundle;
+import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 
-import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-
-import com.example.recipeapp.R;
-import com.example.recipeapp.activities.MainActivity;
-import com.example.recipeapp.adapters.PostsAdapter;
-import com.example.recipeapp.adapters.ProfileAdapter;
 import com.example.recipeapp.adapters.PostsAdapter;
 import com.example.recipeapp.adapters.RecipeSearchAdapter;
 import com.example.recipeapp.databinding.FragmentProfileMenuBinding;
 import com.example.recipeapp.models.Post;
 import com.example.recipeapp.models.Recipe;
 import com.example.recipeapp.models.User;
+import com.parse.ParseQuery;
 import com.parse.ParseUser;
 
 import java.util.ArrayList;
@@ -30,8 +26,8 @@ import java.util.List;
 public class ProfileMenuFragment extends Fragment {
 
     public static final String TAG = "ProfileMenuFragment";
-    private FragmentProfileMenuBinding binding;
     private final User CURRENT_USER = new User(ParseUser.getCurrentUser());
+    private FragmentProfileMenuBinding binding;
     private List<Recipe> recipeList;
     private List<Post> postList;
     private RecipeSearchAdapter recipeSearchAdapter;
@@ -46,9 +42,9 @@ public class ProfileMenuFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         recipeList = new ArrayList<>();
-        recipeSearchAdapter = new RecipeSearchAdapter(getContext(), recipeList);
+        recipeSearchAdapter = new RecipeSearchAdapter(requireContext(), recipeList);
         postList = new ArrayList<>();
-        postsAdapter = new PostsAdapter(getContext(), postList);
+        postsAdapter = new PostsAdapter(requireContext(), postList);
         User.getUser(CURRENT_USER);
         setHasOptionsMenu(true);
 
@@ -60,17 +56,21 @@ public class ProfileMenuFragment extends Fragment {
     }
 
     private void setUpContent() {
-        if(menuItem.equals("Liked Recipes")) {
-            getRecipesLiked();
-        } else if (menuItem.equals("Made Recipes")) {
-            getRecipesMade();
-        } else if (menuItem.equals("Liked Posts")) {
-            //getPostsLiked();
+        switch (menuItem) {
+            case "Liked Recipes":
+                getRecipesLiked();
+                break;
+            case "Made Recipes":
+                getRecipesMade();
+                break;
+            case "Liked Posts":
+                getPostsLiked();
+                break;
         }
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         binding = FragmentProfileMenuBinding.inflate(getLayoutInflater());
         return binding.getRoot();
@@ -101,6 +101,33 @@ public class ProfileMenuFragment extends Fragment {
         recipeSearchAdapter.addAll(recipeList);
         binding.rvRecipes.setVisibility(View.VISIBLE);
         binding.rvPosts.setVisibility(View.GONE);
+    }
+
+    private void getPostsLiked() {
+        ParseQuery<Post> query = ParseQuery.getQuery(Post.class);
+        query.include(Post.KEY_LIKED_BY);
+        query.include(Post.KEY_AUTHOR);
+        query.include(Post.KEY_IMAGE);
+        query.include(Post.KEY_TITLE);
+        query.findInBackground((objects, e) -> {
+            if (e != null) {
+                Log.e(TAG, "Unable to fetch posts", e);
+                return;
+            }
+            List<Post> posts = new ArrayList<>();
+            for (Post post : objects) {
+                if (post.isLikedbyCurrentUser(CURRENT_USER.getParseUser())) {
+                    posts.add(post);
+                    Log.i(TAG, "Added " + post.getTitle());
+                }
+            }
+            postsAdapter.clear();
+            postList = posts;
+            postsAdapter.addAll(postList);
+            binding.rvPosts.setVisibility(View.VISIBLE);
+            binding.rvRecipes.setVisibility(View.GONE);
+            Log.i(TAG, "Liked posts: " + postList.toString());
+        });
     }
 
 }
