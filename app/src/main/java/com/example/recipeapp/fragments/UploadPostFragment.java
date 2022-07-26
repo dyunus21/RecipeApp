@@ -85,8 +85,8 @@ public class UploadPostFragment extends Fragment implements AdapterView.OnItemSe
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(getContext(),
                 R.array.postOptions, android.R.layout.simple_spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        binding.spinner.setAdapter(adapter);
-        binding.spinner.setOnItemSelectedListener(this);
+        binding.spinnerType.setAdapter(adapter);
+        binding.spinnerType.setOnItemSelectedListener(this);
         if (recipe != null) {
             Log.i(TAG, "Recieved recipe in Upload post!");
             binding.etRecipeLink.setText(recipe.getObjectId() + " " + recipe.getTitle());
@@ -101,12 +101,12 @@ public class UploadPostFragment extends Fragment implements AdapterView.OnItemSe
         String description = binding.etDescription.getText().toString();
         if (title.isEmpty() || description.isEmpty()) {
             Toast.makeText(getContext(), "Field cannot be empty!", Toast.LENGTH_SHORT).show();
+            progressDialog.dismiss();
             return;
         }
 
         if (photoFile == null || binding.ivImage.getDrawable() == null) {
             Toast.makeText(getContext(), "Post does not contain any image!", Toast.LENGTH_SHORT).show();
-            return;
         }
         postRecipe(title, description);
     }
@@ -117,7 +117,7 @@ public class UploadPostFragment extends Fragment implements AdapterView.OnItemSe
         post.setImage(new ParseFile(photoFile));
         post.setTitle(title);
         post.setDescription(description);
-        post.setType(binding.spinner.getSelectedItem().toString());
+        post.setType(binding.spinnerType.getSelectedItem().toString());
         if (recipe != null) {
             post.setRecipeLinked(recipe);
         }

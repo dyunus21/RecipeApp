@@ -124,14 +124,14 @@ public class InventoryFragment extends Fragment {
     }
 
     private void addIngredient(final String name, final String count, final String unit) {
-        Ingredient ingredient = new Ingredient();
+        final Ingredient ingredient = new Ingredient();
         ingredient.initialize(name, Integer.parseInt(count), unit);
         ingredient.saveInBackground(e -> {
             if (e != null) {
                 Log.e(TAG, "Error in adding ingredient!", e);
                 return;
             }
-            List<Ingredient> ingredientList = currentUser.getIngredientArray();
+            final List<Ingredient> ingredientList = currentUser.getIngredientArray();
             adapter.clear();
             ingredientList.add(ingredient);
             adapter.addAll(ingredientList);
