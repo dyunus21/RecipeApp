@@ -63,7 +63,11 @@
         android:id="@+id/inventoryFragment"
         android:name="com.example.recipeapp.fragments.InventoryFragment"
         android:label="fragment_inventory"
-        tools:layout="@layout/fragment_inventory"/>
+        tools:layout="@layout/fragment_inventory">
+        <action
+            android:id="@+id/action_inventoryFragment_to_barcodeScanFragment"
+            app:destination="@id/barcodeScanFragment" />
+    </fragment>
     <fragment
         android:id="@+id/uploadRecipeFragment"
         android:name="com.example.recipeapp.fragments.UploadRecipeFragment"
@@ -78,5 +82,18 @@
         android:id="@+id/barcodeScanFragment"
         android:name="com.example.recipeapp.fragments.BarcodeScanFragment"
         android:label="fragment_barcode_scan"
-        tools:layout="@layout/fragment_barcode_scan" />
+        tools:layout="@layout/fragment_barcode_scan" >
+        <action
+            android:id="@+id/action_barcodeScanFragment_to_inventoryFragment"
+            app:destination="@id/inventoryFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/profileMenuFragment"
+        android:name="com.example.recipeapp.ProfileMenuFragment"
+        android:label="fragment_profile_menu"
+        tools:layout="@layout/fragment_profile_menu" >
+        <action
+            android:id="@+id/action_profileMenuFragment_to_profileFragment"
+            app:destination="@id/profileFragment" />
+    </fragment>
 </navigation>
