@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,6 +17,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 
 import com.bumptech.glide.Glide;
@@ -30,6 +32,7 @@ import com.example.recipeapp.models.Post;
 import com.example.recipeapp.models.Recipe;
 import com.example.recipeapp.models.User;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
+import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.tabs.TabLayout;
 import com.parse.ParseFile;
 import com.parse.ParseQuery;
@@ -40,7 +43,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class ProfileFragment extends Fragment {
+public class ProfileFragment extends Fragment implements NavigationView.OnNavigationItemSelectedListener {
     private static final String TAG = "ProfileFragment";
     private final static int PICK_PHOTO_CODE = 1046;
     private final User CURRENT_USER = new User(ParseUser.getCurrentUser());
@@ -95,6 +98,8 @@ public class ProfileFragment extends Fragment {
         setUpTabs();
         binding.tabLayout.getTabAt(0).select();
         binding.logout.setOnClickListener(v -> showLogoutAlert());
+
+        binding.navigationDrawerView.setNavigationItemSelectedListener(this);
     }
 
     private void setUpTabs() {
@@ -234,5 +239,24 @@ public class ProfileFragment extends Fragment {
         ParseUser.logOut();
         final Intent intent = new Intent(getContext(), LoginActivity.class);
         startActivity(intent);
+    }
+
+    @Override
+    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+    }
+
+    @Override
+    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+        // TODO: Update navigation
+        if (item.getItemId() == R.id.likedRecipes) {
+            NavHostFragment.findNavController(this).navigate(R.id.socialFeedFragment);
+        } else if (item.getItemId() == R.id.madeRecipes) {
+            NavHostFragment.findNavController(this).navigate(R.id.socialFeedFragment);
+        } else if (item.getItemId() == R.id.likedPosts) {
+            NavHostFragment.findNavController(this).navigate(R.id.socialFeedFragment);
+        }
+        binding.navigationDrawerView.setVisibility(View.GONE);
+        return true;
     }
 }

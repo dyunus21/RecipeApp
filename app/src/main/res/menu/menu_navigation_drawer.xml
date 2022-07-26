@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
-    <group
-        android:id="@+id/groupRecipes">
+    <group android:id="@+id/groupRecipes">
 
         <item
             android:id="@+id/RecipeTitle"
@@ -9,39 +8,30 @@
             <menu>
                 <item
                     android:id="@+id/likedRecipes"
-                    android:title="Liked"
                     android:icon="@drawable/ic_baseline_favorite_24"
-                    />
+                    android:title="Liked" />
                 <item
                     android:id="@+id/madeRecipes"
-                    android:title="Made"
-                    android:icon="@drawable/ic_baseline_format_list_instructions_24"/>
+                    android:icon="@drawable/ic_baseline_format_list_instructions_24"
+                    android:title="Made" />
 
             </menu>
 
         </item>
     </group>
-    <group
-        android:id="@+id/groupPosts">
+    <group android:id="@+id/groupPosts">
         <item
             android:id="@+id/PostsTitle"
             android:title="Posts">
             <menu>
-                <item android:id="@+id/likedPosts"
-                    android:title="Liked"
-                    android:icon="@drawable/ic_baseline_favorite_24"/>
+                <item
+                    android:id="@+id/likedPosts"
+                    android:icon="@drawable/ic_baseline_favorite_24"
+                    android:title="Liked" />
             </menu>
 
         </item>
 
     </group>
-
-<!--    <group-->
-<!--        android:id="@+id/groupSettings">-->
-<!--        <item-->
-<!--            android:id="@+id/logout"-->
-<!--            android:icon="@drawable/ic_baseline_logout_24"-->
-<!--            android:title="Log out"></item>-->
-<!--    </group>-->
 
 </menu>
