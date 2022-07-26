@@ -9,6 +9,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -164,6 +165,8 @@ public class BarcodeScanFragment extends Fragment {
         final CameraDialogBinding cameraDialogBinding = CameraDialogBinding.inflate(getLayoutInflater());
         cameraDialogBinding.tvRawvalue.setText("Raw Value: " + barcode.getRawValue());
         cameraDialogBinding.tvProductName.setText("Product Name: " + productName);
+        final ArrayAdapter unitsAdapter = new ArrayAdapter(getContext(), android.R.layout.simple_dropdown_item_1line, getResources().getStringArray(R.array.units));
+        cameraDialogBinding.actvUnit.setAdapter(unitsAdapter);
         Glide.with(getContext()).load(bitmap).into(cameraDialogBinding.ivPreview);
         alertDialogBuilder.setNegativeButton("Cancel", (dialog, which) -> {
             dialog.cancel();
@@ -173,7 +176,7 @@ public class BarcodeScanFragment extends Fragment {
             Log.i(TAG, "Add Ingredient: " + cameraDialogBinding.tvProductName.getText().toString().substring(14));
             String name = cameraDialogBinding.tvProductName.getText().toString().substring(14);
             String count = cameraDialogBinding.etCount.getText().toString();
-            String unit = cameraDialogBinding.etUnit.getText().toString();
+            String unit = cameraDialogBinding.actvUnit.getText().toString();
             if (name.isEmpty() || count.isEmpty() || unit.isEmpty()) {
                 Toast.makeText(getContext(), "Fields cannot be empty!", Toast.LENGTH_SHORT).show();
             } else {

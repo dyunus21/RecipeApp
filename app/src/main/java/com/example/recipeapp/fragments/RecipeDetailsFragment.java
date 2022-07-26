@@ -10,6 +10,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
+import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.bumptech.glide.Glide;
@@ -356,7 +357,8 @@ public class RecipeDetailsFragment extends Fragment {
     }
 
     public void goBack() {
-        getActivity().onBackPressed();
+        NavHostFragment.findNavController(this).navigateUp();
+//        getActivity().onNavigateUp();
     }
 
 }

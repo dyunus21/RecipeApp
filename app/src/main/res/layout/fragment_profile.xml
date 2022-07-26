@@ -160,7 +160,7 @@
 
     <com.google.android.material.navigation.NavigationView
         android:id="@+id/navigationDrawerView"
-        android:layout_width="214dp"
+        android:layout_width="230dp"
         android:layout_height="0dp"
         android:layout_gravity="start"
         app:headerLayout="@layout/header_navigation_drawer"
