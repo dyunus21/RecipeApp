@@ -10,213 +10,223 @@
             type="com.example.recipeapp.activities.RegisterActivity" />
     </data>
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@color/teal_700"
-        tools:context=".activities.RegisterActivity">
-
-        <ImageView
-            android:id="@+id/ivAppLogo"
-            android:layout_width="100dp"
-            android:layout_height="100dp"
-            android:layout_marginTop="20dp"
-            android:background="@mipmap/ic_launcher_round"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <TextView
-            android:id="@+id/tvSignup"
-            style="@style/Title"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            android:text="Create Account"
-            android:textColor="@color/white"
-            android:textSize="36sp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/ivAppLogo" />
-
-        <TextView
-            android:id="@+id/tvAccount"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Have an account?"
-            android:textColor="@color/white"
-            android:textSize="20sp"
-            android:textStyle="bold"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/btnSignup" />
-
-        <ImageView
-            android:id="@+id/ivProfileImage"
-            android:layout_width="100dp"
-            android:layout_height="100dp"
-            android:layout_marginTop="10dp"
-            android:background="@drawable/profile"
-            android:backgroundTint="@color/white"
-            android:onClick="@{(view)->activityRegisterController.onPickPhoto(view)}"
-            app:layout_constraintEnd_toEndOf="@+id/tvSignup"
-            app:layout_constraintStart_toStartOf="@+id/tvSignup"
-            app:layout_constraintTop_toBottomOf="@+id/tvSignup" />
-
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/tilFirstName"
-            style="@style/Widget.Material3.TextInputLayout.FilledBox"
-            android:layout_width="150dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="50dp"
-            android:hint="First Name"
-            app:layout_constraintBottom_toBottomOf="@+id/tilLastName"
-            app:layout_constraintStart_toStartOf="parent">
+        android:layout_height="wrap_content">
 
 
-            <EditText
-                android:id="@+id/etFirstName"
-                android:layout_width="match_parent"
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/teal_700"
+            tools:context=".activities.RegisterActivity">
+
+            <ImageView
+                android:id="@+id/ivAppLogo"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:layout_marginTop="20dp"
+                android:background="@mipmap/ic_launcher_round"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/tvSignup"
+                style="@style/Title"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:text="Create Account"
+                android:textColor="@color/white"
+                android:textSize="36sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/ivAppLogo" />
 
-                android:ems="10"
+            <TextView
+                android:id="@+id/tvAccount"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Have an account?"
+                android:textColor="@color/white"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/btnSignup" />
 
-                android:inputType="textPersonName" />
-        </com.google.android.material.textfield.TextInputLayout>
+            <ImageView
+                android:id="@+id/ivProfileImage"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:layout_marginTop="20dp"
+                android:background="@drawable/profile"
+                android:backgroundTint="@color/white"
+                android:onClick="@{(view)->activityRegisterController.onPickPhoto(view)}"
+                app:layout_constraintEnd_toEndOf="@+id/tvSignup"
+                app:layout_constraintStart_toStartOf="@+id/tvSignup"
+                app:layout_constraintTop_toBottomOf="@+id/tvSignup" />
 
-
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/tilLastName"
-            style="@style/Widget.Material3.TextInputLayout.FilledBox"
-            android:layout_width="150dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="12dp"
-            android:layout_marginTop="10dp"
-            android:hint="Last Name"
-            app:layout_constraintStart_toEndOf="@+id/tilFirstName"
-            app:layout_constraintTop_toBottomOf="@+id/ivProfileImage">
-
-            <EditText
-                android:id="@+id/etLastName"
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/tilFirstName"
+                style="@style/Widget.Material3.TextInputLayout.FilledBox"
                 android:layout_width="150dp"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="50dp"
+                android:hint="First Name"
+                app:layout_constraintBottom_toBottomOf="@+id/tilLastName"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/tilLastName">
 
-                android:ems="10"
 
-                android:inputType="textPersonName" />
-        </com.google.android.material.textfield.TextInputLayout>
+                <EditText
+                    android:id="@+id/etFirstName"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+
+                    android:ems="10"
+
+                    android:inputType="textPersonName" />
+            </com.google.android.material.textfield.TextInputLayout>
 
 
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/tilEmail"
-            style="@style/Widget.Material3.TextInputLayout.FilledBox"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="50dp"
-            android:layout_marginTop="20dp"
-            android:layout_marginEnd="50dp"
-            android:hint="Email Address"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/tilLastName">
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/tilLastName"
+                style="@style/Widget.Material3.TextInputLayout.FilledBox"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="20dp"
+                android:hint="Last Name"
+                app:layout_constraintEnd_toEndOf="@+id/tilEmail"
+                app:layout_constraintStart_toEndOf="@+id/tilFirstName"
+                app:layout_constraintTop_toBottomOf="@+id/ivProfileImage">
 
-            <EditText
-                android:id="@+id/etEmail"
+                <EditText
+                    android:id="@+id/etLastName"
+                    android:layout_width="150dp"
+                    android:layout_height="wrap_content"
+
+                    android:ems="10"
+
+                    android:inputType="textPersonName" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/tilEmail"
+                style="@style/Widget.Material3.TextInputLayout.FilledBox"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:ems="10"
-                android:inputType="textEmailAddress" />
-        </com.google.android.material.textfield.TextInputLayout>
+                android:layout_marginStart="50dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginEnd="50dp"
+                android:hint="Email Address"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/tilLastName">
+
+                <EditText
+                    android:id="@+id/etEmail"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:ems="10"
+                    android:inputType="textEmailAddress" />
+            </com.google.android.material.textfield.TextInputLayout>
 
 
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/tilUsername"
-            style="@style/Widget.Material3.TextInputLayout.FilledBox"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="50dp"
-            android:layout_marginTop="20dp"
-            android:layout_marginEnd="50dp"
-            android:hint="Username"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/tilEmail">
-
-            <EditText
-                android:id="@+id/etUsername"
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/tilUsername"
+                style="@style/Widget.Material3.TextInputLayout.FilledBox"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:ems="10"
-                android:inputType="textPersonName" />
+                android:layout_marginStart="50dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginEnd="50dp"
+                android:hint="Username"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/tilEmail">
 
-        </com.google.android.material.textfield.TextInputLayout>
+                <EditText
+                    android:id="@+id/etUsername"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:ems="10"
+                    android:inputType="textPersonName" />
+
+            </com.google.android.material.textfield.TextInputLayout>
 
 
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/tilPassword"
-            style="@style/Widget.Material3.TextInputLayout.FilledBox"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="50dp"
-            android:layout_marginTop="20dp"
-            android:layout_marginEnd="50dp"
-            android:hint="Password"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/tilUsername">
-
-            <EditText
-                android:id="@+id/etPassword"
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/tilPassword"
+                style="@style/Widget.Material3.TextInputLayout.FilledBox"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:ems="10"
-                android:inputType="textPassword" />
-        </com.google.android.material.textfield.TextInputLayout>
+                android:layout_marginStart="50dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginEnd="50dp"
+                android:hint="Password"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/tilUsername">
+
+                <EditText
+                    android:id="@+id/etPassword"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:ems="10"
+                    android:inputType="textPassword" />
+            </com.google.android.material.textfield.TextInputLayout>
 
 
-        <Button
-            android:id="@+id/btnSignup"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="30dp"
-            android:backgroundTint="@color/white"
-            android:onClick="@{(view)->activityRegisterController.registerUser()}"
-            android:text="Create Account"
-            android:textColor="@color/teal_700"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/tilPassword" />
+            <Button
+                android:id="@+id/btnSignup"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="30dp"
+                android:backgroundTint="@color/white"
+                android:onClick="@{(view)->activityRegisterController.registerUser()}"
+                android:text="Create Account"
+                android:textColor="@color/teal_700"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/tilPassword" />
 
-        <TextView
-            android:id="@+id/tvTerms"
-            android:layout_width="230dp"
-            android:layout_height="0dp"
-            android:layout_marginTop="10dp"
-            android:text="By signing up, you agree to our Terms &amp; Privacy Policy."
-            android:textAlignment="center"
-            android:textColor="@color/white"
-            app:layout_constraintBottom_toTopOf="@+id/tvAccount"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/btnSignup" />
+            <TextView
+                android:id="@+id/tvTerms"
+                android:layout_width="230dp"
+                android:layout_height="0dp"
+                android:layout_marginTop="10dp"
+                android:text="By signing up, you agree to our Terms &amp; Privacy Policy."
+                android:textAlignment="center"
+                android:textColor="@color/white"
+                app:layout_constraintBottom_toTopOf="@+id/tvAccount"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/btnSignup" />
 
-        <TextView
-            android:id="@+id/tvLogin"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:autoLink="all"
-            android:clickable="true"
-            android:onClick="@{(view)->activityRegisterController.goLogin()}"
-            android:text="Log in"
-            android:textColor="@color/teal_200"
-            android:textSize="20sp"
-            android:textStyle="bold"
-            app:layout_constraintEnd_toEndOf="@+id/tvAccount"
-            app:layout_constraintStart_toStartOf="@+id/tvAccount"
-            app:layout_constraintTop_toBottomOf="@+id/tvAccount"
-            tools:ignore="TouchTargetSizeCheck" />
+            <TextView
+                android:id="@+id/tvLogin"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="20dp"
+                android:autoLink="all"
+                android:clickable="true"
+                android:onClick="@{(view)->activityRegisterController.goLogin()}"
+                android:text="Log in"
+                android:textColor="@color/teal_200"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="@+id/tvAccount"
+                app:layout_constraintStart_toStartOf="@+id/tvAccount"
+                app:layout_constraintTop_toBottomOf="@+id/tvAccount"
+                tools:ignore="TouchTargetSizeCheck" />
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </ScrollView>
 </layout>
