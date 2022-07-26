@@ -26,13 +26,13 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.ViewHolder> 
 
     @NonNull
     @Override
-    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent,final int viewType) {
+    public ViewHolder onCreateViewHolder(@NonNull final ViewGroup parent,final int viewType) {
         item_binding = ItemProfilePostBinding.inflate(LayoutInflater.from(context), parent, false);
         return new ViewHolder(item_binding);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ViewHolder holder, final int position) {
+    public void onBindViewHolder(@NonNull final ViewHolder holder, final int position) {
         final Post post = postList.get(position);
         holder.bind(post);
     }
