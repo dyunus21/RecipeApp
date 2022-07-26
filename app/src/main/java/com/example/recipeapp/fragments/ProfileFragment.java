@@ -41,6 +41,7 @@ import com.parse.ParseUser;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 
 public class ProfileFragment extends Fragment implements NavigationView.OnNavigationItemSelectedListener {
@@ -96,7 +97,7 @@ public class ProfileFragment extends Fragment implements NavigationView.OnNaviga
         binding.rvPosts.setAdapter(postsAdapter);
         queryPosts();
         setUpTabs();
-        binding.tabLayout.getTabAt(0).select();
+        Objects.requireNonNull(binding.tabLayout.getTabAt(0)).select();
         binding.logout.setOnClickListener(v -> showLogoutAlert());
 
         binding.navigationDrawerView.setNavigationItemSelectedListener(this);
@@ -138,7 +139,7 @@ public class ProfileFragment extends Fragment implements NavigationView.OnNaviga
     }
 
     private void queryPosts() {
-        ParseQuery<Post> query = ParseQuery.getQuery(Post.class);
+        final ParseQuery<Post> query = ParseQuery.getQuery(Post.class);
         query.whereEqualTo(Post.KEY_AUTHOR, CURRENT_USER.getParseUser());
         query.include(Post.KEY_TITLE);
         query.include(Post.KEY_AUTHOR);
@@ -227,7 +228,7 @@ public class ProfileFragment extends Fragment implements NavigationView.OnNaviga
         });
         alertDialogBuilder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
             @Override
-            public void onClick(DialogInterface dialog, int which) {
+            public void onClick(@NonNull DialogInterface dialog, int which) {
                 dialog.dismiss();
             }
         });

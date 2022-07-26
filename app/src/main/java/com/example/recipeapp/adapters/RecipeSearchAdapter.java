@@ -39,12 +39,12 @@ class DetailsTransition extends TransitionSet {
 
 public class RecipeSearchAdapter extends RecyclerView.Adapter<RecipeSearchAdapter.ViewHolder> {
     private static final String TAG = "RecipeSearchAdapter";
-    private final Context context;
+    @NonNull private final Context context;
     private final User CURRENT_USER = new User(ParseUser.getCurrentUser());
     public List<Recipe> recipesList;
     private ItemRecipeCardBinding item_binding;
 
-    public RecipeSearchAdapter(Context context, List<Recipe> recipes) {
+    public RecipeSearchAdapter(@NonNull final Context context, @NonNull final List<Recipe> recipes) {
         this.context = context;
         this.recipesList = recipes;
     }
@@ -94,23 +94,21 @@ public class RecipeSearchAdapter extends RecyclerView.Adapter<RecipeSearchAdapte
         notifyDataSetChanged();
     }
 
-    public void addAll(List<Recipe> list) {
+    public void addAll(@NonNull final List<Recipe> list) {
         recipesList.addAll(list);
         notifyDataSetChanged();
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
         public ItemRecipeCardBinding binding;
-        private Recipe currentRecipe;
 
         public ViewHolder(@NonNull ItemRecipeCardBinding itemView) {
             super(itemView.getRoot());
             this.binding = itemView;
         }
 
-        public void bind(Recipe recipe) throws ParseException {
+        public void bind(@NonNull final Recipe recipe) throws ParseException {
             recipe.fetchIfNeeded();
-            currentRecipe = recipe;
             binding.tvTitle.setText(recipe.getTitle());
             if (Objects.equals(recipe.getImageUrl(), "") && recipe.getImage() == null)
                 Glide.with(context).load(R.drawable.placeholder_image).into(binding.ivImage);

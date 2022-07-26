@@ -15,11 +15,11 @@ import java.util.List;
 
 public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.ViewHolder> {
     private static final String TAG = "PostsAdapter";
-    private final Context context;
-    private final List<Post> postList;
+    @NonNull private final Context context;
+    @NonNull private final List<Post> postList;
     private ItemProfilePostBinding item_binding;
 
-    public PostsAdapter(Context context, List<Post> posts) {
+    public PostsAdapter(@NonNull final Context context, @NonNull final List<Post> posts) {
         this.context = context;
         this.postList = posts;
     }
@@ -47,20 +47,20 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.ViewHolder> 
         notifyDataSetChanged();
     }
 
-    public void addAll(List<Post> posts) {
+    public void addAll(@NonNull List<Post> posts) {
         postList.addAll(posts);
         notifyDataSetChanged();
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
-        private final ItemProfilePostBinding binding;
+        @NonNull private final ItemProfilePostBinding binding;
 
         public ViewHolder(@NonNull ItemProfilePostBinding itemView) {
             super(itemView.getRoot());
             this.binding = itemView;
         }
 
-        public void bind(Post post) {
+        public void bind(@NonNull final Post post) {
             Glide.with(context).load(post.getImage().getUrl()).into(binding.ivImage);
         }
     }
