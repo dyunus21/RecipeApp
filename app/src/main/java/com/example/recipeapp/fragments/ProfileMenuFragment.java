@@ -1,16 +1,21 @@
 package com.example.recipeapp.fragments;
 
 import android.os.Bundle;
-import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 
+import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+
+import com.example.recipeapp.R;
+import com.example.recipeapp.activities.MainActivity;
+import com.example.recipeapp.adapters.PostsAdapter;
+import com.example.recipeapp.adapters.ProfileAdapter;
 import com.example.recipeapp.adapters.PostsAdapter;
 import com.example.recipeapp.adapters.RecipeSearchAdapter;
 import com.example.recipeapp.databinding.FragmentProfileMenuBinding;
@@ -25,8 +30,8 @@ import java.util.List;
 public class ProfileMenuFragment extends Fragment {
 
     public static final String TAG = "ProfileMenuFragment";
-    private final User CURRENT_USER = new User(ParseUser.getCurrentUser());
     private FragmentProfileMenuBinding binding;
+    private final User CURRENT_USER = new User(ParseUser.getCurrentUser());
     private List<Recipe> recipeList;
     private List<Post> postList;
     private RecipeSearchAdapter recipeSearchAdapter;
@@ -55,7 +60,7 @@ public class ProfileMenuFragment extends Fragment {
     }
 
     private void setUpContent() {
-        if (menuItem.equals("Liked Recipes")) {
+        if(menuItem.equals("Liked Recipes")) {
             getRecipesLiked();
         } else if (menuItem.equals("Made Recipes")) {
             getRecipesMade();
