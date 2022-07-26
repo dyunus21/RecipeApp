@@ -13,7 +13,7 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
+import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -144,10 +144,7 @@ public class SocialFeedAdapter extends RecyclerView.Adapter<SocialFeedAdapter.Vi
                 bundle.putParcelable(Recipe.class.getSimpleName(), post.getRecipeLinked());
                 RecipeDetailsFragment recipeDetailsFragment = new RecipeDetailsFragment();
                 recipeDetailsFragment.setArguments(bundle);
-                ((AppCompatActivity) context).getSupportFragmentManager()
-                        .beginTransaction()
-                        .replace(R.id.nav_host_fragment, recipeDetailsFragment)
-                        .commit();
+                Navigation.findNavController(v).navigate(R.id.recipeDetailsFragment, bundle);
             });
 
             binding.tvPostType.setText(post.getType());
