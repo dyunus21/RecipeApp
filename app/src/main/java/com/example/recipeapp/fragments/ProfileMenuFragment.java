@@ -3,6 +3,7 @@ package com.example.recipeapp.fragments;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -11,6 +12,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 
+import com.example.recipeapp.R;
 import com.example.recipeapp.adapters.PostsAdapter;
 import com.example.recipeapp.adapters.RecipeSearchAdapter;
 import com.example.recipeapp.databinding.FragmentProfileMenuBinding;
@@ -130,4 +132,5 @@ public class ProfileMenuFragment extends Fragment {
         });
     }
 
+    // TODO: Show Navigation Drawer
 }
