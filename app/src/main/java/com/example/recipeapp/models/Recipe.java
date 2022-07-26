@@ -26,6 +26,7 @@ public class Recipe extends ParseObject {
     public static final String KEY_REVIEWS = "reviews";
     private static final String TAG = "Recipe";
 
+    // TODO: Refactor to not be static
     public static List<Recipe> getRecipes(JSONArray results) throws JSONException {
         List<Recipe> recipes = new ArrayList<>();
         for (int i = 0; i < results.length(); i++) {
@@ -49,7 +50,7 @@ public class Recipe extends ParseObject {
             }
             recipe.setInstructions(instructions);
 
-            if ((!results.getJSONObject(i).has("image")) || results.getJSONObject(i).getString("image") == "") {
+            if ((!results.getJSONObject(i).has("image")) || results.getJSONObject(i).getString("image").equals("")) {
                 recipe.setImage(null);
             }
             recipe.setImageUrl(results.getJSONObject(i).getString("image"));

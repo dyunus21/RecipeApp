@@ -134,7 +134,6 @@ public class SocialFeedAdapter extends RecyclerView.Adapter<SocialFeedAdapter.Vi
                     return true;
                 }
             });
-
             binding.ivImage.setOnTouchListener((v, event) -> gestureDetector.onTouchEvent(event));
             if (post.getRecipeLinked() != null) {
                 binding.btnGoToRecipe.setVisibility(View.VISIBLE);

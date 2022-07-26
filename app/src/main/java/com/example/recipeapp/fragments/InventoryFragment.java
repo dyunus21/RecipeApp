@@ -31,6 +31,7 @@ import com.parse.ParseUser;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class InventoryFragment extends Fragment {
     private static final String TAG = "InventoryFragment";
@@ -99,25 +100,22 @@ public class InventoryFragment extends Fragment {
     }
 
     public void showAddIngredientDialog() {
-        MaterialAlertDialogBuilder alertDialogBuilder = new MaterialAlertDialogBuilder(getContext());
+        MaterialAlertDialogBuilder alertDialogBuilder = new MaterialAlertDialogBuilder(requireContext());
         AddIngredientDialogBinding ingredientDialogBinding = AddIngredientDialogBinding.inflate(getLayoutInflater());
         alertDialogBuilder.setView(ingredientDialogBinding.getRoot());
-        final ArrayAdapter unitsAdapter = new ArrayAdapter(getContext(), android.R.layout.simple_dropdown_item_1line, getResources().getStringArray(R.array.units));
+        final ArrayAdapter<String> unitsAdapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_dropdown_item_1line, getResources().getStringArray(R.array.units));
         ingredientDialogBinding.actvUnit.setAdapter(unitsAdapter);
-        alertDialogBuilder.setPositiveButton("Add", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                progressDialog.show();
-                String name = ingredientDialogBinding.etName.getText().toString();
-                String count = ingredientDialogBinding.etCount.getText().toString();
-                String unit = ingredientDialogBinding.actvUnit.getText().toString();
-                if (name.isEmpty() || count.isEmpty() || unit.isEmpty()) {
-                    Toast.makeText(getContext(), "Fields cannot be empty!", Toast.LENGTH_SHORT).show();
-                    progressDialog.dismiss();
-                    return;
-                }
-                addIngredient(name, count, unit);
+        alertDialogBuilder.setPositiveButton("Add", (dialog, which) -> {
+            progressDialog.show();
+            String name = Objects.requireNonNull(ingredientDialogBinding.etName.getText()).toString();
+            String count = Objects.requireNonNull(ingredientDialogBinding.etCount.getText()).toString();
+            String unit = ingredientDialogBinding.actvUnit.getText().toString();
+            if (name.isEmpty() || count.isEmpty() || unit.isEmpty()) {
+                Toast.makeText(getContext(), "Fields cannot be empty!", Toast.LENGTH_SHORT).show();
+                progressDialog.dismiss();
+                return;
             }
+            addIngredient(name, count, unit);
         });
         alertDialogBuilder.setNegativeButton("Cancel", (dialog, which) -> dialog.dismiss());
         alertDialogBuilder.show();

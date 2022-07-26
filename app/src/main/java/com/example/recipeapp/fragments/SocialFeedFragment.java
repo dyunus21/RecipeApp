@@ -42,7 +42,6 @@ public class SocialFeedFragment extends Fragment {
         super.onCreate(savedInstanceState);
         postList = new ArrayList<>();
         adapter = new SocialFeedAdapter(getContext(), postList);
-        //:((MainActivity) getActivity()).getSupportActionBar().setTitle("Explore the Community!");
     }
 
     @Override
@@ -94,7 +93,7 @@ public class SocialFeedFragment extends Fragment {
             }
             adapter.clear();
             postList.addAll(objects);
-            adapter.notifyDataSetChanged();
+            adapter.addAll(postList);
             binding.rvPosts.scrollToPosition(0);
             binding.swipeContainer.setRefreshing(false);
         });

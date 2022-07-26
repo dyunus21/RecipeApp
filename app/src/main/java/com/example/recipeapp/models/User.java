@@ -18,14 +18,11 @@ public class User extends ParseObject {
     public static final String KEY_FIRSTNAME = "firstName";
     public static final String KEY_LASTNAME = "lastName";
     public static final String KEY_PROFILE_IMAGE = "profileImage";
-    public static final String KEY_FOLLOWER_LIST = "followerList";
-    public static final String KEY_FOLLOWING_LIST = "followingList";
     public static final String KEY_INGREDIENT_ARRAY = "ingredientsArray";
     public static final String KEY_INGREDIENTS_STRING = "ingredientsString";
     public static final String KEY_RECIPES_UPLOADED = "recipesUploaded";
     public static final String KEY_RECIPES_MADE = "recipesMade";
     public static final String KEY_RECIPES_LIKED = "recipesLiked";
-    public static final String KEY_POSTS_LIKED = "postsLiked";
     private static final String TAG = "User";
     private ParseUser parseUser;
 
