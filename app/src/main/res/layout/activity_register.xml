@@ -43,10 +43,10 @@
             android:id="@+id/tvAccount"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
             android:text="Have an account?"
             android:textColor="@color/white"
             android:textSize="20sp"
-            android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/btnSignup" />
@@ -71,17 +71,14 @@
             android:layout_marginStart="50dp"
             android:hint="First Name"
             app:layout_constraintBottom_toBottomOf="@+id/tilLastName"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/tilLastName">
+            app:layout_constraintStart_toStartOf="parent">
 
 
             <EditText
                 android:id="@+id/etFirstName"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-
                 android:ems="10"
-
                 android:inputType="textPersonName" />
         </com.google.android.material.textfield.TextInputLayout>
 
@@ -102,9 +99,7 @@
                 android:id="@+id/etLastName"
                 android:layout_width="150dp"
                 android:layout_height="wrap_content"
-
                 android:ems="10"
-
                 android:inputType="textPersonName" />
         </com.google.android.material.textfield.TextInputLayout>
 
@@ -208,7 +203,6 @@
             android:id="@+id/tvLogin"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="20dp"
             android:autoLink="all"
             android:clickable="true"
             android:onClick="@{(view)->activityRegisterController.goLogin()}"
@@ -216,7 +210,6 @@
             android:textColor="@color/teal_200"
             android:textSize="20sp"
             android:textStyle="bold"
-            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="@+id/tvAccount"
             app:layout_constraintStart_toStartOf="@+id/tvAccount"
             app:layout_constraintTop_toBottomOf="@+id/tvAccount"
