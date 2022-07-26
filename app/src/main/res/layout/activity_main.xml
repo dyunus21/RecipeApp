@@ -65,7 +65,7 @@
 
             <com.google.android.material.bottomnavigation.BottomNavigationView
                 android:id="@+id/bottomNavigationView"
-                style="@style/Widget.Material3.BottomNavigationView"
+                style="@style/BottomNavBar"
                 android:layout_width="match_parent"
                 android:layout_height="80dp"
                 android:layout_gravity="bottom"
@@ -89,6 +89,7 @@
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
                 android:layout_margin="10dp"
+                android:backgroundTint="@color/teal_700"
                 android:src="@drawable/ic_baseline_post_add_24"
                 app:fabSize="mini"
                 app:rippleColor="@color/white"
@@ -99,6 +100,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_margin="10dp"
+                android:backgroundTint="@color/teal_700"
                 android:onClick="@{(view)->controller.animateFabRecipeOnClick()}"
                 android:src="@drawable/ic_baseline_recipe"
                 app:fabSize="mini"
@@ -113,6 +115,7 @@
                 android:layout_marginTop="10dp"
                 android:layout_marginRight="18dp"
                 android:layout_marginBottom="18dp"
+                android:backgroundTint="@color/teal_700"
                 android:src="@drawable/ic_baseline_add_24"
                 app:fabSize="normal"
                 app:layout_anchor="@+id/constraintLayout"

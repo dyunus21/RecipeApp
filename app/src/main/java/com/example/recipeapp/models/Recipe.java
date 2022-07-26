@@ -49,7 +49,7 @@ public class Recipe extends ParseObject {
             }
             recipe.setInstructions(instructions);
 
-            if (results.getJSONObject(i).getString("image") == "") {
+            if ((!results.getJSONObject(i).has("image")) || results.getJSONObject(i).getString("image") == "") {
                 recipe.setImage(null);
             }
             recipe.setImageUrl(results.getJSONObject(i).getString("image"));

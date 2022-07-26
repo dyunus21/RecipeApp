@@ -115,17 +115,19 @@ public class RecipeDetailsFragment extends Fragment {
             binding.tvUploadedBy.setText("Uploaded by: @username");
         }
 
-        // TODO: button does not change color to indicate liked recipes because ids differ each session
         if (currentUser.isLikedbyCurrentUser(recipe)) {
             binding.ibHeart.setBackgroundResource(R.drawable.ic_baseline_favorite_24);
         } else {
             binding.ibHeart.setBackgroundResource(R.drawable.ic_baseline_favorite_border_24);
         }
+
+        binding.ibHeart.setOnClickListener(v -> findRecipe("like"));
         if (currentUser.isMadebyCurrentUser(recipe)) {
             binding.btnMade.setText("I Made it!");
         } else {
             binding.btnMade.setText("Make it!");
         }
+        binding.btnMade.setOnClickListener(v -> findRecipe("made"));
         if (recipe.getRecipeId() == 0 && ParseUser.getCurrentUser().hasSameId(recipe.getAuthor().getParseUser())) {
             binding.ibEdit.setVisibility(View.VISIBLE);
         } else {
@@ -136,12 +138,6 @@ public class RecipeDetailsFragment extends Fragment {
         binding.rvReviews.setAdapter(reviewsAdapter);
         queryReviews();
     }
-
-//    @Override
-//    public void onDestroyView() {
-//        super.onDestroyView();
-//        ((MainActivity) getActivity()).getSupportActionBar().show();
-//    }
 
     private void setUpTabs() {
         binding.tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {

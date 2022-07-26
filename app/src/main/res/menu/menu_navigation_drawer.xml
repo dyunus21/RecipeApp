@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <group android:id="@+id/groupRecipes">
+
+        <item
+            android:id="@+id/RecipeTitle"
+            android:title="Recipes">
+            <menu>
+                <item
+                    android:id="@+id/likedRecipes"
+                    android:icon="@drawable/ic_baseline_favorite_24"
+                    android:title="Liked" />
+                <item
+                    android:id="@+id/madeRecipes"
+                    android:icon="@drawable/ic_baseline_format_list_instructions_24"
+                    android:title="Made" />
+
+            </menu>
+
+        </item>
+    </group>
+    <group android:id="@+id/groupPosts">
+        <item
+            android:id="@+id/PostsTitle"
+            android:title="Posts">
+            <menu>
+                <item
+                    android:id="@+id/likedPosts"
+                    android:icon="@drawable/ic_baseline_favorite_24"
+                    android:title="Liked" />
+            </menu>
+
+        </item>
+
+    </group>
+
+</menu>

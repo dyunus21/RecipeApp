@@ -2,6 +2,7 @@ package com.example.recipeapp.adapters;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 
@@ -21,6 +22,7 @@ import com.example.recipeapp.databinding.ItemRecipeCardBinding;
 import com.example.recipeapp.fragments.RecipeDetailsFragment;
 import com.example.recipeapp.models.Recipe;
 import com.example.recipeapp.models.User;
+import com.parse.ParseException;
 import com.parse.ParseUser;
 
 import java.util.List;
@@ -37,12 +39,12 @@ class DetailsTransition extends TransitionSet {
 
 public class RecipeSearchAdapter extends RecyclerView.Adapter<RecipeSearchAdapter.ViewHolder> {
     private static final String TAG = "RecipeSearchAdapter";
-    private final Context context;
+    @NonNull private final Context context;
     private final User CURRENT_USER = new User(ParseUser.getCurrentUser());
     public List<Recipe> recipesList;
     private ItemRecipeCardBinding item_binding;
 
-    public RecipeSearchAdapter(Context context, List<Recipe> recipes) {
+    public RecipeSearchAdapter(@NonNull final Context context, @NonNull final List<Recipe> recipes) {
         this.context = context;
         this.recipesList = recipes;
     }
@@ -58,7 +60,11 @@ public class RecipeSearchAdapter extends RecyclerView.Adapter<RecipeSearchAdapte
     @Override
     public void onBindViewHolder(@NonNull final ViewHolder holder, int position) {
         final Recipe recipe = recipesList.get(position);
-        holder.bind(recipe);
+        try {
+            holder.bind(recipe);
+        } catch (ParseException e) {
+            Log.e(TAG, "Unable to bind recipe", e);
+        }
         final Bundle bundle = new Bundle();
         bundle.putParcelable(Recipe.class.getSimpleName(), recipe);
         RecipeDetailsFragment details = new RecipeDetailsFragment();
@@ -88,22 +94,21 @@ public class RecipeSearchAdapter extends RecyclerView.Adapter<RecipeSearchAdapte
         notifyDataSetChanged();
     }
 
-    public void addAll(List<Recipe> list) {
+    public void addAll(@NonNull final List<Recipe> list) {
         recipesList.addAll(list);
         notifyDataSetChanged();
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
         public ItemRecipeCardBinding binding;
-        private Recipe currentRecipe;
 
         public ViewHolder(@NonNull ItemRecipeCardBinding itemView) {
             super(itemView.getRoot());
             this.binding = itemView;
         }
 
-        public void bind(Recipe recipe) {
-            currentRecipe = recipe;
+        public void bind(@NonNull final Recipe recipe) throws ParseException {
+            recipe.fetchIfNeeded();
             binding.tvTitle.setText(recipe.getTitle());
             if (Objects.equals(recipe.getImageUrl(), "") && recipe.getImage() == null)
                 Glide.with(context).load(R.drawable.placeholder_image).into(binding.ivImage);
