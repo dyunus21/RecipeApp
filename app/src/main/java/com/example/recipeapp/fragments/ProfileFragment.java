@@ -6,8 +6,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,7 +20,6 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import com.bumptech.glide.Glide;
 import com.example.recipeapp.R;
 import com.example.recipeapp.activities.LoginActivity;
-import com.example.recipeapp.activities.MainActivity;
 import com.example.recipeapp.adapters.PostsAdapter;
 import com.example.recipeapp.adapters.RecipeSearchAdapter;
 import com.example.recipeapp.clients.ImageClient;
@@ -47,7 +44,7 @@ public class ProfileFragment extends Fragment implements NavigationView.OnNaviga
     private static final String TAG = "ProfileFragment";
     private final static int PICK_PHOTO_CODE = 1046;
     @NonNull
-    private final User CURRENT_USER = new User(ParseUser.getCurrentUser());
+    private User CURRENT_USER = new User(ParseUser.getCurrentUser());
     @Nullable
     private File photoFile;
     private FragmentProfileBinding binding;
@@ -80,6 +77,11 @@ public class ProfileFragment extends Fragment implements NavigationView.OnNaviga
         postsAdapter = new PostsAdapter(requireContext(), posts);
         imageClient = new ImageClient(this);
         User.getUser(CURRENT_USER);
+        final Bundle bundle = this.getArguments();
+        if (bundle != null) {
+            CURRENT_USER = (User) bundle.get("User");
+            Log.i(TAG, "Profile for " + CURRENT_USER.getParseUser().getUsername());
+        }
         setHasOptionsMenu(true);
     }
 
@@ -87,6 +89,7 @@ public class ProfileFragment extends Fragment implements NavigationView.OnNaviga
     public void onViewCreated(@NonNull final View view, @Nullable final Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         binding.navigationDrawerView.setVisibility(View.GONE);
+        binding.ibMenu.setVisibility(View.GONE);
         binding.tvUsername.setText("@" + CURRENT_USER.getParseUser().getUsername());
         binding.tvFullname.setText(CURRENT_USER.getFirstName() + " " + CURRENT_USER.getLastName());
         setProfileImage();
@@ -104,7 +107,10 @@ public class ProfileFragment extends Fragment implements NavigationView.OnNaviga
         binding.logout.setOnClickListener(v -> showLogoutAlert());
 
         binding.navigationDrawerView.setNavigationItemSelectedListener(this);
-        binding.ibMenu.setOnClickListener(v -> binding.navigationDrawerView.setVisibility(View.VISIBLE));
+        if (CURRENT_USER.getParseUser().hasSameId(ParseUser.getCurrentUser())) {
+            binding.ibMenu.setVisibility(View.VISIBLE);
+            binding.ibMenu.setOnClickListener(v -> binding.navigationDrawerView.setVisibility(View.VISIBLE));
+        }
         binding.ibClose.setOnClickListener(v -> binding.navigationDrawerView.setVisibility(View.GONE));
     }
 
@@ -201,23 +207,6 @@ public class ProfileFragment extends Fragment implements NavigationView.OnNaviga
         }
     }
 
-    @Override
-    public void onPrepareOptionsMenu(@NonNull final Menu menu) {
-        menu.findItem(R.id.navigation_drawer).setVisible(true);
-        super.onPrepareOptionsMenu(menu);
-    }
-
-//    @Override
-//    public boolean onOptionsItemSelected(@NonNull final MenuItem item) {
-//        if (item.getItemId() == R.id.navigation_drawer) {
-//            if (binding.navigationDrawerView.getVisibility() == View.VISIBLE)
-//                binding.navigationDrawerView.setVisibility(View.GONE);
-//            else
-//                binding.navigationDrawerView.setVisibility(View.VISIBLE);
-//        }
-//        return super.onOptionsItemSelected(item);
-//    }
-
     public void showLogoutAlert() {
         final MaterialAlertDialogBuilder alertDialogBuilder = new MaterialAlertDialogBuilder(requireContext());
         alertDialogBuilder.setTitle("Logout from app?");
@@ -232,11 +221,6 @@ public class ProfileFragment extends Fragment implements NavigationView.OnNaviga
         ParseUser.logOut();
         final Intent intent = new Intent(getContext(), LoginActivity.class);
         startActivity(intent);
-    }
-
-    @Override
-    public void onCreateOptionsMenu(@NonNull final Menu menu, @NonNull final MenuInflater inflater) {
-        super.onCreateOptionsMenu(menu, inflater);
     }
 
     @Override

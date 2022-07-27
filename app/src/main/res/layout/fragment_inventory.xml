@@ -46,19 +46,19 @@
             android:id="@+id/fabAdd"
             android:layout_width="wrap_content"
             android:layout_height="0dp"
-            android:backgroundTint="@color/teal_700"
+            android:backgroundTint="@color/white"
             android:clickable="true"
             android:onClick="@{(view)->fragmentInventoryController.showAddIngredientDialog()}"
             android:text="Add"
-            android:textColor="@color/white"
+            android:textColor="@color/teal_700"
             app:fabSize="mini"
             app:icon="@drawable/ic_baseline_add_24"
             app:iconGravity="textEnd"
-            app:iconTint="@color/white"
+            app:iconTint="@color/teal_700"
             app:layout_constraintBottom_toBottomOf="@+id/ibScan"
             app:layout_constraintEnd_toEndOf="@+id/rvIngredients"
             app:layout_constraintTop_toTopOf="@+id/ibScan"
-            app:rippleColor="@color/light_teal" />
+            app:rippleColor="@color/teal_700" />
 
         <ImageButton
             android:id="@+id/ibScan"

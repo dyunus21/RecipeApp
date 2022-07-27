@@ -14,6 +14,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.navigation.Navigation;
+import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -107,7 +108,13 @@ public class SocialFeedAdapter extends RecyclerView.Adapter<SocialFeedAdapter.Vi
             binding.tvTitle.setText(post.getTitle());
             final String sourceString = "<b>" + user.getParseUser().getUsername() + "</b> " + post.getDescription();
             binding.tvDescription.setText(Html.fromHtml(sourceString));
-            // TODO: Go to User Profile page when clicked on user profile image
+
+            binding.ivProfileImage.setOnClickListener(v -> {
+                Bundle bundle = new Bundle();
+                bundle.putParcelable("User", post.getAuthor());
+                Log.i(TAG, "Bundling " + post.getAuthor().getParseUser().getUsername());
+                Navigation.findNavController(v).navigate(R.id.profileFragment,bundle);
+            });
 
             final List<ParseUser> likedBy = post.getLikedBy();
             binding.tvLikes.setText(likedBy.size() + " likes");
