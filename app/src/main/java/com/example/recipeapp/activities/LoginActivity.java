@@ -11,6 +11,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.example.recipeapp.databinding.ActivityLoginBinding;
 import com.parse.ParseUser;
 
+import java.util.Objects;
+
 public class LoginActivity extends AppCompatActivity {
 
     private static final String TAG = "LoginActivity";
@@ -28,17 +30,18 @@ public class LoginActivity extends AppCompatActivity {
         }
     }
 
-    // TODO: Handle errors
     public void loginUser() {
         Log.i(TAG, "Attempting to login user");
         final String username = binding.etUsername.getText().toString();
         final String password = binding.etPassword.getText().toString();
         ParseUser.logInInBackground(username, password, (user, e) -> {
             if (e != null) {
-                Log.e(TAG, "Error with login", e);
+                Log.e(TAG, "Error with login" + e.getMessage());
+                if (Objects.equals(e.getMessage(), "Invalid username/password.")) {
+                    Toast.makeText(LoginActivity.this, "Invalid username/password ", Toast.LENGTH_SHORT).show();
+                }
                 return;
             }
-
             goMainActivity();
             Toast.makeText(LoginActivity.this, "Welcome " + ParseUser.getCurrentUser().getUsername(), Toast.LENGTH_SHORT).show();
         });
