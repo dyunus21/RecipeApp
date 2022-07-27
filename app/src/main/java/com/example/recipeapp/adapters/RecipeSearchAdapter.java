@@ -39,9 +39,11 @@ class DetailsTransition extends TransitionSet {
 
 public class RecipeSearchAdapter extends RecyclerView.Adapter<RecipeSearchAdapter.ViewHolder> {
     private static final String TAG = "RecipeSearchAdapter";
-    @NonNull private final Context context;
+    @NonNull
+    public final List<Recipe> recipesList;
+    @NonNull
+    private final Context context;
     private final User CURRENT_USER = new User(ParseUser.getCurrentUser());
-    public List<Recipe> recipesList;
     private ItemRecipeCardBinding item_binding;
 
     public RecipeSearchAdapter(@NonNull final Context context, @NonNull final List<Recipe> recipes) {
@@ -52,13 +54,13 @@ public class RecipeSearchAdapter extends RecyclerView.Adapter<RecipeSearchAdapte
     //TODO: Check animations
     @NonNull
     @Override
-    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public ViewHolder onCreateViewHolder(@NonNull final ViewGroup parent, final int viewType) {
         item_binding = ItemRecipeCardBinding.inflate(LayoutInflater.from(context), parent, false);
         return new ViewHolder(item_binding);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull final ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull final ViewHolder holder, final int position) {
         final Recipe recipe = recipesList.get(position);
         try {
             holder.bind(recipe);
@@ -100,9 +102,9 @@ public class RecipeSearchAdapter extends RecyclerView.Adapter<RecipeSearchAdapte
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
-        public ItemRecipeCardBinding binding;
+        public final ItemRecipeCardBinding binding;
 
-        public ViewHolder(@NonNull ItemRecipeCardBinding itemView) {
+        public ViewHolder(@NonNull final ItemRecipeCardBinding itemView) {
             super(itemView.getRoot());
             this.binding = itemView;
         }

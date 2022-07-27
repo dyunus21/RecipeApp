@@ -3,6 +3,8 @@ package com.example.recipeapp.clients;
 import android.content.Context;
 import android.util.Log;
 
+import androidx.annotation.NonNull;
+
 import com.codepath.asynchttpclient.AsyncHttpClient;
 import com.codepath.asynchttpclient.RequestHeaders;
 import com.codepath.asynchttpclient.RequestParams;
@@ -25,18 +27,21 @@ public class RecipeClient {
     public static final String BASE_URL = "https://spoonacular-recipe-food-nutrition-v1.p.rapidapi.com";
     public static final String HOST = "spoonacular-recipe-food-nutrition-v1.p.rapidapi.com";
     private static final String TAG = "RecipeClient";
+    @NonNull
     private final RequestHeaders headers;
+    @NonNull
     private final Context context;
+    @NonNull
     private final AsyncHttpClient client = new AsyncHttpClient();
 
-    public RecipeClient(Context context) {
+    public RecipeClient(@NonNull final Context context) {
         this.context = context;
         headers = new RequestHeaders();
         headers.put("X-RapidAPI-Key", context.getString(R.string.Nutrition_API_Key));
         headers.put("X-RapidAPI-Host", HOST);
     }
 
-    public void getRecipes(final String query, final Map<String, String> parameters, final JsonHttpResponseHandler handler) {
+    public void getRecipes(final String query, final Map<String, String> parameters, @NonNull final JsonHttpResponseHandler handler) {
         final RequestParams params = new RequestParams();
         params.put("query", query);
         params.put("addRecipeInformation", "true");
@@ -58,38 +63,38 @@ public class RecipeClient {
         client.get(BASE_URL + "/recipes/complexSearch", headers, params, handler);
     }
 
-    public void getRecipesDetailed(final int recipeId, final JsonHttpResponseHandler handler) {
+    public void getRecipesDetailed(final int recipeId, @NonNull final JsonHttpResponseHandler handler) {
         final RequestParams params = new RequestParams();
         params.put("id", recipeId);
         Log.i(TAG, "RecipeDetailedURL: " + BASE_URL + "/recipes/" + recipeId + "/information");
         client.get(BASE_URL + "/recipes/" + recipeId + "/information", headers, params, handler);
     }
 
-    public void getRandomRecipes(JsonHttpResponseHandler handler) {
+    public void getRandomRecipes(@NonNull final JsonHttpResponseHandler handler) {
         final RequestParams params = new RequestParams();
         params.put("number", 10);
         client.get(BASE_URL + "/recipes/random", headers, params, handler);
     }
 
 
-    public void getRecipesByImage(final File photoFile, final JsonHttpResponseHandler handler) {
+    public void getRecipesByImage(@NonNull final File photoFile, @NonNull final JsonHttpResponseHandler handler) {
         final RequestParams params = new RequestParams();
         try {
-            BufferedSource bufferedSource = Okio.buffer(Okio.source(photoFile));
-            ByteString source = bufferedSource.readByteString();
-            RequestBody body = RequestBody.create(source.toByteArray(), MediaType.get("image/jpg"));
-            RequestBody requestBody = new MultipartBody.Builder()
+            final BufferedSource bufferedSource = Okio.buffer(Okio.source(photoFile));
+            final ByteString source = bufferedSource.readByteString();
+            final RequestBody body = RequestBody.create(source.toByteArray(), MediaType.get("image/jpg"));
+            final RequestBody requestBody = new MultipartBody.Builder()
                     .setType(MultipartBody.FORM)
                     .addFormDataPart("file", "photo.jpg", body)
                     .build();
             client.post(BASE_URL + "/food/images/analyze", headers, params, requestBody, handler);
         } catch (IOException e) {
-            e.printStackTrace();
+            Log.e(TAG, "Unable to search recipes based on provided image!", e);
         }
 
     }
 
-    public void getRecipeInformationBulk(final String ids, final JsonHttpResponseHandler handler) {
+    public void getRecipeInformationBulk(final String ids, @NonNull final JsonHttpResponseHandler handler) {
         final RequestParams params = new RequestParams();
         params.put("ids", ids);
         client.get(BASE_URL + "/recipes/informationBulk", headers, params, handler);

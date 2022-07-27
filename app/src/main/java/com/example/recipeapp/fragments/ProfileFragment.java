@@ -12,7 +12,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -91,7 +90,7 @@ public class ProfileFragment extends Fragment implements NavigationView.OnNaviga
         binding.tvUsername.setText("@" + CURRENT_USER.getParseUser().getUsername());
         binding.tvFullname.setText(CURRENT_USER.getFirstName() + " " + CURRENT_USER.getLastName());
         setProfileImage();
-        binding.tvChangeProfileImage.setOnClickListener(v -> imageClient.onPickPhoto(v));
+        binding.tvChangeProfileImage.setOnClickListener(v -> imageClient.onPickPhoto());
         binding.tvRecipeCount.setText(String.valueOf(CURRENT_USER.getRecipesUploaded().size()));
 
         binding.rvRecipes.setLayoutManager(new GridLayoutManager(getContext(), 2));
