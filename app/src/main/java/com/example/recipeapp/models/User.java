@@ -60,7 +60,7 @@ public class User extends ParseObject {
         return parseUser.getString(KEY_FIRSTNAME);
     }
 
-    public void setFirstName(final String firstName) {
+    public void setFirstName(@NonNull final String firstName) {
         parseUser.put(KEY_FIRSTNAME, firstName);
     }
 
@@ -68,7 +68,7 @@ public class User extends ParseObject {
         return parseUser.getString(KEY_LASTNAME);
     }
 
-    public void setLastName(final String lastName) {
+    public void setLastName(@NonNull final String lastName) {
         parseUser.put(KEY_LASTNAME, lastName);
     }
 

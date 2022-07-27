@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 
 import com.example.recipeapp.adapters.PostsAdapter;
@@ -81,6 +82,7 @@ public class ProfileMenuFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull final View view, @Nullable final Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        binding.setFragmentProfileMenuController(this);
         binding.rvRecipes.setAdapter(recipeSearchAdapter);
         binding.rvRecipes.setLayoutManager(new GridLayoutManager(getContext(), 2));
         binding.rvPosts.setAdapter(postsAdapter);
@@ -132,5 +134,7 @@ public class ProfileMenuFragment extends Fragment {
         });
     }
 
-    // TODO: Show Navigation Drawer
+    public void goToProfile() {
+        NavHostFragment.findNavController(this).navigateUp();
+    }
 }

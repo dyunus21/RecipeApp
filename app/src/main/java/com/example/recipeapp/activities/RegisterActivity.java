@@ -6,7 +6,6 @@ import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.ImageDecoder;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
@@ -41,7 +40,7 @@ public class RegisterActivity extends AppCompatActivity {
     }
 
     @Override
-    protected void onCreate(@Nullable Bundle savedInstanceState) {
+    protected void onCreate(@Nullable final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = ActivityRegisterBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
@@ -90,7 +89,7 @@ public class RegisterActivity extends AppCompatActivity {
     }
 
     @Override
-    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+    public void onActivityResult(final int requestCode, final int resultCode, @Nullable final Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if ((data != null) && requestCode == PICK_PHOTO_CODE) {
             Uri photoUri = data.getData();
@@ -131,7 +130,7 @@ public class RegisterActivity extends AppCompatActivity {
 
     @Nullable
     @SuppressLint("Range")
-    public String getFileName(final @NonNull Uri uri) {
+    public String getFileName(@NonNull final Uri uri) {
         String result = null;
         if (uri.getScheme().equals("content")) {
             Cursor cursor = getContentResolver().query(uri, null, null, null, null);
@@ -155,7 +154,7 @@ public class RegisterActivity extends AppCompatActivity {
     }
 
     @NonNull
-    public File getPhotoFileUri(final String fileName) {
+    public File getPhotoFileUri(@NonNull final String fileName) {
         final File mediaStorageDir = new File(getExternalFilesDir(Environment.DIRECTORY_PICTURES), TAG);
 
         if (!mediaStorageDir.exists() && !mediaStorageDir.mkdirs()) {
@@ -165,16 +164,11 @@ public class RegisterActivity extends AppCompatActivity {
         return new File(mediaStorageDir.getPath() + File.separator + fileName);
     }
 
-    public Bitmap loadFromUri(final Uri photoUri) {
+    public Bitmap loadFromUri(@NonNull final Uri photoUri) {
         Bitmap image = null;
         try {
-            // check version of Android on device
-            if (Build.VERSION.SDK_INT > 27) {
-                ImageDecoder.Source source = ImageDecoder.createSource(getContentResolver(), photoUri);
-                image = ImageDecoder.decodeBitmap(source);
-            } else {
-                image = MediaStore.Images.Media.getBitmap(getContentResolver(), photoUri);
-            }
+            ImageDecoder.Source source = ImageDecoder.createSource(getContentResolver(), photoUri);
+            image = ImageDecoder.decodeBitmap(source);
         } catch (IOException e) {
             Log.e(TAG, "Unable to load image from URI", e);
         }

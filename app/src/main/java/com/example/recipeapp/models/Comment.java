@@ -5,6 +5,8 @@ import androidx.annotation.NonNull;
 import com.parse.ParseClassName;
 import com.parse.ParseObject;
 
+import java.util.Objects;
+
 @ParseClassName("Comment")
 public class Comment extends ParseObject {
     public static final String KEY_AUTHOR = "author";
@@ -14,7 +16,7 @@ public class Comment extends ParseObject {
 
 
     public User getAuthor() {
-        return new User(getParseUser(KEY_AUTHOR));
+        return new User(Objects.requireNonNull(getParseUser(KEY_AUTHOR)));
     }
 
     public void setAuthor(@NonNull final User author) {
@@ -25,7 +27,7 @@ public class Comment extends ParseObject {
         return getString(KEY_DESCRIPTION);
     }
 
-    public void setDescription(final String description) {
+    public void setDescription(@NonNull final String description) {
         put(KEY_DESCRIPTION, description);
     }
 

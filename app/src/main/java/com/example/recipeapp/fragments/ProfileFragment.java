@@ -64,7 +64,7 @@ public class ProfileFragment extends Fragment implements NavigationView.OnNaviga
     }
 
     @Override
-    public View onCreateView(final @NonNull LayoutInflater inflater,
+    public View onCreateView(@NonNull final LayoutInflater inflater,
                              @Nullable final ViewGroup container,
                              @Nullable final Bundle savedInstanceState) {
         binding = FragmentProfileBinding.inflate(getLayoutInflater());
@@ -85,7 +85,7 @@ public class ProfileFragment extends Fragment implements NavigationView.OnNaviga
     }
 
     @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+    public void onViewCreated(@NonNull final View view, @Nullable final Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         binding.navigationDrawerView.setVisibility(View.GONE);
         binding.tvUsername.setText("@" + CURRENT_USER.getParseUser().getUsername());

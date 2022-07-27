@@ -148,7 +148,7 @@ public class UploadRecipeFragment extends Fragment {
         publishRecipe(title, cuisineType, cooktime, ingredients, instructions);
     }
 
-    private void publishRecipe(final String title, final String cuisineType, final int cooktime, @NonNull final String ingredients, @NonNull final String instructions) {
+    private void publishRecipe(@NonNull final String title, @NonNull final String cuisineType, final int cooktime, @NonNull final String ingredients, @NonNull final String instructions) {
         recipe.setTitle(title);
         recipe.setCuisineType(cuisineType);
         recipe.setCooktime(cooktime);

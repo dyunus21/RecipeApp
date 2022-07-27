@@ -85,7 +85,7 @@ public class Recipe extends ParseObject {
         return getString(KEY_TITLE);
     }
 
-    public void setTitle(final String title) {
+    public void setTitle(@NonNull final String title) {
         put(KEY_TITLE, title);
     }
 
@@ -93,7 +93,7 @@ public class Recipe extends ParseObject {
         return getParseFile(KEY_IMAGE);
     }
 
-    public void setImage(final @Nullable ParseFile image) {
+    public void setImage(@Nullable final ParseFile image) {
         put(KEY_IMAGE, Objects.requireNonNull(image));
     }
 
@@ -101,7 +101,7 @@ public class Recipe extends ParseObject {
         return getString(KEY_IMAGE_URL);
     }
 
-    public void setImageUrl(final String imageUrl) {
+    public void setImageUrl(@NonNull final String imageUrl) {
         put(KEY_IMAGE_URL, imageUrl);
     }
 

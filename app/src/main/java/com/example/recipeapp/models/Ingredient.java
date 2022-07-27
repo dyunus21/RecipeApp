@@ -1,5 +1,6 @@
 package com.example.recipeapp.models;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.parse.ParseClassName;
@@ -11,7 +12,7 @@ public class Ingredient extends ParseObject {
     public static final String KEY_COUNT = "count";
     public static final String KEY_UNIT = "unit";
 
-    public void initialize(final String name, final int count, final String unit) {
+    public void initialize(@NonNull final String name, final int count, @NonNull final String unit) {
         this.setName(name);
         this.setCount(count);
         this.setUnit(unit);
@@ -22,7 +23,7 @@ public class Ingredient extends ParseObject {
         return getString(KEY_NAME);
     }
 
-    public void setName(final String name) {
+    public void setName(@NonNull final String name) {
         put(KEY_NAME, name);
     }
 
@@ -31,7 +32,7 @@ public class Ingredient extends ParseObject {
         return getString(KEY_UNIT);
     }
 
-    public void setUnit(final String unit) {
+    public void setUnit(@NonNull final String unit) {
         put(KEY_UNIT, unit);
     }
 

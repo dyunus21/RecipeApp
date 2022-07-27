@@ -63,7 +63,7 @@ public class InventoryAdapter extends RecyclerView.Adapter<InventoryAdapter.View
             this.binding = itemView;
         }
 
-        public void bind(final Ingredient ingredient) {
+        public void bind(@NonNull final Ingredient ingredient) {
             currentIngredient = ingredient;
             binding.tvName.setText(ingredient.getName());
             binding.tvCount.setText(String.valueOf(ingredient.getCount()));

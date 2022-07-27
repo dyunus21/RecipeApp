@@ -27,7 +27,7 @@ public class Post extends ParseObject {
         return getString(KEY_DESCRIPTION);
     }
 
-    public void setDescription(final String description) {
+    public void setDescription(@NonNull final String description) {
         put(KEY_DESCRIPTION, description);
     }
 
@@ -35,7 +35,7 @@ public class Post extends ParseObject {
         return getString(KEY_TITLE);
     }
 
-    public void setTitle(final String title) {
+    public void setTitle(@NonNull final String title) {
         put(KEY_TITLE, title);
     }
 
@@ -43,7 +43,7 @@ public class Post extends ParseObject {
         return getParseFile(KEY_IMAGE);
     }
 
-    public void setImage(final ParseFile image) {
+    public void setImage(@NonNull final ParseFile image) {
         put(KEY_IMAGE, image);
     }
 
@@ -104,7 +104,7 @@ public class Post extends ParseObject {
         return getString(KEY_TYPE);
     }
 
-    public void setType(final String type) {
+    public void setType(@NonNull final String type) {
         put(KEY_TYPE, type);
     }
 

@@ -75,17 +75,17 @@ public class UploadPostFragment extends Fragment implements AdapterView.OnItemSe
         return binding.getRoot();
     }
 
-    public void onItemSelected(@NonNull AdapterView<?> parent, View view, int pos, long id) {
+    public void onItemSelected(@NonNull final AdapterView<?> parent, @NonNull final View view, final int pos, final long id) {
         parent.getItemAtPosition(pos);
     }
 
     @Override
-    public void onNothingSelected(AdapterView<?> parent) {
+    public void onNothingSelected(@NonNull final AdapterView<?> parent) {
 
     }
 
     @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+    public void onViewCreated(@NonNull final View view, @Nullable final Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(requireContext(),
                 R.array.postOptions, android.R.layout.simple_spinner_item);
@@ -116,7 +116,7 @@ public class UploadPostFragment extends Fragment implements AdapterView.OnItemSe
         postRecipe(title, description);
     }
 
-    private void postRecipe(final String title, final String description) {
+    private void postRecipe(@NonNull final String title, @NonNull final String description) {
         Post post = new Post();
         post.setAuthor(new User(ParseUser.getCurrentUser()));
         post.setImage(new ParseFile(Objects.requireNonNull(photoFile)));
@@ -129,7 +129,7 @@ public class UploadPostFragment extends Fragment implements AdapterView.OnItemSe
         savePost(post);
     }
 
-    private void savePost(@NonNull Post post) {
+    private void savePost(@NonNull final Post post) {
         post.saveInBackground(e -> {
             if (e != null) {
                 Log.e(TAG, "Error in saving post", e);
