@@ -12,6 +12,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -252,14 +253,15 @@ public class ProfileFragment extends Fragment implements NavigationView.OnNaviga
 
     @Override
     public boolean onNavigationItemSelected(@NonNull final MenuItem item) {
-        // TODO: Update navigation
+        final Bundle bundle = new Bundle();
         if (item.getItemId() == R.id.likedRecipes) {
-            NavHostFragment.findNavController(this).navigate(R.id.socialFeedFragment);
+            bundle.putString("MenuItem", "Liked Recipes");
         } else if (item.getItemId() == R.id.madeRecipes) {
-            NavHostFragment.findNavController(this).navigate(R.id.socialFeedFragment);
+            bundle.putString("MenuItem", "Made Recipes");
         } else if (item.getItemId() == R.id.likedPosts) {
-            NavHostFragment.findNavController(this).navigate(R.id.socialFeedFragment);
+            bundle.putString("MenuItem", "Liked Posts");
         }
+        NavHostFragment.findNavController(this).navigate(R.id.profileMenuFragment, bundle);
         binding.navigationDrawerView.setVisibility(View.GONE);
         return true;
     }
