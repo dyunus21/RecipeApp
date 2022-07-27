@@ -97,15 +97,8 @@ public class RecipeSearchFragment extends Fragment {
     }
 
     @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        Objects.requireNonNull(((MainActivity) requireActivity()).getSupportActionBar()).show();
-    }
-
-    @Override
     public void onViewCreated(@NonNull final View view, @Nullable final Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        Objects.requireNonNull(((MainActivity) requireActivity()).getSupportActionBar()).hide();
         binding.rvRandomRecipes.setAdapter(adapter);
         binding.rvRandomRecipes.setLayoutManager(new LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false));
         binding.rvRecipes.setAdapter(adapter);
