@@ -64,7 +64,7 @@ _Version4_ (Stretch)
 * [x] User can scan food barcode to update inventory
 * [x] User can search for a recipe based on image
 * [x] Explore Kotlin usage
-* [ ] Implement navigation drawer in Profile fragment
+* [x] Implement navigation drawer in Profile fragment
 * [ ] User can view a demo of app before account creation
 
 ### 2. Screen Archetypes
