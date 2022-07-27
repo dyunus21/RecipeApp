@@ -11,24 +11,23 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.example.recipeapp.adapters.SocialFeedAdapter;
 import com.example.recipeapp.databinding.FragmentSocialFeedBinding;
 import com.example.recipeapp.models.EndlessRecyclerViewScrollListener;
 import com.example.recipeapp.models.Post;
-import com.parse.FindCallback;
-import com.parse.ParseException;
 import com.parse.ParseQuery;
 
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 
 
 public class SocialFeedFragment extends Fragment {
     private static final String TAG = "SocialFragment";
     private FragmentSocialFeedBinding binding;
+    @Nullable
     private SocialFeedAdapter adapter;
     private List<Post> postList;
     private EndlessRecyclerViewScrollListener scrollListener;
@@ -38,24 +37,24 @@ public class SocialFeedFragment extends Fragment {
     }
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
+    public void onCreate(@Nullable final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         postList = new ArrayList<>();
-        adapter = new SocialFeedAdapter(getContext(), postList);
+        adapter = new SocialFeedAdapter(requireContext(), postList);
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(@NonNull final LayoutInflater inflater, @Nullable final ViewGroup container,
+                             @Nullable final Bundle savedInstanceState) {
         binding = FragmentSocialFeedBinding.inflate(getLayoutInflater());
         return binding.getRoot();
     }
 
     @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+    public void onViewCreated(@NonNull final View view, @Nullable final Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         binding.rvPosts.setAdapter(adapter);
-        final LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
+        final LinearLayoutManager linearLayoutManager = new LinearLayoutManager(requireContext());
         binding.rvPosts.setLayoutManager(linearLayoutManager);
 
         binding.swipeContainer.setOnRefreshListener(() -> queryPosts(null));
@@ -74,7 +73,7 @@ public class SocialFeedFragment extends Fragment {
         binding.rvPosts.addOnScrollListener(scrollListener);
     }
 
-    private void queryPosts(Date time) {
+    private void queryPosts(@Nullable final Date time) {
         ParseQuery<Post> query = ParseQuery.getQuery(Post.class);
         query.include(Post.KEY_AUTHOR);
         query.include(Post.KEY_IMAGE);
@@ -91,7 +90,7 @@ public class SocialFeedFragment extends Fragment {
                 Log.e(TAG, "Error in querying posts! ", e);
                 return;
             }
-            adapter.clear();
+            Objects.requireNonNull(adapter).clear();
             postList.addAll(objects);
             adapter.addAll(postList);
             binding.rvPosts.scrollToPosition(0);

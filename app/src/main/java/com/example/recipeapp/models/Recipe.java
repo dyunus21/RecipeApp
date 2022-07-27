@@ -2,6 +2,9 @@ package com.example.recipeapp.models;
 
 import android.util.Log;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+
 import com.parse.ParseClassName;
 import com.parse.ParseFile;
 import com.parse.ParseObject;
@@ -11,6 +14,7 @@ import org.json.JSONException;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @ParseClassName("Recipe")
 public class Recipe extends ParseObject {
@@ -27,14 +31,14 @@ public class Recipe extends ParseObject {
     private static final String TAG = "Recipe";
 
     // TODO: Refactor to not be static
-    public static List<Recipe> getRecipes(JSONArray results) throws JSONException {
-        List<Recipe> recipes = new ArrayList<>();
+    public static List<Recipe> getRecipes(@NonNull final JSONArray results) throws JSONException {
+        final List<Recipe> recipes = new ArrayList<>();
         for (int i = 0; i < results.length(); i++) {
-            Recipe recipe = new Recipe();
+            final Recipe recipe = new Recipe();
             recipe.setRecipeId(results.getJSONObject(i).getInt("id"));
             recipe.setTitle(results.getJSONObject(i).getString("title"));
             recipe.setCooktime(results.getJSONObject(i).getInt("readyInMinutes"));
-            JSONArray cuisineType = results.getJSONObject(i).getJSONArray("cuisines");
+            final JSONArray cuisineType = results.getJSONObject(i).getJSONArray("cuisines");
             if (cuisineType.length() > 0)
                 recipe.setCuisineType(cuisineType.getString(0));
             else
@@ -43,8 +47,8 @@ public class Recipe extends ParseObject {
             if (results.getJSONObject(i).getJSONArray("analyzedInstructions").length() == 0) {
                 continue;
             }
-            List<String> instructions = new ArrayList<>();
-            JSONArray steps = (results.getJSONObject(i).getJSONArray("analyzedInstructions")).getJSONObject(0).getJSONArray("steps");
+            final List<String> instructions = new ArrayList<>();
+            final JSONArray steps = (results.getJSONObject(i).getJSONArray("analyzedInstructions")).getJSONObject(0).getJSONArray("steps");
             for (int j = 0; j < steps.length(); j++) {
                 instructions.add(steps.getJSONObject(j).getString("step"));
             }
@@ -65,7 +69,7 @@ public class Recipe extends ParseObject {
         return getInt(KEY_RECIPE_ID);
     }
 
-    public void setRecipeId(int recipeId) {
+    public void setRecipeId(final int recipeId) {
         put(KEY_RECIPE_ID, recipeId);
     }
 
@@ -73,7 +77,7 @@ public class Recipe extends ParseObject {
         return new User(getParseUser(KEY_AUTHOR));
     }
 
-    public void setAuthor(User author) {
+    public void setAuthor(@NonNull final User author) {
         put(KEY_AUTHOR, author.getParseUser());
     }
 
@@ -81,7 +85,7 @@ public class Recipe extends ParseObject {
         return getString(KEY_TITLE);
     }
 
-    public void setTitle(String title) {
+    public void setTitle(@NonNull final String title) {
         put(KEY_TITLE, title);
     }
 
@@ -89,37 +93,37 @@ public class Recipe extends ParseObject {
         return getParseFile(KEY_IMAGE);
     }
 
-    public void setImage(ParseFile image) {
-        put(KEY_IMAGE, image);
+    public void setImage(@Nullable final ParseFile image) {
+        put(KEY_IMAGE, Objects.requireNonNull(image));
     }
 
     public String getImageUrl() {
         return getString(KEY_IMAGE_URL);
     }
 
-    public void setImageUrl(String imageUrl) {
+    public void setImageUrl(@NonNull final String imageUrl) {
         put(KEY_IMAGE_URL, imageUrl);
     }
 
     public List<String> getIngredientList() {
-        List<String> ingredientList = getList(KEY_INGREDIENT_LIST);
+        final List<String> ingredientList = getList(KEY_INGREDIENT_LIST);
         if (ingredientList == null)
             return new ArrayList<>();
         return ingredientList;
     }
 
-    public void setIngredientList(List<String> ingredientList) {
+    public void setIngredientList(@NonNull final List<String> ingredientList) {
         put(KEY_INGREDIENT_LIST, ingredientList);
     }
 
     public List<String> getInstructions() {
-        List<String> instructions = getList(KEY_INSTRUCTIONS);
+        final List<String> instructions = getList(KEY_INSTRUCTIONS);
         if (instructions == null)
             return new ArrayList<>();
         return instructions;
     }
 
-    public void setInstructions(List<String> instructions) {
+    public void setInstructions(@NonNull final List<String> instructions) {
         put(KEY_INSTRUCTIONS, instructions);
     }
 
@@ -127,7 +131,7 @@ public class Recipe extends ParseObject {
         return getInt(KEY_COOKTIME);
     }
 
-    public void setCooktime(int cooktime) {
+    public void setCooktime(final int cooktime) {
         put(KEY_COOKTIME, cooktime);
     }
 
@@ -135,7 +139,7 @@ public class Recipe extends ParseObject {
         return getString(KEY_CUISINE_TYPE);
     }
 
-    public void setCuisineType(String cuisineType) {
+    public void setCuisineType(final String cuisineType) {
         put(KEY_CUISINE_TYPE, cuisineType);
     }
 }

@@ -4,10 +4,12 @@ import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.view.View;
 
+import androidx.annotation.NonNull;
+
 // Resource: https://betterprogramming.pub/animated-fab-button-with-more-options-2dcf7118fff6
 public class FabAnimation {
 
-    public static boolean rotateFab(final View v, boolean rotate) {
+    public static boolean rotateFab(@NonNull final View v, boolean rotate) {
         v.animate().setDuration(200)
                 .setListener(new AnimatorListenerAdapter() {
                     @Override
@@ -19,7 +21,7 @@ public class FabAnimation {
         return rotate;
     }
 
-    public static void showIn(final View v) {
+    public static void showIn(@NonNull final View v) {
         v.setVisibility(View.VISIBLE);
         v.setAlpha(0f);
         v.setTranslationY(v.getHeight());
@@ -36,7 +38,7 @@ public class FabAnimation {
                 .start();
     }
 
-    public static void showOut(final View v) {
+    public static void showOut(@NonNull final View v) {
         v.setVisibility(View.VISIBLE);
         v.setAlpha(1f);
         v.setTranslationY(0);
@@ -53,7 +55,7 @@ public class FabAnimation {
                 .start();
     }
 
-    public static void init(final View v) {
+    public static void init(@NonNull final View v) {
         v.setVisibility(View.GONE);
         v.setTranslationY(v.getHeight());
         v.setAlpha(0f);

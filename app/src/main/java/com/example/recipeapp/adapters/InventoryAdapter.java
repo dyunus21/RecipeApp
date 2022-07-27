@@ -20,20 +20,20 @@ public class InventoryAdapter extends RecyclerView.Adapter<InventoryAdapter.View
     private final List<Ingredient> ingredientList;
     private ItemIngredientBinding item_binding;
 
-    public InventoryAdapter(Context context, List<Ingredient> ingredientList) {
+    public InventoryAdapter(@NonNull final Context context, @NonNull final List<Ingredient> ingredientList) {
         this.context = context;
         this.ingredientList = ingredientList;
     }
 
     @NonNull
     @Override
-    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public ViewHolder onCreateViewHolder(@NonNull final ViewGroup parent, final int viewType) {
         item_binding = ItemIngredientBinding.inflate(LayoutInflater.from(context), parent, false);
         return new ViewHolder(item_binding);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull final ViewHolder holder, final int position) {
         final Ingredient ingredient = ingredientList.get(position);
         holder.bind(ingredient);
     }
@@ -48,7 +48,7 @@ public class InventoryAdapter extends RecyclerView.Adapter<InventoryAdapter.View
         notifyDataSetChanged();
     }
 
-    public void addAll(List<Ingredient> list) {
+    public void addAll(@NonNull final List<Ingredient> list) {
         ingredientList.addAll(list);
         notifyDataSetChanged();
     }
@@ -58,12 +58,12 @@ public class InventoryAdapter extends RecyclerView.Adapter<InventoryAdapter.View
         private final ItemIngredientBinding binding;
         private Ingredient currentIngredient;
 
-        public ViewHolder(@NonNull ItemIngredientBinding itemView) {
+        public ViewHolder(@NonNull final ItemIngredientBinding itemView) {
             super(itemView.getRoot());
             this.binding = itemView;
         }
 
-        public void bind(Ingredient ingredient) {
+        public void bind(@NonNull final Ingredient ingredient) {
             currentIngredient = ingredient;
             binding.tvName.setText(ingredient.getName());
             binding.tvCount.setText(String.valueOf(ingredient.getCount()));
@@ -71,7 +71,7 @@ public class InventoryAdapter extends RecyclerView.Adapter<InventoryAdapter.View
             binding.ibAdd.setOnClickListener(v -> add(ingredient));
             binding.ibSubtract.setOnClickListener(v -> remove(ingredient));
             binding.ibDelete.setOnClickListener(v -> {
-                MaterialAlertDialogBuilder alertDialogBuilder = new MaterialAlertDialogBuilder(context);
+                final MaterialAlertDialogBuilder alertDialogBuilder = new MaterialAlertDialogBuilder(context);
                 alertDialogBuilder.setMessage("Do you want to delete this ingredient: " + currentIngredient.getName() + "?");
                 alertDialogBuilder.setPositiveButton("Delete", (dialog, which) -> {
                     Log.i(TAG, "Deleted ingredient: " + currentIngredient.getName());
@@ -91,14 +91,14 @@ public class InventoryAdapter extends RecyclerView.Adapter<InventoryAdapter.View
                     Log.e(TAG, "Unable to delete ingredient");
                     return;
                 }
-                Log.i(TAG, "Sucessfully deleted ingredient");
+                Log.i(TAG, "Successfully deleted ingredient");
                 ingredientList.remove(currentIngredient);
                 notifyDataSetChanged();
             });
         }
 
-        private void add(Ingredient ingredient) {
-            int count = ingredient.getCount() + 1;
+        private void add(@NonNull final Ingredient ingredient) {
+            final int count = ingredient.getCount() + 1;
             ingredient.setCount(count);
             binding.tvCount.setText(String.valueOf(count));
             ingredient.saveInBackground(e -> {
@@ -110,8 +110,8 @@ public class InventoryAdapter extends RecyclerView.Adapter<InventoryAdapter.View
             });
         }
 
-        private void remove(Ingredient ingredient) {
-            int count = ingredient.getCount() > 0 ? ingredient.getCount() - 1 : 0;
+        private void remove(@NonNull final Ingredient ingredient) {
+            final int count = ingredient.getCount() > 0 ? ingredient.getCount() - 1 : 0;
             ingredient.setCount(count);
             binding.tvCount.setText(String.valueOf(count));
             ingredient.saveInBackground(e -> {

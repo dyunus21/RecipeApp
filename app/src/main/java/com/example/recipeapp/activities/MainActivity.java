@@ -1,40 +1,33 @@
 package com.example.recipeapp.activities;
 
-import android.content.DialogInterface;
-import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
-import androidx.navigation.fragment.NavHostFragment;
 import androidx.navigation.ui.NavigationUI;
 
 import com.example.recipeapp.R;
 import com.example.recipeapp.databinding.ActivityMainBinding;
 import com.example.recipeapp.models.FabAnimation;
 import com.example.recipeapp.models.User;
-import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.parse.ParseUser;
 
 public class MainActivity extends AppCompatActivity {
 
     private static final String TAG = "MainActivity";
-    private final static int CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE = 42;
-    private final static int PICK_PHOTO_CODE = 1046;
     public static NavController navController;
-    public User CURRENT_USER = new User(ParseUser.getCurrentUser());
+    public final User CURRENT_USER = new User(ParseUser.getCurrentUser());
     public ActivityMainBinding binding;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(@Nullable final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         final View view = binding.getRoot();
@@ -51,18 +44,10 @@ public class MainActivity extends AppCompatActivity {
         FabAnimation.init(binding.fabRecipe);
         FabAnimation.init(binding.fabPost);
         final boolean[] isRotate = {false};
-        binding.fabUpload.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                animateFab(v, isRotate);
-            }
-        });
-        binding.fabPost.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                navController.navigate(R.id.uploadPostFragment);
-                binding.fabUpload.callOnClick();
-            }
+        binding.fabUpload.setOnClickListener(v -> animateFab(v, isRotate));
+        binding.fabPost.setOnClickListener(v -> {
+            navController.navigate(R.id.uploadPostFragment);
+            binding.fabUpload.callOnClick();
         });
     }
 
@@ -71,7 +56,7 @@ public class MainActivity extends AppCompatActivity {
         binding.fabUpload.callOnClick();
     }
 
-    private void animateFab(View v, boolean[] isRotate) {
+    private void animateFab(final @NonNull View v, @NonNull boolean[] isRotate) {
         isRotate[0] = FabAnimation.rotateFab(v, !isRotate[0]);
         if (isRotate[0]) {
             FabAnimation.showIn(binding.fabRecipe);
@@ -83,7 +68,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
+    public boolean onCreateOptionsMenu(@NonNull final Menu menu) {
         getMenuInflater().inflate(R.menu.menu_main, menu);
         return true;
     }

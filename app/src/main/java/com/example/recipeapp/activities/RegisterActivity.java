@@ -6,15 +6,14 @@ import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.ImageDecoder;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.provider.OpenableColumns;
 import android.util.Log;
-import android.view.View;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -34,7 +33,6 @@ public class RegisterActivity extends AppCompatActivity {
 
     private final static int PICK_PHOTO_CODE = 1046;
     private static final String TAG = "RegisterActivity";
-    private final String photoFileName = "photo.jpg";
     private File photoFile;
     private ActivityRegisterBinding binding;
 
@@ -42,7 +40,7 @@ public class RegisterActivity extends AppCompatActivity {
     }
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(@Nullable final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = ActivityRegisterBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
@@ -51,7 +49,7 @@ public class RegisterActivity extends AppCompatActivity {
 
     public void registerUser() {
         Log.i(TAG, "Attempting to register user");
-        User user = new User(new ParseUser());
+        final User user = new User(new ParseUser());
         user.getParseUser().setEmail(binding.etEmail.getText().toString());
         user.setFirstName(binding.etFirstName.getText().toString());
         user.setLastName(binding.etLastName.getText().toString());
@@ -61,7 +59,7 @@ public class RegisterActivity extends AppCompatActivity {
 
     }
 
-    private void registerUserInParse(final User user) {
+    private void registerUserInParse(@NonNull final User user) {
         user.getParseUser().signUpInBackground(e -> {
             if (e != null) {
                 Log.e(TAG, "Issue with registering user!", e);
@@ -77,13 +75,12 @@ public class RegisterActivity extends AppCompatActivity {
         });
     }
 
-    private void setProfileImage(final User user) {
+    private void setProfileImage(@NonNull final User user) {
         user.setProfileImage(new ParseFile(photoFile));
         user.getParseUser().saveInBackground(e -> {
             if (e != null) {
                 Log.e(TAG, "Issue with saving profile image!", e);
                 Toast.makeText(RegisterActivity.this, "Unable to save profile image. Please try again!", Toast.LENGTH_SHORT).show();
-                return;
             } else {
                 Toast.makeText(RegisterActivity.this, "Successfully saved profile image!", Toast.LENGTH_SHORT).show();
             }
@@ -92,7 +89,7 @@ public class RegisterActivity extends AppCompatActivity {
     }
 
     @Override
-    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+    public void onActivityResult(final int requestCode, final int resultCode, @Nullable final Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if ((data != null) && requestCode == PICK_PHOTO_CODE) {
             Uri photoUri = data.getData();
@@ -104,17 +101,19 @@ public class RegisterActivity extends AppCompatActivity {
         }
     }
 
-    public void onPickPhoto(View view) {
+    public void onPickPhoto() {
         Log.i(TAG, "onPickPhoto!");
         Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
         Log.i(TAG, "start intent for gallery!");
         startActivityForResult(intent, PICK_PHOTO_CODE);
     }
 
-    public File resizeFile(final Bitmap image) {
+    @NonNull
+    public File resizeFile(@NonNull final Bitmap image) {
         Bitmap resizedBitmap = BitmapScaler.scaleToFitWidth(image, 800);
         ByteArrayOutputStream bytes = new ByteArrayOutputStream();
         resizedBitmap.compress(Bitmap.CompressFormat.JPEG, 40, bytes);
+        String photoFileName = "photo.jpg";
         File resizedFile = getPhotoFileUri(photoFileName);
         try {
             resizedFile.createNewFile();
@@ -129,8 +128,9 @@ public class RegisterActivity extends AppCompatActivity {
         return resizedFile;
     }
 
+    @Nullable
     @SuppressLint("Range")
-    public String getFileName(final Uri uri) {
+    public String getFileName(@NonNull final Uri uri) {
         String result = null;
         if (uri.getScheme().equals("content")) {
             Cursor cursor = getContentResolver().query(uri, null, null, null, null);
@@ -139,6 +139,7 @@ public class RegisterActivity extends AppCompatActivity {
                     result = cursor.getString(cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME));
                 }
             } finally {
+                assert cursor != null;
                 cursor.close();
             }
         }
@@ -152,8 +153,9 @@ public class RegisterActivity extends AppCompatActivity {
         return result;
     }
 
-    public File getPhotoFileUri(final String fileName) {
-        File mediaStorageDir = new File(getExternalFilesDir(Environment.DIRECTORY_PICTURES), TAG);
+    @NonNull
+    public File getPhotoFileUri(@NonNull final String fileName) {
+        final File mediaStorageDir = new File(getExternalFilesDir(Environment.DIRECTORY_PICTURES), TAG);
 
         if (!mediaStorageDir.exists() && !mediaStorageDir.mkdirs()) {
             Log.d(TAG, "failed to create directory");
@@ -162,16 +164,11 @@ public class RegisterActivity extends AppCompatActivity {
         return new File(mediaStorageDir.getPath() + File.separator + fileName);
     }
 
-    public Bitmap loadFromUri(final Uri photoUri) {
+    public Bitmap loadFromUri(@NonNull final Uri photoUri) {
         Bitmap image = null;
         try {
-            // check version of Android on device
-            if (Build.VERSION.SDK_INT > 27) {
-                ImageDecoder.Source source = ImageDecoder.createSource(getContentResolver(), photoUri);
-                image = ImageDecoder.decodeBitmap(source);
-            } else {
-                image = MediaStore.Images.Media.getBitmap(getContentResolver(), photoUri);
-            }
+            ImageDecoder.Source source = ImageDecoder.createSource(getContentResolver(), photoUri);
+            image = ImageDecoder.decodeBitmap(source);
         } catch (IOException e) {
             Log.e(TAG, "Unable to load image from URI", e);
         }
@@ -180,13 +177,13 @@ public class RegisterActivity extends AppCompatActivity {
 
 
     private void goMainActivity() {
-        Intent intent = new Intent(RegisterActivity.this, MainActivity.class);
+        final Intent intent = new Intent(RegisterActivity.this, MainActivity.class);
         startActivity(intent);
         finish();
     }
 
     public void goLogin() {
-        Intent intent = new Intent(RegisterActivity.this, LoginActivity.class);
+        final Intent intent = new Intent(RegisterActivity.this, LoginActivity.class);
         startActivity(intent);
         finish();
     }
