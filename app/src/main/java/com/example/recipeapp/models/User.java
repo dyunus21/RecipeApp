@@ -2,9 +2,9 @@ package com.example.recipeapp.models;
 
 import android.util.Log;
 
-import com.parse.GetCallback;
+import androidx.annotation.NonNull;
+
 import com.parse.ParseClassName;
-import com.parse.ParseException;
 import com.parse.ParseFile;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
@@ -29,13 +29,13 @@ public class User extends ParseObject {
     public User() {
     }
 
-    public User(ParseUser user) {
+    public User(@NonNull final ParseUser user) {
         this.parseUser = user;
     }
 
-    public static void getUser(User user) {
-        ParseUser currentUser = ParseUser.getCurrentUser();
-        ParseQuery<ParseUser> query = ParseQuery.getQuery(ParseUser.class);
+    public static void getUser(@NonNull final User user) {
+        final ParseUser currentUser = ParseUser.getCurrentUser();
+        final ParseQuery<ParseUser> query = ParseQuery.getQuery(ParseUser.class);
         query.include(User.KEY_INGREDIENT_ARRAY);
         query.include(User.KEY_INGREDIENTS_STRING);
         query.include(User.KEY_PROFILE_IMAGE);
@@ -60,7 +60,7 @@ public class User extends ParseObject {
         return parseUser.getString(KEY_FIRSTNAME);
     }
 
-    public void setFirstName(String firstName) {
+    public void setFirstName(final String firstName) {
         parseUser.put(KEY_FIRSTNAME, firstName);
     }
 
@@ -68,7 +68,7 @@ public class User extends ParseObject {
         return parseUser.getString(KEY_LASTNAME);
     }
 
-    public void setLastName(String lastName) {
+    public void setLastName(final String lastName) {
         parseUser.put(KEY_LASTNAME, lastName);
     }
 
@@ -76,13 +76,13 @@ public class User extends ParseObject {
         return parseUser.getParseFile(KEY_PROFILE_IMAGE);
     }
 
-    public void setProfileImage(ParseFile image) {
+    public void setProfileImage(@NonNull final ParseFile image) {
         parseUser.put(KEY_PROFILE_IMAGE, image);
     }
 
     public String getIngredientsString() {
         String ingredients = "";
-        List<Ingredient> ingredientList = this.getIngredientArray();
+        final List<Ingredient> ingredientList = this.getIngredientArray();
         for (int i = 0; i < ingredientList.size(); i++) {
             ingredients += ingredientList.get(i).getName();
             if (i != ingredientList.size() - 1)
@@ -92,53 +92,53 @@ public class User extends ParseObject {
     }
 
     public List<Ingredient> getIngredientArray() {
-        List<Ingredient> ingredientList = parseUser.getList(KEY_INGREDIENT_ARRAY);
+        final List<Ingredient> ingredientList = parseUser.getList(KEY_INGREDIENT_ARRAY);
         if (ingredientList == null)
             return new ArrayList<>();
         return ingredientList;
     }
 
 
-    public void setIngredientArray(List<Ingredient> ingredientList) {
+    public void setIngredientArray(@NonNull final List<Ingredient> ingredientList) {
         parseUser.put(KEY_INGREDIENT_ARRAY, ingredientList);
 
     }
 
     public List<Recipe> getRecipesUploaded() {
-        List<Recipe> recipesUploaded = parseUser.getList(KEY_RECIPES_UPLOADED);
+        final List<Recipe> recipesUploaded = parseUser.getList(KEY_RECIPES_UPLOADED);
         if (recipesUploaded == null)
             return new ArrayList<>();
         return recipesUploaded;
     }
 
-    public void setRecipesUploaded(List<Recipe> recipesUploaded) {
+    public void setRecipesUploaded(@NonNull final List<Recipe> recipesUploaded) {
         parseUser.put(KEY_RECIPES_UPLOADED, recipesUploaded);
     }
 
     public List<Recipe> getRecipesMade() {
-        List<Recipe> recipesMade = parseUser.getList(KEY_RECIPES_MADE);
+        final List<Recipe> recipesMade = parseUser.getList(KEY_RECIPES_MADE);
         if (recipesMade == null)
             return new ArrayList<>();
         return recipesMade;
     }
 
-    public void setRecipesMade(List<Recipe> recipesMade) {
+    public void setRecipesMade(@NonNull final List<Recipe> recipesMade) {
         parseUser.put(KEY_RECIPES_MADE, recipesMade);
     }
 
     public List<Recipe> getRecipesLiked() {
-        List<Recipe> recipesLiked = parseUser.getList(KEY_RECIPES_LIKED);
+        final List<Recipe> recipesLiked = parseUser.getList(KEY_RECIPES_LIKED);
         if (recipesLiked == null)
             return new ArrayList<>();
         return recipesLiked;
     }
 
-    public void setRecipesLiked(List<Recipe> recipesLiked) {
+    public void setRecipesLiked(@NonNull final List<Recipe> recipesLiked) {
         parseUser.put(KEY_RECIPES_LIKED, recipesLiked);
     }
 
-    public boolean isLikedbyCurrentUser(Recipe currentRecipe) {
-        for (Recipe recipe : getRecipesLiked()) {
+    public boolean isLikedbyCurrentUser(@NonNull final Recipe currentRecipe) {
+        for (final Recipe recipe : getRecipesLiked()) {
             if (recipe.hasSameId(currentRecipe)) {
                 Log.i(TAG, "Recipe is already liked by " + getParseUser().getUsername());
                 return true;
@@ -148,8 +148,8 @@ public class User extends ParseObject {
         return false;
     }
 
-    public void likeRecipe(Recipe recipe) {
-        List<Recipe> recipesLiked = getRecipesLiked();
+    public void likeRecipe(@NonNull final Recipe recipe) {
+        final List<Recipe> recipesLiked = getRecipesLiked();
         for (int i = 0; i < recipesLiked.size(); i++) {
             if (recipesLiked.get(i).hasSameId(recipe)) {
                 recipesLiked.remove(i);
@@ -160,11 +160,10 @@ public class User extends ParseObject {
         }
         recipesLiked.add(recipe);
         setRecipesLiked(recipesLiked);
-        return;
     }
 
-    public boolean isMadebyCurrentUser(Recipe currentRecipe) {
-        for (Recipe recipe : getRecipesMade()) {
+    public boolean isMadebyCurrentUser(@NonNull final Recipe currentRecipe) {
+        for (final Recipe recipe : getRecipesMade()) {
             if (recipe.hasSameId(currentRecipe)) {
                 Log.i(TAG, "Recipe is already made by " + getParseUser().getUsername());
                 return true;
@@ -174,8 +173,8 @@ public class User extends ParseObject {
         return false;
     }
 
-    public void madeRecipe(Recipe recipe) {
-        List<Recipe> recipesMade = getRecipesMade();
+    public void madeRecipe(@NonNull final Recipe recipe) {
+        final List<Recipe> recipesMade = getRecipesMade();
         for (int i = 0; i < recipesMade.size(); i++) {
             if (recipesMade.get(i).hasSameId(recipe)) {
                 recipesMade.remove(i);
@@ -186,7 +185,6 @@ public class User extends ParseObject {
         }
         recipesMade.add(recipe);
         setRecipesMade(recipesMade);
-        return;
     }
 
 

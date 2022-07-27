@@ -1,6 +1,5 @@
 package com.example.recipeapp.fragments;
 
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
@@ -47,7 +46,9 @@ import java.util.Objects;
 public class ProfileFragment extends Fragment implements NavigationView.OnNavigationItemSelectedListener {
     private static final String TAG = "ProfileFragment";
     private final static int PICK_PHOTO_CODE = 1046;
+    @NonNull
     private final User CURRENT_USER = new User(ParseUser.getCurrentUser());
+    @Nullable
     private File photoFile;
     private FragmentProfileBinding binding;
     @Nullable
@@ -64,22 +65,22 @@ public class ProfileFragment extends Fragment implements NavigationView.OnNaviga
 
     @Override
     public View onCreateView(final @NonNull LayoutInflater inflater,
-                             @NonNull final ViewGroup container,
+                             @Nullable final ViewGroup container,
                              @Nullable final Bundle savedInstanceState) {
         binding = FragmentProfileBinding.inflate(getLayoutInflater());
         return binding.getRoot();
     }
 
     @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
+    public void onCreate(@Nullable final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         recipes = new ArrayList<>();
-        recipeSearchAdapter = new RecipeSearchAdapter(getContext(), recipes);
+        recipeSearchAdapter = new RecipeSearchAdapter(requireContext(), recipes);
         posts = new ArrayList<>();
-        postsAdapter = new PostsAdapter(getContext(), posts);
+        postsAdapter = new PostsAdapter(requireContext(), posts);
         imageClient = new ImageClient(this);
         User.getUser(CURRENT_USER);
-        ((MainActivity) getActivity()).getSupportActionBar().setTitle("Profile");
+        Objects.requireNonNull(((MainActivity) requireActivity()).getSupportActionBar()).setTitle("Profile");
         setHasOptionsMenu(true);
     }
 
@@ -109,7 +110,7 @@ public class ProfileFragment extends Fragment implements NavigationView.OnNaviga
     private void setUpTabs() {
         binding.tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
-            public void onTabSelected(@NonNull TabLayout.Tab tab) {
+            public void onTabSelected(@NonNull final TabLayout.Tab tab) {
                 if (tab == binding.tabLayout.getTabAt(0)) {
                     queryRecipes();
                     binding.rvRecipes.setVisibility(View.VISIBLE);
@@ -117,17 +118,16 @@ public class ProfileFragment extends Fragment implements NavigationView.OnNaviga
                 } else if (tab == binding.tabLayout.getTabAt(1)) {
                     binding.rvRecipes.setVisibility(View.GONE);
                     binding.rvPosts.setVisibility(View.VISIBLE);
-
                 }
             }
 
             @Override
-            public void onTabUnselected(@NonNull TabLayout.Tab tab) {
+            public void onTabUnselected(@NonNull final TabLayout.Tab tab) {
 
             }
 
             @Override
-            public void onTabReselected(@NonNull TabLayout.Tab tab) {
+            public void onTabReselected(@NonNull final TabLayout.Tab tab) {
                 if (tab == binding.tabLayout.getTabAt(0)) {
                     queryRecipes();
                     binding.rvRecipes.setVisibility(View.VISIBLE);
@@ -153,7 +153,7 @@ public class ProfileFragment extends Fragment implements NavigationView.OnNaviga
                 Log.e(TAG, "Unable to fetch posts", e);
                 return;
             }
-            postsAdapter.clear();
+            Objects.requireNonNull(postsAdapter).clear();
             posts = objects;
             Log.i(TAG, "Successfully fetched posts" + posts.toString());
             postsAdapter.addAll(posts);
@@ -163,15 +163,14 @@ public class ProfileFragment extends Fragment implements NavigationView.OnNaviga
     }
 
     private void queryRecipes() {
-        recipeSearchAdapter.clear();
+        Objects.requireNonNull(recipeSearchAdapter).clear();
         recipes = CURRENT_USER.getRecipesUploaded();
         Log.i(TAG, recipes.toString());
         recipeSearchAdapter.addAll(recipes);
-        return;
     }
 
     private void changeProfileImage() {
-        CURRENT_USER.setProfileImage(new ParseFile(photoFile));
+        CURRENT_USER.setProfileImage(new ParseFile(Objects.requireNonNull(photoFile)));
         CURRENT_USER.getParseUser().saveInBackground(e -> {
             if (e != null) {
                 Log.e(TAG, "Issue with saving profile image!", e);
@@ -184,13 +183,12 @@ public class ProfileFragment extends Fragment implements NavigationView.OnNaviga
         });
     }
 
-    private final void setProfileImage() {
-        Glide.with(getContext()).load(CURRENT_USER.getProfileImage().getUrl()).circleCrop().into(binding.ivProfileImage);
-        return;
+    private void setProfileImage() {
+        Glide.with(requireContext()).load(CURRENT_USER.getProfileImage().getUrl()).circleCrop().into(binding.ivProfileImage);
     }
 
     @Override
-    public void onActivityResult(final int requestCode, final int resultCode, @Nullable Intent data) {
+    public void onActivityResult(final int requestCode, final int resultCode, @Nullable final Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         photoFile = imageClient.getPhotoFile();
         if ((data != null) && requestCode == PICK_PHOTO_CODE) {
@@ -220,21 +218,11 @@ public class ProfileFragment extends Fragment implements NavigationView.OnNaviga
     }
 
     public void showLogoutAlert() {
-        MaterialAlertDialogBuilder alertDialogBuilder = new MaterialAlertDialogBuilder(getContext());
+        final MaterialAlertDialogBuilder alertDialogBuilder = new MaterialAlertDialogBuilder(requireContext());
         alertDialogBuilder.setTitle("Logout from app?");
         alertDialogBuilder.setMessage("You will need to log back in to access the app!");
-        alertDialogBuilder.setPositiveButton("Logout", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                logoutUser();
-            }
-        });
-        alertDialogBuilder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(@NonNull DialogInterface dialog, int which) {
-                dialog.dismiss();
-            }
-        });
+        alertDialogBuilder.setPositiveButton("Logout", (dialog, which) -> logoutUser());
+        alertDialogBuilder.setNegativeButton("Cancel", (dialog, which) -> dialog.dismiss());
         alertDialogBuilder.show();
     }
 
@@ -246,7 +234,7 @@ public class ProfileFragment extends Fragment implements NavigationView.OnNaviga
     }
 
     @Override
-    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
+    public void onCreateOptionsMenu(@NonNull final Menu menu, @NonNull final MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
     }
 

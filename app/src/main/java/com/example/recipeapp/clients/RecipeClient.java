@@ -30,12 +30,9 @@ public class RecipeClient {
     @NonNull
     private final RequestHeaders headers;
     @NonNull
-    private final Context context;
-    @NonNull
     private final AsyncHttpClient client = new AsyncHttpClient();
 
     public RecipeClient(@NonNull final Context context) {
-        this.context = context;
         headers = new RequestHeaders();
         headers.put("X-RapidAPI-Key", context.getString(R.string.Nutrition_API_Key));
         headers.put("X-RapidAPI-Host", HOST);
