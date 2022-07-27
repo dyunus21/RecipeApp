@@ -1,5 +1,6 @@
 package com.example.recipeapp.fragments;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
@@ -7,6 +8,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
@@ -43,6 +45,7 @@ import java.util.Objects;
 public class ProfileFragment extends Fragment implements NavigationView.OnNavigationItemSelectedListener {
     private static final String TAG = "ProfileFragment";
     private final static int PICK_PHOTO_CODE = 1046;
+    private static final int MIN_DISTANCE = 150;
     @NonNull
     private User CURRENT_USER = new User(ParseUser.getCurrentUser());
     @Nullable
@@ -55,6 +58,7 @@ public class ProfileFragment extends Fragment implements NavigationView.OnNaviga
     private List<Recipe> recipes;
     private List<Post> posts;
     private ImageClient imageClient;
+    private float x1, x2;
 
     public ProfileFragment() {
 
@@ -85,6 +89,7 @@ public class ProfileFragment extends Fragment implements NavigationView.OnNaviga
         setHasOptionsMenu(true);
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     @Override
     public void onViewCreated(@NonNull final View view, @Nullable final Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
@@ -101,8 +106,6 @@ public class ProfileFragment extends Fragment implements NavigationView.OnNaviga
 
         binding.rvPosts.setLayoutManager(new GridLayoutManager(getContext(), 3));
         binding.rvPosts.setAdapter(postsAdapter);
-        queryPosts();
-        setUpTabs();
         Objects.requireNonNull(binding.tabLayout.getTabAt(0)).select();
         binding.logout.setOnClickListener(v -> showLogoutAlert());
 
@@ -112,6 +115,34 @@ public class ProfileFragment extends Fragment implements NavigationView.OnNaviga
             binding.ibMenu.setOnClickListener(v -> binding.navigationDrawerView.setVisibility(View.VISIBLE));
         }
         binding.ibClose.setOnClickListener(v -> binding.navigationDrawerView.setVisibility(View.GONE));
+        queryPosts();
+        setUpTabs();
+        setUpSwipe();
+    }
+
+    @SuppressLint("ClickableViewAccessibility")
+    private void setUpSwipe() {
+        binding.rvRecipes.setOnTouchListener((v, event) -> {
+            if (event.getAction() == MotionEvent.ACTION_UP) {
+                x2 = event.getX();
+                float deltaX = x2 - x1;
+                if (Math.abs(deltaX) > MIN_DISTANCE) {
+                    Objects.requireNonNull(binding.tabLayout.getTabAt(1)).select();
+                }
+            }
+            return true;
+        });
+
+        binding.rvPosts.setOnTouchListener((v, event) -> {
+            if (event.getAction() == MotionEvent.ACTION_UP) {
+                x2 = event.getX();
+                float deltaX = x2 - x1;
+                if (Math.abs(deltaX) > MIN_DISTANCE) {
+                    Objects.requireNonNull(binding.tabLayout.getTabAt(0)).select();
+                }
+            }
+            return true;
+        });
     }
 
     private void setUpTabs() {
@@ -237,4 +268,6 @@ public class ProfileFragment extends Fragment implements NavigationView.OnNaviga
         binding.navigationDrawerView.setVisibility(View.GONE);
         return true;
     }
+
+
 }

@@ -160,7 +160,6 @@ public class SocialFeedAdapter extends RecyclerView.Adapter<SocialFeedAdapter.Vi
             });
 
             binding.tvPostType.setText(post.getType());
-            // TODO: Change tv color based on type
 
         }
 
