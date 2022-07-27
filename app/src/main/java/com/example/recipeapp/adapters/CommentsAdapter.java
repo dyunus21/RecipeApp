@@ -19,28 +19,31 @@ import java.util.List;
 
 public class CommentsAdapter extends RecyclerView.Adapter<CommentsAdapter.ViewHolder> {
     private static final String TAG = "CommentsAdapter";
-    @NonNull
-    public final List<Comment> comments;
-    @NonNull
     private final Context context;
     private final TimeUtils timeUtils = new TimeUtils(new CurrentTimeProvider());
+    public List<Comment> comments;
     private ItemCommentBinding item_binding;
 
-    public CommentsAdapter(@NonNull final Context context) {
+    public CommentsAdapter(Context context) {
         this.comments = new ArrayList<>();
         this.context = context;
     }
 
+    public CommentsAdapter(Context context, List<Comment> comments) {
+        this.context = context;
+        this.comments = comments;
+    }
+
     @NonNull
     @Override
-    public ViewHolder onCreateViewHolder(@NonNull final ViewGroup parent, final int viewType) {
+    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         item_binding = ItemCommentBinding.inflate(LayoutInflater.from(context), parent, false);
         return new ViewHolder(item_binding);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull final CommentsAdapter.ViewHolder holder, final int position) {
-        final Comment comment = comments.get(position);
+    public void onBindViewHolder(@NonNull CommentsAdapter.ViewHolder holder, int position) {
+        Comment comment = comments.get(position);
         holder.bind(comment);
     }
 
@@ -54,21 +57,22 @@ public class CommentsAdapter extends RecyclerView.Adapter<CommentsAdapter.ViewHo
         notifyDataSetChanged();
     }
 
-    public void addAll(@NonNull final List<Comment> list) {
+    public void addAll(List<Comment> list) {
         comments.addAll(list);
         notifyDataSetChanged();
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
-        public final ItemCommentBinding binding;
+        public ItemCommentBinding binding;
+        private Comment comment;
 
-        public ViewHolder(@NonNull final ItemCommentBinding itemView) {
+        public ViewHolder(@NonNull ItemCommentBinding itemView) {
             super(itemView.getRoot());
             this.binding = itemView;
         }
 
-        public void bind(@NonNull final Comment comment) {
-            final String sourceString = "<b>" + comment.getAuthor().getParseUser().getUsername() + "</b> " + comment.getDescription();
+        public void bind(Comment comment) {
+            String sourceString = "<b>" + comment.getAuthor().getParseUser().getUsername() + "</b> " + comment.getDescription();
             binding.tvBody.setText(Html.fromHtml(sourceString));
             Glide.with(context).load(comment.getAuthor().getProfileImage().getUrl()).circleCrop().into(binding.ivProfileImage);
             binding.tvTimestamp.setText(timeUtils.calculateTimeAgo(comment.getCreatedAt()));

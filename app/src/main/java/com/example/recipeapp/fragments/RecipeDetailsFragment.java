@@ -16,9 +16,9 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import com.bumptech.glide.Glide;
 import com.codepath.asynchttpclient.callback.JsonHttpResponseHandler;
 import com.example.recipeapp.R;
+import com.example.recipeapp.clients.RecipeClient;
 import com.example.recipeapp.activities.MainActivity;
 import com.example.recipeapp.adapters.ReviewsAdapter;
-import com.example.recipeapp.clients.RecipeClient;
 import com.example.recipeapp.databinding.FragmentRecipeDetailsBinding;
 import com.example.recipeapp.models.Comment;
 import com.example.recipeapp.models.Recipe;
@@ -35,7 +35,6 @@ import org.json.JSONException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 import okhttp3.Headers;
 
@@ -44,9 +43,7 @@ public class RecipeDetailsFragment extends Fragment {
     private final User currentUser = new User(ParseUser.getCurrentUser());
     private FragmentRecipeDetailsBinding binding;
     private Recipe recipe;
-    @Nullable
     private RecipeClient client;
-    @Nullable
     private ReviewsAdapter reviewsAdapter;
     private List<Review> reviews;
 
@@ -55,49 +52,51 @@ public class RecipeDetailsFragment extends Fragment {
     }
 
     @Override
-    public void onCreate(@Nullable final Bundle savedInstanceState) {
+    public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        client = new RecipeClient(requireContext());
+        client = new RecipeClient(getContext());
         reviews = new ArrayList<>();
-        reviewsAdapter = new ReviewsAdapter(requireContext(), reviews);
+        reviewsAdapter = new ReviewsAdapter(getContext(), reviews);
         final Bundle bundle = this.getArguments();
         if (bundle != null) {
             recipe = bundle.getParcelable("Recipe");
             Log.i(TAG, "Received bundle: " + recipe.getObjectId());
             findRecipe("None");
-            Objects.requireNonNull(((MainActivity) requireActivity()).getSupportActionBar()).setTitle("Recipe Details: " + recipe.getTitle());
+            ((MainActivity) getActivity()).getSupportActionBar().setTitle("Recipe Details: " + recipe.getTitle());
         }
 
     }
 
     @Override
-    public View onCreateView(@NonNull final LayoutInflater inflater, @Nullable final ViewGroup container,
-                             @Nullable final Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
         binding = FragmentRecipeDetailsBinding.inflate(getLayoutInflater());
         binding.setFragmentRecipeDetailsController(this);
         return binding.getRoot();
     }
 
     @Override
-    public void onViewCreated(@NonNull final View view, @Nullable final Bundle savedInstanceState) {
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        Objects.requireNonNull(((MainActivity) requireActivity()).getSupportActionBar()).hide();
+        ((MainActivity) getActivity()).getSupportActionBar().hide();
         showIngredients();
         setUpTabs();
         binding.tvRecipeName.setText(recipe.getTitle());
         binding.tvCookTime.setText(recipe.getCooktime() + " mins");
         binding.tvCuisine.setText(recipe.getCuisineType());
         String url = recipe.getImageUrl() == null ? recipe.getImage().getUrl() : recipe.getImageUrl();
-        Glide.with(requireContext()).load(url).into(binding.ivImage);
+        Glide.with(getContext()).load(url).into(binding.ivImage);
         if (recipe.getRecipeId() != 0) {
             binding.tvUploadedBy.setVisibility(View.GONE);
             try {
                 getIngredients();
                 Log.i(TAG, "list: " + recipe.getIngredientList().toString());
+
             } catch (IOException e) {
                 Log.e(TAG, "Error with getting ingredients", e);
             }
         } else {
+//            binding.tvUploadedBy.setText("Uploaded by: @" + recipe.getAuthor().getParseUser().getUsername());
             List<String> ingredients = recipe.getIngredientList();
             Log.i(TAG, "Ingredients: " + ingredients.toString());
             for (int i = 0; i < ingredients.size(); i++) {
@@ -109,6 +108,12 @@ public class RecipeDetailsFragment extends Fragment {
         Log.i(TAG, "instructions: " + instructions.toString());
         for (int i = 0; i < instructions.size(); i++) {
             binding.tvInstructionsList.append((i + 1) + ". " + instructions.get(i) + "\n \n");
+        }
+
+        if (recipe.getRecipeId() != 0) {
+            binding.tvUploadedBy.setText("");
+        } else {
+            binding.tvUploadedBy.setText("Uploaded by: @username");
         }
 
         if (currentUser.isLikedbyCurrentUser(recipe)) {
@@ -129,7 +134,7 @@ public class RecipeDetailsFragment extends Fragment {
         } else {
             binding.ibEdit.setVisibility(View.GONE);
         }
-        Glide.with(requireContext()).load(currentUser.getProfileImage().getUrl()).circleCrop().into(binding.ivProfileImage);
+        Glide.with(getContext()).load(currentUser.getProfileImage().getUrl()).circleCrop().into(binding.ivProfileImage);
         binding.rvReviews.setLayoutManager(new LinearLayoutManager(getContext()));
         binding.rvReviews.setAdapter(reviewsAdapter);
         queryReviews();
@@ -138,7 +143,7 @@ public class RecipeDetailsFragment extends Fragment {
     private void setUpTabs() {
         binding.tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
-            public void onTabSelected(@NonNull final TabLayout.Tab tab) {
+            public void onTabSelected(TabLayout.Tab tab) {
                 if (tab == binding.tabLayout.getTabAt(0)) {
                     showIngredients();
                 } else if (tab == binding.tabLayout.getTabAt(1)) {
@@ -147,12 +152,12 @@ public class RecipeDetailsFragment extends Fragment {
             }
 
             @Override
-            public void onTabUnselected(@NonNull final TabLayout.Tab tab) {
+            public void onTabUnselected(TabLayout.Tab tab) {
 
             }
 
             @Override
-            public void onTabReselected(@NonNull final TabLayout.Tab tab) {
+            public void onTabReselected(TabLayout.Tab tab) {
                 if (tab == binding.tabLayout.getTabAt(0)) {
                     showIngredients();
                 } else if (tab == binding.tabLayout.getTabAt(1)) {
@@ -173,19 +178,24 @@ public class RecipeDetailsFragment extends Fragment {
     }
 
     public void showShareAlert() {
-        final MaterialAlertDialogBuilder alertDialogBuilder = new MaterialAlertDialogBuilder(requireContext());
+        MaterialAlertDialogBuilder alertDialogBuilder = new MaterialAlertDialogBuilder(getContext());
         alertDialogBuilder.setMessage("Do you want to share this recipe?");
         alertDialogBuilder.setPositiveButton("Share", (dialog, which) -> {
             final Bundle bundle = new Bundle();
             bundle.putParcelable(Recipe.class.getSimpleName(), recipe);
-            NavHostFragment.findNavController(this).navigate(R.id.uploadPostFragment, bundle);
+            UploadPostFragment uploadPostFragment = new UploadPostFragment();
+            uploadPostFragment.setArguments(bundle);
+            getFragmentManager()
+                    .beginTransaction()
+                    .replace(R.id.nav_host_fragment, uploadPostFragment)
+                    .commit();
         });
         alertDialogBuilder.show();
     }
 
     public void postReview() {
-        final String description = Objects.requireNonNull(binding.etReview.getText()).toString();
-        final Review review = new Review();
+        String description = binding.etReview.getText().toString();
+        Review review = new Review();
         review.setAuthor(currentUser);
         review.setDescription(description);
         review.setRecipe(recipe);
@@ -204,7 +214,7 @@ public class RecipeDetailsFragment extends Fragment {
     }
 
     private void queryReviews() {
-        final ParseQuery<Review> query = ParseQuery.getQuery("Review");
+        ParseQuery<Review> query = ParseQuery.getQuery("Review");
         query.whereEqualTo(Review.KEY_RECIPE, recipe);
         query.orderByDescending(Comment.KEY_CREATED_AT);
         query.include(Review.KEY_AUTHOR);
@@ -216,21 +226,21 @@ public class RecipeDetailsFragment extends Fragment {
                 Log.e(TAG, "Error in fetching reviews");
                 return;
             }
-            Objects.requireNonNull(reviewsAdapter).clear();
+            reviewsAdapter.clear();
             reviews = objects;
             reviewsAdapter.addAll(reviews);
             binding.tvReviewText.setText("Reviews(" + reviews.size() + ")");
         });
     }
 
-    public void editRecipe(@NonNull View view) {
+    public void editRecipe(View view) {
         final Bundle bundle = new Bundle();
         bundle.putParcelable(Recipe.class.getSimpleName(), recipe);
         view.setOnClickListener(Navigation.createNavigateOnClickListener(R.id.action_recipeDetailsFragment_to_uploadPostFragment, bundle));
     }
 
     // TODO: Fix databinding of this function
-    public void findRecipe(@NonNull String action) {
+    public void findRecipe(String action) {
         ParseQuery<Recipe> query = ParseQuery.getQuery(Recipe.class);
         query.include(Recipe.KEY_RECIPE_ID);
         query.include(Recipe.KEY_AUTHOR);
@@ -259,6 +269,7 @@ public class RecipeDetailsFragment extends Fragment {
 
     private void madeRecipe() {
         if (currentUser.isMadebyCurrentUser(recipe)) {
+            // TODO Change Image button color to gray
             binding.btnMade.setText("Make it!");
         } else {
             binding.btnMade.setText("I Made it");
@@ -293,7 +304,7 @@ public class RecipeDetailsFragment extends Fragment {
         });
     }
 
-    private void addRecipeToDatabase(@NonNull String action) {
+    private void addRecipeToDatabase(String action) {
         Log.i(TAG, "Adding recipe to database: " + recipe.getTitle());
         recipe.put("uploaded", true);
         recipe.saveInBackground(e -> {
@@ -311,14 +322,14 @@ public class RecipeDetailsFragment extends Fragment {
     }
 
     public void getIngredients() throws IOException {
-        final List<String> ingredients = new ArrayList<>();
+        List<String> ingredients = new ArrayList<>();
 
-        Objects.requireNonNull(client).getRecipesDetailed(recipe.getRecipeId(), new JsonHttpResponseHandler() {
+        client.getRecipesDetailed(recipe.getRecipeId(), new JsonHttpResponseHandler() {
 
             @Override
-            public void onSuccess(final int statusCode, @NonNull final Headers headers, @NonNull final JSON json) {
-                Log.i(TAG, "onSuccess! " + json);
-                JSONArray jsonArray;
+            public void onSuccess(int statusCode, Headers headers, JSON json) {
+                Log.i(TAG, "onSuccess! " + json.toString());
+                JSONArray jsonArray = null;
                 try {
                     jsonArray = json.jsonObject.getJSONArray("extendedIngredients");
                     for (int i = 0; i < jsonArray.length(); i++) {
@@ -337,7 +348,7 @@ public class RecipeDetailsFragment extends Fragment {
             }
 
             @Override
-            public void onFailure(final int statusCode, @NonNull final Headers headers, final String response, @NonNull final Throwable throwable) {
+            public void onFailure(int statusCode, Headers headers, String response, Throwable throwable) {
                 Log.e(TAG, "onFailure" + response, throwable);
             }
         });
@@ -347,6 +358,7 @@ public class RecipeDetailsFragment extends Fragment {
 
     public void goBack() {
         NavHostFragment.findNavController(this).navigateUp();
+//        getActivity().onNavigateUp();
     }
 
 }

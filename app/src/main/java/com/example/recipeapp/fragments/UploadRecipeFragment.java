@@ -34,7 +34,6 @@ import com.parse.ParseUser;
 import java.io.File;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Objects;
 
 public class UploadRecipeFragment extends Fragment {
     public final static int CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE = 42;
@@ -42,12 +41,10 @@ public class UploadRecipeFragment extends Fragment {
     private static final String TAG = "FragmentUploadRecipe";
     private static final User currentUser = new User(ParseUser.getCurrentUser());
     public ImageClient imageClient;
-    @Nullable
     private File photoFile;
     private Recipe recipe;
     private boolean edited = false;
     private FragmentUploadRecipeBinding binding;
-    @Nullable
     private ProgressDialog progressDialog;
 
     public UploadRecipeFragment() {
@@ -55,16 +52,16 @@ public class UploadRecipeFragment extends Fragment {
     }
 
     @Override
-    public void onCreate(@Nullable final Bundle savedInstanceState) {
+    public void onCreate(@Nullable Bundle savedInstanceState) {
         User.getUser(currentUser);
         imageClient = new ImageClient(this);
         final Bundle bundle = this.getArguments();
-        progressDialog = new ProgressDialog(requireContext());
+        progressDialog = new ProgressDialog(getContext());
         if (bundle != null) {
             edited = true;
             recipe = bundle.getParcelable("Recipe");
             Log.i(TAG, "Received bundle: " + recipe.getRecipeId());
-            Objects.requireNonNull(((MainActivity) requireActivity()).getSupportActionBar()).setTitle("Edit: " + recipe.getTitle());
+            ((MainActivity) getActivity()).getSupportActionBar().setTitle("Edit: " + recipe.getTitle());
             getRecipe();
             User.getUser(recipe.getAuthor());
         } else {
@@ -74,18 +71,18 @@ public class UploadRecipeFragment extends Fragment {
     }
 
     @Override
-    public View onCreateView(@NonNull final LayoutInflater inflater, @Nullable final ViewGroup container,
-                             @Nullable final Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
         binding = FragmentUploadRecipeBinding.inflate(getLayoutInflater());
         binding.setFragmentUploadRecipeController(this);
         return binding.getRoot();
     }
 
     @Override
-    public void onViewCreated(@NonNull final View view, @Nullable final Bundle savedInstanceState) {
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        Objects.requireNonNull(((MainActivity) requireActivity()).getSupportActionBar()).setTitle("Upload New Recipe");
-        binding.actvCuisine.setAdapter(new ArrayAdapter<>(requireContext(), android.R.layout.simple_dropdown_item_1line, getResources().getStringArray(R.array.cuisine)));
+        ((MainActivity) getActivity()).getSupportActionBar().setTitle("Upload New Recipe");
+        binding.actvCuisine.setAdapter(new ArrayAdapter<>(getContext(), android.R.layout.simple_dropdown_item_1line, getResources().getStringArray(R.array.cuisine)));
         if (edited) {
             binding.btnDelete.setVisibility(View.VISIBLE);
         }
@@ -102,17 +99,17 @@ public class UploadRecipeFragment extends Fragment {
                 return;
             }
             Log.i(TAG, "Successfully deleted recipe" + recipe.getTitle());
-            final List<Recipe> uploaded = currentUser.getRecipesUploaded();
+            List<Recipe> uploaded = currentUser.getRecipesUploaded();
             uploaded.remove(recipe);
             currentUser.setRecipesUploaded(uploaded);
             currentUser.saveInBackground();
-            NavHostFragment.findNavController(requireParentFragment()).navigate(R.id.recipeSearchFragment);
+            NavHostFragment.findNavController(getParentFragment()).navigate(R.id.recipeSearchFragment);
         });
     }
 
     private void initializePage() {
         binding.etRecipeName.setText(recipe.getTitle());
-        Glide.with(requireContext()).load(recipe.getImage().getUrl()).into(binding.ivImage);
+        Glide.with(getContext()).load(recipe.getImage().getUrl()).into(binding.ivImage);
         binding.actvCuisine.setText(recipe.getCuisineType());
         binding.etCooktime.setText(String.valueOf(recipe.getCooktime()));
         String instructions = "";
@@ -125,10 +122,11 @@ public class UploadRecipeFragment extends Fragment {
             ingredients += recipe.getIngredientList().get(i) + "\n";
         }
         binding.etIngredientList.setText(ingredients);
+        return;
     }
 
     public void validateRecipe() {
-        Objects.requireNonNull(progressDialog).setMessage("Uploading recipe...");
+        progressDialog.setMessage("Uploading recipe...");
         progressDialog.show();
         final String title = binding.etRecipeName.getText().toString();
         final String cuisineType = binding.actvCuisine.getText().toString();
@@ -136,27 +134,28 @@ public class UploadRecipeFragment extends Fragment {
         final String ingredients = binding.etIngredientList.getText().toString();
         final String instructions = binding.etInstructions.getText().toString();
 
+        //TODO: Later update to TOAST messages regarding specific fields
         if (title.isEmpty() || cuisineType.isEmpty() || cooktime == 0 || ingredients.isEmpty() || instructions.isEmpty()) {
-            Toast.makeText(requireContext(), "Field cannot be empty!", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getContext(), "Field cannot be empty!", Toast.LENGTH_SHORT).show();
             return;
         }
 
         if (photoFile == null && binding.ivImage.getDrawable() == null) {
-            Toast.makeText(requireContext(), "Post does not contain any image!", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getContext(), "Post does not contain any image!", Toast.LENGTH_SHORT).show();
             return;
         }
         publishRecipe(title, cuisineType, cooktime, ingredients, instructions);
     }
 
-    private void publishRecipe(@NonNull final String title, @NonNull final String cuisineType, final int cooktime, @NonNull final String ingredients, @NonNull final String instructions) {
+    private void publishRecipe(final String title, final String cuisineType, final int cooktime, final String ingredients, final String instructions) {
         recipe.setTitle(title);
         recipe.setCuisineType(cuisineType);
         recipe.setCooktime(cooktime);
         recipe.setAuthor(new User(ParseUser.getCurrentUser()));
-        final List<String> ingredientList = Arrays.asList(ingredients.split("\n"));
+        List<String> ingredientList = Arrays.asList(ingredients.split("\n"));
         Log.i(TAG, "Ingredient List Uploaded: " + ingredientList);
         recipe.setIngredientList(ingredientList);
-        final List<String> instructionList = Arrays.asList(instructions.split("\n"));
+        List<String> instructionList = Arrays.asList(instructions.split("\n"));
         Log.i(TAG, "Instruction List Uploaded: " + instructionList);
         recipe.setInstructions(instructionList);
         if (photoFile != null)
@@ -165,14 +164,14 @@ public class UploadRecipeFragment extends Fragment {
         recipe.saveInBackground(e -> {
             if (e != null) {
                 Log.e(TAG, "Error with saving recipe", e);
-                Toast.makeText(requireContext(), "Unable to save recipe!", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), "Unable to save recipe!", Toast.LENGTH_SHORT).show();
                 return;
             }
             Log.i(TAG, "Successfully saved recipe: " + recipe.getTitle());
             clearPage();
             if (!edited)
                 addRecipeToUser(recipe);
-            Objects.requireNonNull(progressDialog).dismiss();
+            progressDialog.dismiss();
         });
 
     }
@@ -187,7 +186,7 @@ public class UploadRecipeFragment extends Fragment {
     }
 
     public void getRecipe() {
-        final ParseQuery<Recipe> query = ParseQuery.getQuery(Recipe.class);
+        ParseQuery<Recipe> query = ParseQuery.getQuery(Recipe.class);
         query.include(Recipe.KEY_TITLE);
         query.include(Recipe.KEY_COOKTIME);
         query.include(Recipe.KEY_CUISINE_TYPE);
@@ -201,12 +200,13 @@ public class UploadRecipeFragment extends Fragment {
         query.getInBackground(recipe.getObjectId(), (object, e) -> setRecipe(object));
     }
 
-    private void setRecipe(@NonNull final Recipe object) {
+    private void setRecipe(Recipe object) {
         this.recipe = object;
+        return;
     }
 
-    private void addRecipeToUser(@NonNull final Recipe recipe) {
-        final List<Recipe> uploaded = currentUser.getRecipesUploaded();
+    private void addRecipeToUser(Recipe recipe) {
+        List<Recipe> uploaded = currentUser.getRecipesUploaded();
         if (!uploaded.contains(recipe))
             uploaded.add(recipe);
         currentUser.setRecipesUploaded(uploaded);
@@ -219,24 +219,29 @@ public class UploadRecipeFragment extends Fragment {
     }
 
     @Override
-    public void onActivityResult(final int requestCode, final int resultCode, @Nullable final Intent data) {
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         photoFile = imageClient.getPhotoFile();
         if (requestCode == CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE) {
             Log.i(TAG, "onActivity result camera");
             if (resultCode == RESULT_OK) {
-                final Bitmap takenImage = BitmapFactory.decodeFile(Objects.requireNonNull(photoFile).getAbsolutePath());
+                final Bitmap takenImage = BitmapFactory.decodeFile(photoFile.getAbsolutePath());
                 photoFile = imageClient.resizeFile(takenImage);
-                Glide.with(requireContext()).load(photoFile).into(binding.ivImage);
+                Glide.with(getContext()).load(photoFile).into(binding.ivImage);
                 Log.i(TAG, "File: " + photoFile.toString());
             } else {
-                Toast.makeText(requireContext(), "Picture wasn't taken!", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), "Picture wasn't taken!", Toast.LENGTH_SHORT).show();
             }
         } else if ((data != null) && requestCode == PICK_PHOTO_CODE) {
             final Uri photoUri = data.getData();
-            final Bitmap selectedImage = imageClient.loadFromUri(photoUri);
+            Bitmap selectedImage = imageClient.loadFromUri(photoUri);
             photoFile = imageClient.resizeFile(selectedImage);
-            Glide.with(requireContext()).load(photoFile).into(binding.ivImage);
+            Glide.with(getContext()).load(photoFile).into(binding.ivImage);
             Log.i(TAG, "File: " + photoFile.toString());
         }
     }
+
+    public void goBack() {
+        getActivity().onBackPressed();
+    }
+
 }

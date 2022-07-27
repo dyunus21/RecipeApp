@@ -19,27 +19,25 @@ import com.google.mlkit.vision.common.InputImage;
 import com.google.mlkit.vision.common.internal.ImageConvertUtils;
 
 import java.util.List;
-import java.util.Objects;
 
 // TODO: Convert to Kotlin?
 // Resource: https://medium.com/codex/scan-barcodes-in-android-using-the-ml-kit-30b2a03ccd50
 @SuppressLint("UnsafeOptInUsageError")
 public class BarcodeAnalyzer implements ImageAnalysis.Analyzer {
     private static final String TAG = "BarcodeAnalyzer";
-    @NonNull
     private final BarcodeScanFragment barcodeScanFragment;
 
-    public BarcodeAnalyzer(final @NonNull BarcodeScanFragment fragment) {
+    public BarcodeAnalyzer(BarcodeScanFragment fragment) {
         this.barcodeScanFragment = fragment;
     }
 
     @Override
-    public void analyze(@NonNull final ImageProxy image) {
-        final Image img = image.getImage();
+    public void analyze(@NonNull ImageProxy image) {
+        Image img = image.getImage();
         if (img != null) {
-            final InputImage inputImage = InputImage.fromMediaImage(img, image.getImageInfo().getRotationDegrees());
-            final BarcodeScannerOptions options = new BarcodeScannerOptions.Builder().setBarcodeFormats(Barcode.FORMAT_UPC_A).build();
-            final BarcodeScanner scanner = BarcodeScanning.getClient(options);
+            InputImage inputImage = InputImage.fromMediaImage(img, image.getImageInfo().getRotationDegrees());
+            BarcodeScannerOptions options = new BarcodeScannerOptions.Builder().setBarcodeFormats(Barcode.FORMAT_UPC_A).build();
+            BarcodeScanner scanner = BarcodeScanning.getClient(options);
             scanner.process(inputImage).addOnSuccessListener(barcodes -> {
                         Log.i(TAG, "Success barcode, ");
                         analyzeBarcodes(barcodes, inputImage);
@@ -54,10 +52,11 @@ public class BarcodeAnalyzer implements ImageAnalysis.Analyzer {
 
     }
 
-    private void analyzeBarcodes(@NonNull final List<Barcode> barcodes, @NonNull final InputImage inputImage) {
-        for (final Barcode barcode : barcodes) {
+    private void analyzeBarcodes(List<Barcode> barcodes, InputImage inputImage) {
+        for (Barcode barcode : barcodes) {
             Log.i(TAG, barcode.toString());
 
+            // See API reference for complete list of supported types
             if (barcode.getValueType() == Barcode.TYPE_PRODUCT) {
                 Log.i(TAG, "Barcode: " + barcode.getRawValue());
                 Bitmap bitmap = null;
@@ -66,7 +65,7 @@ public class BarcodeAnalyzer implements ImageAnalysis.Analyzer {
                 } catch (MlKitException e) {
                     Log.e(TAG, "Unable to fetch bitmap", e);
                 }
-                barcodeScanFragment.setBarcode(barcode, Objects.requireNonNull(bitmap));
+                barcodeScanFragment.setBarcode(barcode, bitmap);
             }
         }
     }

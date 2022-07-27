@@ -1,11 +1,7 @@
 package com.example.recipeapp.models;
 
-import androidx.annotation.NonNull;
-
 import com.parse.ParseClassName;
 import com.parse.ParseObject;
-
-import java.util.Objects;
 
 @ParseClassName("Comment")
 public class Comment extends ParseObject {
@@ -16,10 +12,10 @@ public class Comment extends ParseObject {
 
 
     public User getAuthor() {
-        return new User(Objects.requireNonNull(getParseUser(KEY_AUTHOR)));
+        return new User(getParseUser(KEY_AUTHOR));
     }
 
-    public void setAuthor(@NonNull final User author) {
+    public void setAuthor(User author) {
         put(KEY_AUTHOR, author.getParseUser());
     }
 
@@ -27,7 +23,7 @@ public class Comment extends ParseObject {
         return getString(KEY_DESCRIPTION);
     }
 
-    public void setDescription(@NonNull final String description) {
+    public void setDescription(String description) {
         put(KEY_DESCRIPTION, description);
     }
 
@@ -35,7 +31,7 @@ public class Comment extends ParseObject {
         return (Post) getParseObject(KEY_POST);
     }
 
-    public void setPost(@NonNull final Post post) {
+    public void setPost(Post post) {
         put(KEY_POST, post);
     }
 }

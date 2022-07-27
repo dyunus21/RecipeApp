@@ -25,8 +25,8 @@ import androidx.navigation.fragment.NavHostFragment;
 
 import com.bumptech.glide.Glide;
 import com.codepath.asynchttpclient.callback.JsonHttpResponseHandler;
-import com.example.recipeapp.R;
 import com.example.recipeapp.clients.BarcodeAnalyzeClient;
+import com.example.recipeapp.R;
 import com.example.recipeapp.databinding.CameraDialogBinding;
 import com.example.recipeapp.databinding.FragmentBarcodeScanBinding;
 import com.example.recipeapp.models.BarcodeAnalyzer;
@@ -42,7 +42,6 @@ import org.json.JSONException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Objects;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -52,20 +51,15 @@ public class BarcodeScanFragment extends Fragment {
 
     private static final String TAG = "BarcodeScanningFragment";
     private final int REQUEST_CODE_PERMISSIONS = 10;
-    private final String[] REQUIRED_PERMISSIONS = new ArrayList<>(Arrays.asList(Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE)).toArray(new String[0]);
-    @NonNull
+    private final String[] REQUIRED_PERMISSIONS = new ArrayList<String>(Arrays.asList(Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE)).toArray(new String[0]);
     private final Ingredient ingredient = new Ingredient();
-    @NonNull
     private final User CURRENT_USER = new User(ParseUser.getCurrentUser());
     private FragmentBarcodeScanBinding binding;
-    @Nullable
     private ProgressDialog progressDialog;
     private ExecutorService cameraExecutor;
     private ImageAnalysis imageAnalyzer;
     private Barcode barcode;
-    @Nullable
     private Bitmap bitmap;
-    @NonNull
     private String productName = "";
 
     public BarcodeScanFragment() {
@@ -74,7 +68,7 @@ public class BarcodeScanFragment extends Fragment {
 
     @Nullable
     @Override
-    public View onCreateView(@NonNull final LayoutInflater inflater, @Nullable final ViewGroup container, @Nullable final Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         binding = FragmentBarcodeScanBinding.inflate(getLayoutInflater());
         binding.setFragmentBarcodeController(this);
         progressDialog = new ProgressDialog(getContext());
@@ -82,28 +76,28 @@ public class BarcodeScanFragment extends Fragment {
     }
 
     @Override
-    public void onViewCreated(@NonNull final View view, @Nullable final Bundle savedInstanceState) {
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         if (allPermissionsGranted()) {
             Log.i(TAG, "Start Camera!");
             startCamera();
         } else {
             ActivityCompat.requestPermissions(
-                    requireActivity(), REQUIRED_PERMISSIONS, REQUEST_CODE_PERMISSIONS);
+                    getActivity(), REQUIRED_PERMISSIONS, REQUEST_CODE_PERMISSIONS);
         }
         cameraExecutor = Executors.newSingleThreadExecutor();
     }
 
     private boolean allPermissionsGranted() {
         for (final String permission : REQUIRED_PERMISSIONS) {
-            if (ContextCompat.checkSelfPermission(requireContext(), permission) != PackageManager.PERMISSION_GRANTED)
+            if (ContextCompat.checkSelfPermission(getContext(), permission) != PackageManager.PERMISSION_GRANTED)
                 return false;
         }
         return true;
     }
 
     @Override
-    public void onRequestPermissionsResult(final int requestCode, @NonNull final String[] permissions, @NonNull final int[] grantResults) {
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         if (requestCode == REQUEST_CODE_PERMISSIONS) {
             if (allPermissionsGranted()) {
                 startCamera();
@@ -114,7 +108,7 @@ public class BarcodeScanFragment extends Fragment {
     }
 
     private void startCamera() {
-        final ListenableFuture<ProcessCameraProvider> processCameraProvider = ProcessCameraProvider.getInstance(requireContext());
+        final ListenableFuture<ProcessCameraProvider> processCameraProvider = ProcessCameraProvider.getInstance(getContext());
         processCameraProvider.addListener(() -> {
             try {
                 final ProcessCameraProvider cameraProvider = processCameraProvider.get();
@@ -143,13 +137,13 @@ public class BarcodeScanFragment extends Fragment {
         cameraExecutor.shutdown();
     }
 
-    private void getProductName(final String rawValue) {
+    private void getProductName(String rawValue) {
         Log.i(TAG, "Getting product name for: " + rawValue);
-        final BarcodeAnalyzeClient barcodeAnalyzeClient = new BarcodeAnalyzeClient(requireContext());
+        final BarcodeAnalyzeClient barcodeAnalyzeClient = new BarcodeAnalyzeClient(getContext());
         barcodeAnalyzeClient.analyzeBarcode(rawValue, new JsonHttpResponseHandler() {
             @Override
-            public void onSuccess(int statusCode, Headers headers, @NonNull JSON json) {
-                Log.i(TAG, "Analyzed barcode!" + json);
+            public void onSuccess(int statusCode, Headers headers, JSON json) {
+                Log.i(TAG, "Analyzed barcode!" + json.toString());
                 try {
                     productName = json.jsonObject.getString("item_name");
                     progressDialog.dismiss();
@@ -167,22 +161,22 @@ public class BarcodeScanFragment extends Fragment {
     }
 
     public void showAlert() {
-        final MaterialAlertDialogBuilder alertDialogBuilder = new MaterialAlertDialogBuilder(requireContext());
+        final MaterialAlertDialogBuilder alertDialogBuilder = new MaterialAlertDialogBuilder(getContext());
         final CameraDialogBinding cameraDialogBinding = CameraDialogBinding.inflate(getLayoutInflater());
         cameraDialogBinding.tvRawvalue.setText("Raw Value: " + barcode.getRawValue());
         cameraDialogBinding.tvProductName.setText("Product Name: " + productName);
-        final ArrayAdapter<String> unitsAdapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_dropdown_item_1line, getResources().getStringArray(R.array.units));
+        final ArrayAdapter unitsAdapter = new ArrayAdapter(getContext(), android.R.layout.simple_dropdown_item_1line, getResources().getStringArray(R.array.units));
         cameraDialogBinding.actvUnit.setAdapter(unitsAdapter);
-        Glide.with(requireContext()).load(bitmap).into(cameraDialogBinding.ivPreview);
+        Glide.with(getContext()).load(bitmap).into(cameraDialogBinding.ivPreview);
         alertDialogBuilder.setNegativeButton("Cancel", (dialog, which) -> {
             dialog.cancel();
             startCamera();
         });
         alertDialogBuilder.setPositiveButton("Add Ingredient", (dialog, which) -> {
             Log.i(TAG, "Add Ingredient: " + cameraDialogBinding.tvProductName.getText().toString().substring(14));
-            final String name = cameraDialogBinding.tvProductName.getText().toString().substring(14);
-            final String count = Objects.requireNonNull(cameraDialogBinding.etCount.getText()).toString();
-            final String unit = cameraDialogBinding.actvUnit.getText().toString();
+            String name = cameraDialogBinding.tvProductName.getText().toString().substring(14);
+            String count = cameraDialogBinding.etCount.getText().toString();
+            String unit = cameraDialogBinding.actvUnit.getText().toString();
             if (name.isEmpty() || count.isEmpty() || unit.isEmpty()) {
                 Toast.makeText(getContext(), "Fields cannot be empty!", Toast.LENGTH_SHORT).show();
             } else {
@@ -200,7 +194,7 @@ public class BarcodeScanFragment extends Fragment {
                 Log.e(TAG, "Error in adding ingredient!", e);
                 return;
             }
-            final List<Ingredient> ingredientList = CURRENT_USER.getIngredientArray();
+            List<Ingredient> ingredientList = CURRENT_USER.getIngredientArray();
             ingredientList.add(ingredient);
 
             CURRENT_USER.setIngredientArray(ingredientList);
@@ -220,7 +214,7 @@ public class BarcodeScanFragment extends Fragment {
         NavHostFragment.findNavController(this).navigate(R.id.inventoryFragment);
     }
 
-    public void setBarcode(@NonNull final Barcode barcode, @NonNull final Bitmap bitmap) {
+    public void setBarcode(final Barcode barcode, final Bitmap bitmap) {
         imageAnalyzer.clearAnalyzer();
         this.barcode = barcode;
         this.bitmap = bitmap;
