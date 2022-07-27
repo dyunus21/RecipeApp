@@ -6,7 +6,6 @@
     android:background="#D7ECE9"
     tools:context=".fragments.ProfileFragment">
 
-
     <TextView
         android:id="@+id/tvPostCount"
         style="@style/Title"

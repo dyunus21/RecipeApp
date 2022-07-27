@@ -2,7 +2,6 @@ package com.example.recipeapp.fragments;
 
 import static android.app.Activity.RESULT_OK;
 
-import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -27,7 +26,6 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import com.bumptech.glide.Glide;
 import com.codepath.asynchttpclient.callback.JsonHttpResponseHandler;
 import com.example.recipeapp.R;
-import com.example.recipeapp.activities.MainActivity;
 import com.example.recipeapp.adapters.RecipeSearchAdapter;
 import com.example.recipeapp.clients.ImageClient;
 import com.example.recipeapp.clients.RecipeClient;
@@ -69,8 +67,6 @@ public class RecipeSearchFragment extends Fragment {
     private ImageClient imageClient;
     @Nullable
     private File photoFile;
-    @Nullable
-    private ProgressDialog progressDialog;
 
 
     public RecipeSearchFragment() {
@@ -92,7 +88,6 @@ public class RecipeSearchFragment extends Fragment {
         recipes = new ArrayList<>();
         adapter = new RecipeSearchAdapter(requireContext(), recipes);
         imageClient = new ImageClient(this);
-        progressDialog = new ProgressDialog(requireContext());
         User.getUser(currentUser);
     }
 
@@ -118,6 +113,7 @@ public class RecipeSearchFragment extends Fragment {
                     binding.rvRandomRecipes.setVisibility(View.GONE);
                     binding.rvRecipes.setVisibility(View.VISIBLE);
                     binding.textView.setVisibility(View.GONE);
+                    binding.loadingAnimation.setVisibility(View.VISIBLE);
                     getRecipesByQuery(query);
                 } catch (IOException e) {
                     e.printStackTrace();
@@ -189,8 +185,7 @@ public class RecipeSearchFragment extends Fragment {
     }
 
     private void initializeScreen() throws IOException {
-        Objects.requireNonNull(progressDialog).setMessage("Fetching recipes...");
-        progressDialog.show();
+        binding.loadingAnimation.setVisibility(View.VISIBLE);
         Objects.requireNonNull(client).getRandomRecipes(new JsonHttpResponseHandler() {
             @Override
             public void onSuccess(final int statusCode, @NonNull final Headers headers, @NonNull final JSON json) {
@@ -207,7 +202,7 @@ public class RecipeSearchFragment extends Fragment {
                     adapter.addAll(recipes);
                     binding.rvRandomRecipes.scrollToPosition(0);
                     binding.swipeContainer.setRefreshing(false);
-                    progressDialog.dismiss();
+                    binding.loadingAnimation.setVisibility(View.GONE);
                 } catch (JSONException e) {
                     Log.e(TAG, "Hit JSON exception", e);
                 }
@@ -257,6 +252,7 @@ public class RecipeSearchFragment extends Fragment {
                 }
                 try {
                     recipes.addAll(Recipe.getRecipes(Objects.requireNonNull(jsonArray)));
+                    binding.loadingAnimation.setVisibility(View.GONE);
                     if (recipes.size() == 0) {
                         showNoResultsDialog();
                     }
@@ -286,8 +282,7 @@ public class RecipeSearchFragment extends Fragment {
         alertDialogBuilder.setPositiveButton("Search", (dialog, which) -> {
             Log.i(TAG, "Search for recipes based on image");
             try {
-                Objects.requireNonNull(progressDialog).setMessage("Fetching recipes...");
-                progressDialog.show();
+                binding.loadingAnimation.setVisibility(View.VISIBLE);
                 searchRecipesByImage();
             } catch (IOException e) {
                 Log.e(TAG, "Unable to search for recipes based on image", e);
@@ -348,7 +343,7 @@ public class RecipeSearchFragment extends Fragment {
                 binding.rvRandomRecipes.setVisibility(View.GONE);
                 binding.textView.setVisibility(View.GONE);
                 adapter.addAll(recipes);
-                Objects.requireNonNull(progressDialog).dismiss();
+                binding.loadingAnimation.setVisibility(View.GONE);
             }
 
             @Override
