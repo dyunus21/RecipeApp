@@ -93,8 +93,8 @@ public class Recipe extends ParseObject {
         return getParseFile(KEY_IMAGE);
     }
 
-    public void setImage(@Nullable final ParseFile image) {
-        put(KEY_IMAGE, Objects.requireNonNull(image));
+    public void setImage(@NonNull final ParseFile image) {
+        put(KEY_IMAGE, image);
     }
 
     public String getImageUrl() {

@@ -50,6 +50,7 @@ public class RecipeDetailsFragment extends Fragment {
     private ReviewsAdapter reviewsAdapter;
     private List<Review> reviews;
 
+    // NO-OP
     public RecipeDetailsFragment() {
 
     }

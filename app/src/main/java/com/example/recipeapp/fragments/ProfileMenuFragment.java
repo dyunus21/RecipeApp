@@ -36,6 +36,7 @@ public class ProfileMenuFragment extends Fragment {
     private PostsAdapter postsAdapter;
     private String menuItem;
 
+    // NO-OP
     public ProfileMenuFragment() {
 
     }

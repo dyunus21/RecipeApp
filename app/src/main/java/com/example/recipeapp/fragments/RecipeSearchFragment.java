@@ -12,7 +12,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.SearchView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -23,6 +22,8 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
+import com.arlib.floatingsearchview.FloatingSearchView;
+import com.arlib.floatingsearchview.suggestions.model.SearchSuggestion;
 import com.bumptech.glide.Glide;
 import com.codepath.asynchttpclient.callback.JsonHttpResponseHandler;
 import com.example.recipeapp.R;
@@ -69,6 +70,7 @@ public class RecipeSearchFragment extends Fragment {
     private File photoFile;
 
 
+    // NO-OP
     public RecipeSearchFragment() {
 
     }
@@ -100,10 +102,14 @@ public class RecipeSearchFragment extends Fragment {
         GridLayoutManager gridLayoutManager = new GridLayoutManager(requireContext(), 2);
         binding.rvRecipes.setLayoutManager(gridLayoutManager);
         setRefresh();
-
-        binding.svSearch.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+        binding.svSearch.setOnSearchListener(new FloatingSearchView.OnSearchListener() {
             @Override
-            public boolean onQueryTextSubmit(final String query) {
+            public void onSuggestionClicked(@NonNull final SearchSuggestion searchSuggestion) {
+
+            }
+
+            @Override
+            public void onSearchAction(@NonNull final String query) {
                 Log.i(TAG, query);
                 try {
                     Objects.requireNonNull(adapter).clear();
@@ -116,16 +122,10 @@ public class RecipeSearchFragment extends Fragment {
                     binding.loadingAnimation.setVisibility(View.VISIBLE);
                     getRecipesByQuery(query);
                 } catch (IOException e) {
-                    e.printStackTrace();
+                    Toast.makeText(getContext(), "Unable to search for recipe!", Toast.LENGTH_SHORT).show();
+                    Log.e(TAG, "Unable to search for recipe!", e);
                 }
-                return true;
             }
-
-            @Override
-            public boolean onQueryTextChange(final String newText) {
-                return false;
-            }
-
         });
     }
 
