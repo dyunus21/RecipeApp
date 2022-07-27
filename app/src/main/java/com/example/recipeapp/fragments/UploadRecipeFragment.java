@@ -64,7 +64,6 @@ public class UploadRecipeFragment extends Fragment {
             edited = true;
             recipe = bundle.getParcelable("Recipe");
             Log.i(TAG, "Received bundle: " + recipe.getRecipeId());
-            Objects.requireNonNull(((MainActivity) requireActivity()).getSupportActionBar()).setTitle("Edit: " + recipe.getTitle());
             getRecipe();
             User.getUser(recipe.getAuthor());
         } else {
@@ -84,7 +83,6 @@ public class UploadRecipeFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull final View view, @Nullable final Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        Objects.requireNonNull(((MainActivity) requireActivity()).getSupportActionBar()).setTitle("Upload New Recipe");
         binding.actvCuisine.setAdapter(new ArrayAdapter<>(requireContext(), android.R.layout.simple_dropdown_item_1line, getResources().getStringArray(R.array.cuisine)));
         if (edited) {
             binding.btnDelete.setVisibility(View.VISIBLE);

@@ -62,14 +62,7 @@ public class InventoryFragment extends Fragment {
     }
 
     @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        Objects.requireNonNull(((MainActivity) requireActivity()).getSupportActionBar()).show();
-    }
-
-    @Override
     public void onViewCreated(@NonNull final View view, @Nullable final Bundle savedInstanceState) {
-        Objects.requireNonNull(((MainActivity) requireActivity()).getSupportActionBar()).hide();
         super.onViewCreated(view, savedInstanceState);
         final LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
         binding.rvIngredients.setAdapter(adapter);

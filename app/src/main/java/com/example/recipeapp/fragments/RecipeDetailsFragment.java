@@ -65,7 +65,6 @@ public class RecipeDetailsFragment extends Fragment {
             recipe = bundle.getParcelable("Recipe");
             Log.i(TAG, "Received bundle: " + recipe.getObjectId());
             findRecipe("None");
-            Objects.requireNonNull(((MainActivity) requireActivity()).getSupportActionBar()).setTitle("Recipe Details: " + recipe.getTitle());
         }
 
     }
@@ -81,7 +80,6 @@ public class RecipeDetailsFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull final View view, @Nullable final Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        Objects.requireNonNull(((MainActivity) requireActivity()).getSupportActionBar()).hide();
         showIngredients();
         setUpTabs();
         binding.tvRecipeName.setText(recipe.getTitle());

@@ -50,7 +50,7 @@
                 android:layout_height="50dp"
                 android:layout_marginTop="20dp"
                 app:layout_constraintStart_toStartOf="@+id/tilTitle"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toBottomOf="@+id/tvNewPost" />
 
 
             <Button
@@ -159,6 +159,18 @@
                     android:inputType="textPersonName" />
 
             </com.google.android.material.textfield.TextInputLayout>
+
+            <TextView
+                android:id="@+id/tvNewPost"
+                style="@style/Title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text="New Post"
+                android:textColor="@color/teal_700"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
 
         </androidx.constraintlayout.widget.ConstraintLayout>

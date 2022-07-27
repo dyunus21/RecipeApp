@@ -71,7 +71,6 @@ public class UploadPostFragment extends Fragment implements AdapterView.OnItemSe
             Log.i(TAG, "Received bundle: " + recipe.getRecipeId());
         }
 
-        Objects.requireNonNull(((MainActivity) requireActivity()).getSupportActionBar()).setTitle("Upload New Post");
         return binding.getRoot();
     }
 

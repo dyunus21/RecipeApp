@@ -80,7 +80,6 @@ public class ProfileFragment extends Fragment implements NavigationView.OnNaviga
         postsAdapter = new PostsAdapter(requireContext(), posts);
         imageClient = new ImageClient(this);
         User.getUser(CURRENT_USER);
-        Objects.requireNonNull(((MainActivity) requireActivity()).getSupportActionBar()).setTitle("Profile");
         setHasOptionsMenu(true);
     }
 
@@ -105,6 +104,8 @@ public class ProfileFragment extends Fragment implements NavigationView.OnNaviga
         binding.logout.setOnClickListener(v -> showLogoutAlert());
 
         binding.navigationDrawerView.setNavigationItemSelectedListener(this);
+        binding.ibMenu.setOnClickListener(v -> binding.navigationDrawerView.setVisibility(View.VISIBLE));
+        binding.ibClose.setOnClickListener(v -> binding.navigationDrawerView.setVisibility(View.GONE));
     }
 
     private void setUpTabs() {
@@ -206,16 +207,16 @@ public class ProfileFragment extends Fragment implements NavigationView.OnNaviga
         super.onPrepareOptionsMenu(menu);
     }
 
-    @Override
-    public boolean onOptionsItemSelected(@NonNull final MenuItem item) {
-        if (item.getItemId() == R.id.navigation_drawer) {
-            if (binding.navigationDrawerView.getVisibility() == View.VISIBLE)
-                binding.navigationDrawerView.setVisibility(View.GONE);
-            else
-                binding.navigationDrawerView.setVisibility(View.VISIBLE);
-        }
-        return super.onOptionsItemSelected(item);
-    }
+//    @Override
+//    public boolean onOptionsItemSelected(@NonNull final MenuItem item) {
+//        if (item.getItemId() == R.id.navigation_drawer) {
+//            if (binding.navigationDrawerView.getVisibility() == View.VISIBLE)
+//                binding.navigationDrawerView.setVisibility(View.GONE);
+//            else
+//                binding.navigationDrawerView.setVisibility(View.VISIBLE);
+//        }
+//        return super.onOptionsItemSelected(item);
+//    }
 
     public void showLogoutAlert() {
         final MaterialAlertDialogBuilder alertDialogBuilder = new MaterialAlertDialogBuilder(requireContext());
