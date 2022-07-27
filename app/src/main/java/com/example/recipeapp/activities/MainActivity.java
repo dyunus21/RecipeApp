@@ -7,6 +7,7 @@ import android.view.View;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 import androidx.navigation.NavController;
@@ -34,7 +35,6 @@ public class MainActivity extends AppCompatActivity {
         setContentView(view);
         binding.setController(this);
 
-        setSupportActionBar(binding.toolbar);
         User.getUser(CURRENT_USER);
         navController = Navigation.findNavController(this, R.id.nav_host_fragment);
         binding.bottomNavigationView.setBackground(new ColorDrawable(ContextCompat.getColor(this, R.color.teal_700)));
@@ -66,13 +66,6 @@ public class MainActivity extends AppCompatActivity {
             FabAnimation.showOut(binding.fabPost);
         }
     }
-
-    @Override
-    public boolean onCreateOptionsMenu(@NonNull final Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_main, menu);
-        return true;
-    }
-
 
     @Override
     public boolean onSupportNavigateUp() {

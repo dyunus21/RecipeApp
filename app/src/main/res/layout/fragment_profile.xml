@@ -6,7 +6,6 @@
     android:background="#D7ECE9"
     tools:context=".fragments.ProfileFragment">
 
-
     <TextView
         android:id="@+id/tvPostCount"
         style="@style/Title"
@@ -54,18 +53,6 @@
         app:layout_constraintHorizontal_bias="0.481"
         app:layout_constraintStart_toStartOf="@+id/tvFullname"
         app:layout_constraintTop_toBottomOf="@+id/tvFullname" />
-
-    <TextView
-        android:id="@+id/tvChangeProfileImage"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:text="Change Profile Image"
-        android:visibility="gone"
-        app:layout_constraintBottom_toTopOf="@+id/ivProfileImage"
-        app:layout_constraintEnd_toEndOf="@+id/ivProfileImage"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="@+id/ivProfileImage"
-        tools:textAlignment="center" />
 
     <TextView
         android:id="@+id/tvFullname"
@@ -158,6 +145,16 @@
     </com.google.android.material.tabs.TabLayout>
 
 
+    <ImageButton
+        android:id="@+id/ibMenu"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginEnd="30dp"
+        android:background="@drawable/ic_baseline_menu_24"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
     <com.google.android.material.navigation.NavigationView
         android:id="@+id/navigationDrawerView"
         android:layout_width="230dp"
@@ -178,6 +175,18 @@
             android:paddingStart="30dp">
 
             <TextView
+                android:id="@+id/tvChangeProfileImage"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:drawableStart="@drawable/ic_baseline_account_circle_24"
+                android:drawablePadding="10dp"
+                android:drawableTint="@color/teal_700"
+                android:gravity="center"
+                android:text="Change Profile Image"
+                tools:textAlignment="center" />
+
+            <TextView
                 android:id="@+id/logout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -187,4 +196,14 @@
         </LinearLayout>
 
     </com.google.android.material.navigation.NavigationView>
+
+    <ImageButton
+        android:id="@+id/ibClose"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@android:drawable/ic_menu_close_clear_cancel"
+        android:backgroundTint="@color/black"
+        app:layout_constraintStart_toStartOf="@+id/navigationDrawerView"
+        app:layout_constraintTop_toTopOf="parent" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>
