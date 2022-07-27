@@ -31,16 +31,21 @@ import com.parse.ParseQuery;
 import com.parse.ParseUser;
 
 import java.util.List;
+import java.util.Objects;
 
 public class SocialFeedAdapter extends RecyclerView.Adapter<SocialFeedAdapter.ViewHolder> {
     private static final String TAG = "SocialFeedAdapter";
+    @NonNull
     private final Context context;
+    @NonNull
     private final List<Post> postList;
+    @NonNull
     private final User CURRENT_USER = new User(ParseUser.getCurrentUser());
+    @NonNull
     private final TimeUtils timeUtils = new TimeUtils(new CurrentTimeProvider());
     private ItemPostBinding item_binding;
 
-    public SocialFeedAdapter(Context context, List<Post> postList) {
+    public SocialFeedAdapter(@NonNull final Context context, @NonNull final List<Post> postList) {
         this.context = context;
         this.postList = postList;
     }
@@ -48,14 +53,14 @@ public class SocialFeedAdapter extends RecyclerView.Adapter<SocialFeedAdapter.Vi
 
     @NonNull
     @Override
-    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public ViewHolder onCreateViewHolder(@NonNull final ViewGroup parent, final int viewType) {
         item_binding = ItemPostBinding.inflate(LayoutInflater.from(context), parent, false);
         User.getUser(CURRENT_USER);
         return new ViewHolder(item_binding);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull final ViewHolder holder, final int position) {
         final Post post = postList.get(position);
         holder.bind(post);
 
@@ -71,7 +76,7 @@ public class SocialFeedAdapter extends RecyclerView.Adapter<SocialFeedAdapter.Vi
         notifyDataSetChanged();
     }
 
-    public void addAll(List<Post> list) {
+    public void addAll(@NonNull final List<Post> list) {
         postList.addAll(list);
         notifyDataSetChanged();
     }
@@ -79,30 +84,32 @@ public class SocialFeedAdapter extends RecyclerView.Adapter<SocialFeedAdapter.Vi
     public class ViewHolder extends RecyclerView.ViewHolder {
         private final ItemPostBinding binding;
         private Post currentPost;
-        private CommentsAdapter commentsAdapter;
+        @NonNull
+        private final CommentsAdapter commentsAdapter;
 
 
         @SuppressLint("ClickableViewAccessibility")
-        public ViewHolder(@NonNull ItemPostBinding itemView) {
+        public ViewHolder(@NonNull final ItemPostBinding itemView) {
             super(itemView.getRoot());
             this.binding = itemView;
+            commentsAdapter = new CommentsAdapter(context);
         }
 
 
         @SuppressLint("ClickableViewAccessibility")
-        public void bind(Post post) {
+        public void bind(@NonNull final Post post) {
             currentPost = post;
-            User user = post.getAuthor();
+            final User user = post.getAuthor();
             binding.tvUsername.setText("@" + user.getParseUser().getUsername());
             Glide.with(context).load(post.getImage().getUrl()).into(binding.ivImage);
             Glide.with(context).load(user.getProfileImage().getUrl()).circleCrop().into(binding.ivProfileImage);
             binding.tvTimestamp.setText(timeUtils.calculateTimeAgo(post.getCreatedAt()));
             binding.tvTitle.setText(post.getTitle());
-            String sourceString = "<b>" + user.getParseUser().getUsername() + "</b> " + post.getDescription();
+            final String sourceString = "<b>" + user.getParseUser().getUsername() + "</b> " + post.getDescription();
             binding.tvDescription.setText(Html.fromHtml(sourceString));
             // TODO: Go to User Profile page when clicked on user profile image
 
-            List<ParseUser> likedBy = post.getLikedBy();
+            final List<ParseUser> likedBy = post.getLikedBy();
             binding.tvLikes.setText(likedBy.size() + " likes");
             if (post.isLikedbyCurrentUser(ParseUser.getCurrentUser())) {
                 binding.ibHeart.setBackgroundResource(R.drawable.ic_baseline_favorite_24);
@@ -114,15 +121,14 @@ public class SocialFeedAdapter extends RecyclerView.Adapter<SocialFeedAdapter.Vi
 
             Glide.with(context).load(CURRENT_USER.getProfileImage().getUrl()).circleCrop().into(binding.ivCurrentUserProfileImage);
             binding.rvComments.setLayoutManager(new LinearLayoutManager(context));
-            commentsAdapter = new CommentsAdapter(context);
             binding.rvComments.setAdapter(commentsAdapter);
             binding.btnPostComment.setOnClickListener(v -> postComment());
             refreshComments();
 
-            GestureDetector gestureDetector = new GestureDetector(context.getApplicationContext(), new GestureDetector.SimpleOnGestureListener() {
+            final GestureDetector gestureDetector = new GestureDetector(context.getApplicationContext(), new GestureDetector.SimpleOnGestureListener() {
 
                 @Override
-                public boolean onDoubleTap(MotionEvent e) {
+                public boolean onDoubleTap(@NonNull final MotionEvent e) {
                     Log.i(TAG, "double tapped post: " + currentPost.getTitle());
                     Toast.makeText(context, "Double tapped post: " + currentPost.getTitle(), Toast.LENGTH_SHORT).show();
                     likePost();
@@ -130,7 +136,7 @@ public class SocialFeedAdapter extends RecyclerView.Adapter<SocialFeedAdapter.Vi
                 }
 
                 @Override
-                public boolean onDown(MotionEvent e) {
+                public boolean onDown(@NonNull final MotionEvent e) {
                     return true;
                 }
             });
@@ -141,7 +147,7 @@ public class SocialFeedAdapter extends RecyclerView.Adapter<SocialFeedAdapter.Vi
             binding.btnGoToRecipe.setOnClickListener(v -> {
                 final Bundle bundle = new Bundle();
                 bundle.putParcelable(Recipe.class.getSimpleName(), post.getRecipeLinked());
-                RecipeDetailsFragment recipeDetailsFragment = new RecipeDetailsFragment();
+                final RecipeDetailsFragment recipeDetailsFragment = new RecipeDetailsFragment();
                 recipeDetailsFragment.setArguments(bundle);
                 Navigation.findNavController(v).navigate(R.id.recipeDetailsFragment, bundle);
             });
@@ -170,7 +176,7 @@ public class SocialFeedAdapter extends RecyclerView.Adapter<SocialFeedAdapter.Vi
         }
 
         private void refreshComments() {
-            ParseQuery<Comment> query = ParseQuery.getQuery("Comment");
+            final ParseQuery<Comment> query = ParseQuery.getQuery("Comment");
             query.whereEqualTo(Comment.KEY_POST, currentPost);
             query.orderByDescending(Comment.KEY_CREATED_AT);
             query.include(Comment.KEY_AUTHOR);
@@ -187,8 +193,8 @@ public class SocialFeedAdapter extends RecyclerView.Adapter<SocialFeedAdapter.Vi
         }
 
         private void postComment() {
-            String body = binding.etComment.getText().toString();
-            Comment comment = new Comment();
+            final String body = Objects.requireNonNull(binding.etComment.getText()).toString();
+            final Comment comment = new Comment();
             comment.setAuthor(CURRENT_USER);
             comment.setDescription(body);
             comment.setPost(currentPost);

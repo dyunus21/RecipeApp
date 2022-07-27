@@ -5,12 +5,12 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.ImageDecoder;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.util.Log;
-import android.view.View;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.core.content.FileProvider;
 import androidx.fragment.app.Fragment;
 
@@ -27,15 +27,17 @@ public class ImageClient extends MainActivity {
     private static final String TAG = "ImageClient";
     private static final int CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE = 42;
     private final static int PICK_PHOTO_CODE = 1046;
-    public String photoFileName = Calendar.getInstance().getTime() + ".jpg";
+    public final String photoFileName = Calendar.getInstance().getTime() + ".jpg";
+    @NonNull
+    final Context context;
+    @NonNull
+    final Fragment fragment;
     File photoFile;
-    Context context;
-    Fragment fragment;
 
 
-    public ImageClient(Fragment fragment) {
+    public ImageClient(@NonNull final Fragment fragment) {
         this.fragment = fragment;
-        this.context = fragment.getContext();
+        this.context = fragment.requireContext();
     }
 
 
@@ -50,23 +52,23 @@ public class ImageClient extends MainActivity {
     }
 
 
-    public void onPickPhoto(View view) {
+    public void onPickPhoto() {
         Log.i(TAG, "onPickPhoto!");
-        Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+        final Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
         Log.i(TAG, "start intent for gallery!");
         fragment.startActivityForResult(intent, PICK_PHOTO_CODE);
 
     }
 
-    public File resizeFile(Bitmap image) {
-        Bitmap resizedBitmap = BitmapScaler.scaleToFitWidth(image, 800);
-        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+    @NonNull
+    public File resizeFile(@NonNull final Bitmap image) {
+        final Bitmap resizedBitmap = BitmapScaler.scaleToFitWidth(image, 800);
+        final ByteArrayOutputStream bytes = new ByteArrayOutputStream();
         resizedBitmap.compress(Bitmap.CompressFormat.JPEG, 40, bytes);
         File resizedFile = getPhotoFileUri(photoFileName);
         try {
             resizedFile.createNewFile();
-            FileOutputStream fos = null;
-            fos = new FileOutputStream(resizedFile);
+            final FileOutputStream fos = new FileOutputStream(resizedFile);
             fos.write(bytes.toByteArray());
             fos.close();
         } catch (IOException e) {
@@ -76,8 +78,9 @@ public class ImageClient extends MainActivity {
         return resizedFile;
     }
 
-    public File getPhotoFileUri(String fileName) {
-        File mediaStorageDir = new File(context.getExternalFilesDir(Environment.DIRECTORY_PICTURES), TAG);
+    @NonNull
+    public File getPhotoFileUri(final String fileName) {
+        final File mediaStorageDir = new File(context.getExternalFilesDir(Environment.DIRECTORY_PICTURES), TAG);
 
         if (!mediaStorageDir.exists() && !mediaStorageDir.mkdirs()) {
             Log.d(TAG, "failed to create directory");
@@ -86,22 +89,19 @@ public class ImageClient extends MainActivity {
         return new File(mediaStorageDir.getPath() + File.separator + fileName);
     }
 
-    public Bitmap loadFromUri(Uri photoUri) {
+    public Bitmap loadFromUri(@NonNull final Uri photoUri) {
         Bitmap image = null;
         try {
             // check version of Android on device
-            if (Build.VERSION.SDK_INT > 27) {
-                ImageDecoder.Source source = ImageDecoder.createSource(context.getContentResolver(), photoUri);
-                image = ImageDecoder.decodeBitmap(source);
-            } else {
-                image = MediaStore.Images.Media.getBitmap(context.getContentResolver(), photoUri);
-            }
+            final ImageDecoder.Source source = ImageDecoder.createSource(context.getContentResolver(), photoUri);
+            image = ImageDecoder.decodeBitmap(source);
         } catch (IOException e) {
             Log.e(TAG, "Unable to load image from URI", e);
         }
         return image;
     }
 
+    @Nullable
     public File getPhotoFile() {
         return photoFile;
     }
