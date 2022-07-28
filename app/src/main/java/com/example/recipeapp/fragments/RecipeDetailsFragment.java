@@ -1,5 +1,6 @@
 package com.example.recipeapp.fragments;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -16,7 +17,6 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import com.bumptech.glide.Glide;
 import com.codepath.asynchttpclient.callback.JsonHttpResponseHandler;
 import com.example.recipeapp.R;
-import com.example.recipeapp.activities.MainActivity;
 import com.example.recipeapp.adapters.ReviewsAdapter;
 import com.example.recipeapp.clients.RecipeClient;
 import com.example.recipeapp.databinding.FragmentRecipeDetailsBinding;
@@ -85,6 +85,7 @@ public class RecipeDetailsFragment extends Fragment {
         binding.tvRecipeName.setText(recipe.getTitle());
         binding.tvCookTime.setText(recipe.getCooktime() + " mins");
         binding.tvCuisine.setText(recipe.getCuisineType());
+        binding.tvServings.setText(recipe.getServings() + " Servings");
         String url = recipe.getImageUrl() == null ? recipe.getImage().getUrl() : recipe.getImageUrl();
         Glide.with(requireContext()).load(url).into(binding.ivImage);
         if (recipe.getRecipeId() != 0) {
@@ -118,8 +119,12 @@ public class RecipeDetailsFragment extends Fragment {
         binding.ibHeart.setOnClickListener(v -> findRecipe("like"));
         if (currentUser.isMadebyCurrentUser(recipe)) {
             binding.btnMade.setText("I Made it!");
+            binding.btnMade.setBackgroundColor(getResources().getColor(R.color.white));
+            binding.btnMade.setTextColor(getResources().getColor(R.color.teal_700));
         } else {
             binding.btnMade.setText("Make it!");
+            binding.btnMade.setBackgroundColor(getResources().getColor(R.color.teal_700));
+            binding.btnMade.setTextColor(getResources().getColor(R.color.white));
         }
         binding.btnMade.setOnClickListener(v -> findRecipe("made"));
         if (recipe.getRecipeId() == 0 && ParseUser.getCurrentUser().hasSameId(recipe.getAuthor().getParseUser())) {
@@ -224,7 +229,7 @@ public class RecipeDetailsFragment extends Fragment {
     public void editRecipe(@NonNull View view) {
         final Bundle bundle = new Bundle();
         bundle.putParcelable(Recipe.class.getSimpleName(), recipe);
-        view.setOnClickListener(Navigation.createNavigateOnClickListener(R.id.action_recipeDetailsFragment_to_uploadPostFragment, bundle));
+        view.setOnClickListener(Navigation.createNavigateOnClickListener(R.id.action_recipeDetailsFragment_to_uploadRecipeFragment, bundle));
     }
 
     public void findRecipe(@NonNull String action) {
@@ -257,8 +262,12 @@ public class RecipeDetailsFragment extends Fragment {
     private void madeRecipe() {
         if (currentUser.isMadebyCurrentUser(recipe)) {
             binding.btnMade.setText("Make it!");
+            binding.btnMade.setBackgroundColor(getResources().getColor(R.color.teal_700));
+            binding.btnMade.setTextColor(getResources().getColor(R.color.white));
         } else {
             binding.btnMade.setText("I Made it");
+            binding.btnMade.setBackgroundColor(getResources().getColor(R.color.white));
+            binding.btnMade.setTextColor(getResources().getColor(R.color.teal_700));
         }
 
         currentUser.madeRecipe(recipe);

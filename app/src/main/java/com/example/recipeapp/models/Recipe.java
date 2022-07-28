@@ -1,7 +1,5 @@
 package com.example.recipeapp.models;
 
-import android.util.Log;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
@@ -9,12 +7,8 @@ import com.parse.ParseClassName;
 import com.parse.ParseFile;
 import com.parse.ParseObject;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 @ParseClassName("Recipe")
 public class Recipe extends ParseObject {
@@ -27,43 +21,10 @@ public class Recipe extends ParseObject {
     public static final String KEY_INSTRUCTIONS = "instructions";
     public static final String KEY_COOKTIME = "cooktime";
     public static final String KEY_CUISINE_TYPE = "cuisineType";
+    public static final String KEY_SERVINGS = "servings";
     public static final String KEY_REVIEWS = "reviews";
     private static final String TAG = "Recipe";
 
-    // TODO: Refactor to not be static
-    public static List<Recipe> getRecipes(@NonNull final JSONArray results) throws JSONException {
-        final List<Recipe> recipes = new ArrayList<>();
-        for (int i = 0; i < results.length(); i++) {
-            final Recipe recipe = new Recipe();
-            recipe.setRecipeId(results.getJSONObject(i).getInt("id"));
-            recipe.setTitle(results.getJSONObject(i).getString("title"));
-            recipe.setCooktime(results.getJSONObject(i).getInt("readyInMinutes"));
-            final JSONArray cuisineType = results.getJSONObject(i).getJSONArray("cuisines");
-            if (cuisineType.length() > 0)
-                recipe.setCuisineType(cuisineType.getString(0));
-            else
-                recipe.setCuisineType("None");
-
-            if (results.getJSONObject(i).getJSONArray("analyzedInstructions").length() == 0) {
-                continue;
-            }
-            final List<String> instructions = new ArrayList<>();
-            final JSONArray steps = (results.getJSONObject(i).getJSONArray("analyzedInstructions")).getJSONObject(0).getJSONArray("steps");
-            for (int j = 0; j < steps.length(); j++) {
-                instructions.add(steps.getJSONObject(j).getString("step"));
-            }
-            recipe.setInstructions(instructions);
-
-//            if ((!results.getJSONObject(i).has("image")) || results.getJSONObject(i).getString("image").equals("")) {
-//                recipe.setImage(ParseFile());
-//            }
-            recipe.setImageUrl(results.getJSONObject(i).getString("image"));
-            Log.i(TAG, "Added " + recipe.getTitle());
-            recipes.add(recipe);
-
-        }
-        return recipes;
-    }
 
     public int getRecipeId() {
         return getInt(KEY_RECIPE_ID);
@@ -141,6 +102,14 @@ public class Recipe extends ParseObject {
 
     public void setCuisineType(final String cuisineType) {
         put(KEY_CUISINE_TYPE, cuisineType);
+    }
+
+    public int getServings() {
+        return getInt(KEY_SERVINGS);
+    }
+
+    public void setServings(final int servings) {
+        put(KEY_SERVINGS, servings);
     }
 }
 

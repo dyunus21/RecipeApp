@@ -35,6 +35,7 @@ import com.example.recipeapp.databinding.FragmentRecipeSearchBinding;
 import com.example.recipeapp.databinding.ImageSearchDialogBinding;
 import com.example.recipeapp.models.Recipe;
 import com.example.recipeapp.models.User;
+import com.example.recipeapp.utilities.RecipeUtils;
 import com.google.android.material.chip.Chip;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.parse.ParseQuery;
@@ -68,6 +69,8 @@ public class RecipeSearchFragment extends Fragment {
     private ImageClient imageClient;
     @Nullable
     private File photoFile;
+    @Nullable
+    private RecipeUtils recipeUtils;
 
     public RecipeSearchFragment() {
         // NO-OP
@@ -88,6 +91,7 @@ public class RecipeSearchFragment extends Fragment {
         recipes = new ArrayList<>();
         adapter = new RecipeSearchAdapter(requireContext(), recipes);
         imageClient = new ImageClient(this);
+        recipeUtils = new RecipeUtils();
         User.getUser(currentUser);
     }
 
@@ -196,7 +200,7 @@ public class RecipeSearchFragment extends Fragment {
                 }
                 try {
                     Objects.requireNonNull(adapter).clear();
-                    recipes = Recipe.getRecipes(Objects.requireNonNull(jsonArray));
+                    recipes = Objects.requireNonNull(recipeUtils).getRecipes(Objects.requireNonNull(jsonArray));
                     adapter.addAll(recipes);
                     binding.rvRandomRecipes.scrollToPosition(0);
                     binding.swipeContainer.setRefreshing(false);
@@ -249,7 +253,7 @@ public class RecipeSearchFragment extends Fragment {
                     Log.e(TAG, "Hit JSON exception", e);
                 }
                 try {
-                    recipes.addAll(Recipe.getRecipes(Objects.requireNonNull(jsonArray)));
+                    recipes = Objects.requireNonNull(recipeUtils).getRecipes(Objects.requireNonNull(jsonArray));
                     binding.loadingAnimation.setVisibility(View.GONE);
                     if (recipes.size() == 0) {
                         showNoResultsDialog();
@@ -329,7 +333,7 @@ public class RecipeSearchFragment extends Fragment {
                 Log.i(TAG, "Successfully Received array of recipe information based on ids" + json);
                 final JSONArray jsonArray = json.jsonArray;
                 try {
-                    recipes = Recipe.getRecipes(jsonArray);
+                    recipes = Objects.requireNonNull(recipeUtils).getRecipes(Objects.requireNonNull(jsonArray));
                 } catch (JSONException e) {
                     Log.e(TAG, "Unable to getRecipes from jsonArray", e);
                 }

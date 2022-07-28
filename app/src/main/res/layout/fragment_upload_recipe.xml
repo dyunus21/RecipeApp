@@ -81,14 +81,16 @@
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/tilCuisine"
                 style="@style/Widget.Material3.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
-                android:layout_width="179dp"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="30dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginEnd="30dp"
                 android:hint="Cuisine Type"
                 app:boxBackgroundColor="@color/light_teal"
-                app:layout_constraintBottom_toBottomOf="@+id/tilCooktime"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="@+id/tilCooktime"
+                app:layout_constraintTop_toBottomOf="@+id/btnGallery"
                 app:startIconDrawable="@drawable/ic_baseline_restaurant_menu_24"
                 app:startIconTint="@color/teal_700">
 
@@ -106,20 +108,39 @@
 
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/tilCooktime"
-                android:layout_width="0dp"
+                android:layout_width="160dp"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="5dp"
                 android:layout_marginTop="10dp"
-                android:layout_marginEnd="30dp"
-                android:hint="Cooktime (minutes)"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@+id/tilCuisine"
-                app:layout_constraintTop_toBottomOf="@+id/btnGallery"
+                android:layout_marginEnd="10dp"
+                android:hint="Cooktime (mins)"
+                app:layout_constraintEnd_toStartOf="@+id/tilServings"
+                app:layout_constraintStart_toStartOf="@+id/tilCuisine"
+                app:layout_constraintTop_toBottomOf="@+id/tilCuisine"
                 app:startIconDrawable="@drawable/ic_baseline_access_time_24"
                 app:startIconTint="@color/teal_700">
 
                 <EditText
                     android:id="@+id/etCooktime"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+
+                    android:ems="10"
+                    android:inputType="number" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/tilServings"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:hint="Servings"
+                app:layout_constraintEnd_toEndOf="@+id/tilCuisine"
+                app:layout_constraintStart_toEndOf="@+id/tilCooktime"
+                app:layout_constraintTop_toTopOf="@+id/tilCooktime"
+                app:startIconDrawable="@drawable/ic_baseline_access_time_24"
+                app:startIconTint="@color/teal_700">
+
+                <EditText
+                    android:id="@+id/etServings"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
 
@@ -137,7 +158,7 @@
                 android:hint="Ingredient List:"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/tilCuisine"
+                app:layout_constraintTop_toBottomOf="@+id/tilCooktime"
                 app:startIconDrawable="@drawable/ic_baseline_checklist_ingredient"
                 app:startIconTint="@color/teal_700">
 
