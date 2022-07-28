@@ -32,9 +32,8 @@ public class SocialFeedFragment extends Fragment {
     private List<Post> postList;
     private EndlessRecyclerViewScrollListener scrollListener;
 
-    // NO-OP
     public SocialFeedFragment() {
-
+        // NO-OP
     }
 
     @Override

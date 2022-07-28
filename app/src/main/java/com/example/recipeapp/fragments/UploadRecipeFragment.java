@@ -50,9 +50,8 @@ public class UploadRecipeFragment extends Fragment {
     @Nullable
     private ProgressDialog progressDialog;
 
-    // NO-OP
     public UploadRecipeFragment() {
-
+        // NO-OP
     }
 
     @Override

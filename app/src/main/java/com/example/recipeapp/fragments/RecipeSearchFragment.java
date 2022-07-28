@@ -69,10 +69,8 @@ public class RecipeSearchFragment extends Fragment {
     @Nullable
     private File photoFile;
 
-
-    // NO-OP
     public RecipeSearchFragment() {
-
+        // NO-OP
     }
 
     @Override

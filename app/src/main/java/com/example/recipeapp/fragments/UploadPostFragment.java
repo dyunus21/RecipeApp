@@ -48,9 +48,8 @@ public class UploadPostFragment extends Fragment implements AdapterView.OnItemSe
     private ProgressDialog progressDialog;
     private Recipe recipe;
 
-    // NO-OP
     public UploadPostFragment() {
-
+        // NO-OP
     }
 
     @Override

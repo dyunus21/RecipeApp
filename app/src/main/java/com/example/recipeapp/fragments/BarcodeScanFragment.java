@@ -68,9 +68,8 @@ public class BarcodeScanFragment extends Fragment {
     @NonNull
     private String productName = "";
 
-    // NO-OP
     public BarcodeScanFragment() {
-
+        // NO-OP
     }
 
     @Nullable

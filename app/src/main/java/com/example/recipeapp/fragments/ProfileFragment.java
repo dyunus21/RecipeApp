@@ -60,9 +60,8 @@ public class ProfileFragment extends Fragment implements NavigationView.OnNaviga
     private ImageClient imageClient;
     private float x1, x2;
 
-    // NO-OP
     public ProfileFragment() {
-
+        // NO-OP
     }
 
     @Override

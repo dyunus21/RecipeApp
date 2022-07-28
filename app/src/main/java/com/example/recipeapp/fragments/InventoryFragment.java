@@ -40,9 +40,8 @@ public class InventoryFragment extends Fragment {
     @Nullable
     private ProgressDialog progressDialog;
 
-    // NO-OP
     public InventoryFragment() {
-
+        // NO-OP
     }
 
     @Override
