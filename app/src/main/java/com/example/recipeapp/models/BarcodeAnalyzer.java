@@ -21,7 +21,6 @@ import com.google.mlkit.vision.common.internal.ImageConvertUtils;
 import java.util.List;
 import java.util.Objects;
 
-// TODO: Convert to Kotlin?
 // Resource: https://medium.com/codex/scan-barcodes-in-android-using-the-ml-kit-30b2a03ccd50
 @SuppressLint("UnsafeOptInUsageError")
 public class BarcodeAnalyzer implements ImageAnalysis.Analyzer {

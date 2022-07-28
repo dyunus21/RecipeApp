@@ -1,14 +1,14 @@
 package com.example.recipeapp.fragments;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
@@ -22,7 +22,6 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import com.bumptech.glide.Glide;
 import com.example.recipeapp.R;
 import com.example.recipeapp.activities.LoginActivity;
-import com.example.recipeapp.activities.MainActivity;
 import com.example.recipeapp.adapters.PostsAdapter;
 import com.example.recipeapp.adapters.RecipeSearchAdapter;
 import com.example.recipeapp.clients.ImageClient;
@@ -46,8 +45,9 @@ import java.util.Objects;
 public class ProfileFragment extends Fragment implements NavigationView.OnNavigationItemSelectedListener {
     private static final String TAG = "ProfileFragment";
     private final static int PICK_PHOTO_CODE = 1046;
+    private static final int MIN_DISTANCE = 150;
     @NonNull
-    private final User CURRENT_USER = new User(ParseUser.getCurrentUser());
+    private User CURRENT_USER = new User(ParseUser.getCurrentUser());
     @Nullable
     private File photoFile;
     private FragmentProfileBinding binding;
@@ -58,6 +58,7 @@ public class ProfileFragment extends Fragment implements NavigationView.OnNaviga
     private List<Recipe> recipes;
     private List<Post> posts;
     private ImageClient imageClient;
+    private float x1, x2;
 
     public ProfileFragment() {
 
@@ -80,13 +81,20 @@ public class ProfileFragment extends Fragment implements NavigationView.OnNaviga
         postsAdapter = new PostsAdapter(requireContext(), posts);
         imageClient = new ImageClient(this);
         User.getUser(CURRENT_USER);
+        final Bundle bundle = this.getArguments();
+        if (bundle != null) {
+            CURRENT_USER = (User) bundle.get("User");
+            Log.i(TAG, "Profile for " + CURRENT_USER.getParseUser().getUsername());
+        }
         setHasOptionsMenu(true);
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     @Override
     public void onViewCreated(@NonNull final View view, @Nullable final Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         binding.navigationDrawerView.setVisibility(View.GONE);
+        binding.ibMenu.setVisibility(View.GONE);
         binding.tvUsername.setText("@" + CURRENT_USER.getParseUser().getUsername());
         binding.tvFullname.setText(CURRENT_USER.getFirstName() + " " + CURRENT_USER.getLastName());
         setProfileImage();
@@ -98,14 +106,43 @@ public class ProfileFragment extends Fragment implements NavigationView.OnNaviga
 
         binding.rvPosts.setLayoutManager(new GridLayoutManager(getContext(), 3));
         binding.rvPosts.setAdapter(postsAdapter);
-        queryPosts();
-        setUpTabs();
         Objects.requireNonNull(binding.tabLayout.getTabAt(0)).select();
         binding.logout.setOnClickListener(v -> showLogoutAlert());
 
         binding.navigationDrawerView.setNavigationItemSelectedListener(this);
-        binding.ibMenu.setOnClickListener(v -> binding.navigationDrawerView.setVisibility(View.VISIBLE));
+        if (CURRENT_USER.getParseUser().hasSameId(ParseUser.getCurrentUser())) {
+            binding.ibMenu.setVisibility(View.VISIBLE);
+            binding.ibMenu.setOnClickListener(v -> binding.navigationDrawerView.setVisibility(View.VISIBLE));
+        }
         binding.ibClose.setOnClickListener(v -> binding.navigationDrawerView.setVisibility(View.GONE));
+        queryPosts();
+        setUpTabs();
+        setUpSwipe();
+    }
+
+    @SuppressLint("ClickableViewAccessibility")
+    private void setUpSwipe() {
+        binding.rvRecipes.setOnTouchListener((v, event) -> {
+            if (event.getAction() == MotionEvent.ACTION_UP) {
+                x2 = event.getX();
+                float deltaX = x2 - x1;
+                if (Math.abs(deltaX) > MIN_DISTANCE) {
+                    Objects.requireNonNull(binding.tabLayout.getTabAt(1)).select();
+                }
+            }
+            return true;
+        });
+
+        binding.rvPosts.setOnTouchListener((v, event) -> {
+            if (event.getAction() == MotionEvent.ACTION_UP) {
+                x2 = event.getX();
+                float deltaX = x2 - x1;
+                if (Math.abs(deltaX) > MIN_DISTANCE) {
+                    Objects.requireNonNull(binding.tabLayout.getTabAt(0)).select();
+                }
+            }
+            return true;
+        });
     }
 
     private void setUpTabs() {
@@ -201,23 +238,6 @@ public class ProfileFragment extends Fragment implements NavigationView.OnNaviga
         }
     }
 
-    @Override
-    public void onPrepareOptionsMenu(@NonNull final Menu menu) {
-        menu.findItem(R.id.navigation_drawer).setVisible(true);
-        super.onPrepareOptionsMenu(menu);
-    }
-
-//    @Override
-//    public boolean onOptionsItemSelected(@NonNull final MenuItem item) {
-//        if (item.getItemId() == R.id.navigation_drawer) {
-//            if (binding.navigationDrawerView.getVisibility() == View.VISIBLE)
-//                binding.navigationDrawerView.setVisibility(View.GONE);
-//            else
-//                binding.navigationDrawerView.setVisibility(View.VISIBLE);
-//        }
-//        return super.onOptionsItemSelected(item);
-//    }
-
     public void showLogoutAlert() {
         final MaterialAlertDialogBuilder alertDialogBuilder = new MaterialAlertDialogBuilder(requireContext());
         alertDialogBuilder.setTitle("Logout from app?");
@@ -235,11 +255,6 @@ public class ProfileFragment extends Fragment implements NavigationView.OnNaviga
     }
 
     @Override
-    public void onCreateOptionsMenu(@NonNull final Menu menu, @NonNull final MenuInflater inflater) {
-        super.onCreateOptionsMenu(menu, inflater);
-    }
-
-    @Override
     public boolean onNavigationItemSelected(@NonNull final MenuItem item) {
         final Bundle bundle = new Bundle();
         if (item.getItemId() == R.id.likedRecipes) {
@@ -253,4 +268,6 @@ public class ProfileFragment extends Fragment implements NavigationView.OnNaviga
         binding.navigationDrawerView.setVisibility(View.GONE);
         return true;
     }
+
+
 }

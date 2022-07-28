@@ -179,20 +179,20 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="10dp"
-                android:drawableStart="@drawable/ic_baseline_account_circle_24"
                 android:drawablePadding="10dp"
-                android:drawableTint="@color/teal_700"
                 android:gravity="center"
                 android:text="Change Profile Image"
-                tools:textAlignment="center" />
+                tools:textAlignment="center"
+                app:drawableStartCompat="@drawable/ic_baseline_account_circle_24"
+                app:drawableTint="@color/teal_700" />
 
             <TextView
                 android:id="@+id/logout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:drawableStart="@drawable/ic_baseline_logout_24"
                 android:gravity="center"
-                android:text="Log out" />
+                android:text="Log out"
+                app:drawableStartCompat="@drawable/ic_baseline_logout_24" />
         </LinearLayout>
 
     </com.google.android.material.navigation.NavigationView>
