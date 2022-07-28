@@ -65,7 +65,6 @@ _Version4_ (Stretch)
 * [x] User can search for a recipe based on image
 * [x] Explore Kotlin usage
 * [x] Implement navigation drawer in Profile fragment
-* [ ] User can view a demo of app before account creation
 
 ### 2. Screen Archetypes
 
