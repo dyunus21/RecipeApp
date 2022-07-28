@@ -49,7 +49,7 @@ public class UploadPostFragment extends Fragment implements AdapterView.OnItemSe
     private Recipe recipe;
 
     public UploadPostFragment() {
-
+        // NO-OP
     }
 
     @Override

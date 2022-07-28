@@ -51,7 +51,7 @@ public class RecipeDetailsFragment extends Fragment {
     private List<Review> reviews;
 
     public RecipeDetailsFragment() {
-
+        // NO-OP
     }
 
     @Override

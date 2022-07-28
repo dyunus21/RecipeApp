@@ -41,7 +41,7 @@ public class InventoryFragment extends Fragment {
     private ProgressDialog progressDialog;
 
     public InventoryFragment() {
-
+        // NO-OP
     }
 
     @Override

@@ -61,7 +61,7 @@ public class ProfileFragment extends Fragment implements NavigationView.OnNaviga
     private float x1, x2;
 
     public ProfileFragment() {
-
+        // NO-OP
     }
 
     @Override
@@ -106,6 +106,8 @@ public class ProfileFragment extends Fragment implements NavigationView.OnNaviga
 
         binding.rvPosts.setLayoutManager(new GridLayoutManager(getContext(), 3));
         binding.rvPosts.setAdapter(postsAdapter);
+        setUpTabs();
+        setUpSwipe();
         Objects.requireNonNull(binding.tabLayout.getTabAt(0)).select();
         binding.logout.setOnClickListener(v -> showLogoutAlert());
 
@@ -116,8 +118,6 @@ public class ProfileFragment extends Fragment implements NavigationView.OnNaviga
         }
         binding.ibClose.setOnClickListener(v -> binding.navigationDrawerView.setVisibility(View.GONE));
         queryPosts();
-        setUpTabs();
-        setUpSwipe();
     }
 
     @SuppressLint("ClickableViewAccessibility")

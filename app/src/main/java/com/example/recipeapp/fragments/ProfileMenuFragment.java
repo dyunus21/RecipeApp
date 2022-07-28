@@ -37,7 +37,7 @@ public class ProfileMenuFragment extends Fragment {
     private String menuItem;
 
     public ProfileMenuFragment() {
-
+        // NO-OP
     }
 
     @Override
