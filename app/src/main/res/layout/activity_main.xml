@@ -20,20 +20,23 @@
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/constraintLayout"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:layout_gravity="start">
 
             <fragment
                 android:id="@+id/nav_host_fragment"
                 android:name="androidx.navigation.fragment.NavHostFragment"
-                android:layout_width="412dp"
+                android:layout_width="0dp"
                 android:layout_height="0dp"
                 android:layout_gravity="bottom"
-                android:layout_marginBottom="90dp"
+                android:layout_marginBottom="?android:attr/actionBarSize"
                 app:defaultNavHost="true"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="0.0"
                 app:navGraph="@navigation/nav_graph" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
@@ -42,19 +45,16 @@
             android:id="@+id/bottomAppBar"
             style="@style/Widget.MaterialComponents.BottomAppBar.Colored"
             android:layout_width="wrap_content"
-            android:layout_height="80dp"
+            android:layout_height="wrap_content"
             android:layout_gravity="bottom"
-            android:keepScreenOn="false"
-            android:keyboardNavigationCluster="false"
             app:contentInsetStart="0dp">
 
             <com.google.android.material.bottomnavigation.BottomNavigationView
                 android:id="@+id/bottomNavigationView"
                 style="@style/BottomNavBar"
                 android:layout_width="match_parent"
-                android:layout_height="80dp"
+                android:layout_height="wrap_content"
                 android:layout_gravity="bottom"
-                android:background="@color/teal_700"
                 app:elevation="0dp"
                 app:menu="@menu/menu_bottom_navigation">
 

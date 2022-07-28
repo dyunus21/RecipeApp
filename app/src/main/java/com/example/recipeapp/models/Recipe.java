@@ -54,9 +54,9 @@ public class Recipe extends ParseObject {
             }
             recipe.setInstructions(instructions);
 
-            if ((!results.getJSONObject(i).has("image")) || results.getJSONObject(i).getString("image").equals("")) {
-                recipe.setImage(null);
-            }
+//            if ((!results.getJSONObject(i).has("image")) || results.getJSONObject(i).getString("image").equals("")) {
+//                recipe.setImage(ParseFile());
+//            }
             recipe.setImageUrl(results.getJSONObject(i).getString("image"));
             Log.i(TAG, "Added " + recipe.getTitle());
             recipes.add(recipe);
@@ -93,7 +93,7 @@ public class Recipe extends ParseObject {
         return getParseFile(KEY_IMAGE);
     }
 
-    public void setImage(@NonNull final ParseFile image) {
+    public void setImage(@Nullable final ParseFile image) {
         put(KEY_IMAGE, image);
     }
 
