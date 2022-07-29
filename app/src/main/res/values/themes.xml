@@ -35,7 +35,12 @@
         <item name="itemBackground">@color/white</item>
     </style>
 
-    <style name="RecipeQuest.TextInputLayout.Filled" parent="Widget.Material3.TextInputLayout.OutlinedBox">
+    <style name="RecipeQuest.TextInputLayout.Outlined" parent="Widget.Material3.TextInputLayout.OutlinedBox">
+        <item name="shapeAppearanceOverlay">@style/RecipeQuest.ShapeAppearanceOverlay.Rounded</item>
+        <item name="boxBackgroundColor">@color/light_teal</item>
+    </style>
+
+    <style name="RecipeQuest.TextInputLayout.Filled" parent="Widget.Material3.TextInputLayout.FilledBox">
         <item name="shapeAppearanceOverlay">@style/RecipeQuest.ShapeAppearanceOverlay.Rounded</item>
         <item name="boxBackgroundColor">@color/light_teal</item>
     </style>

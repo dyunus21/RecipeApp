@@ -159,8 +159,9 @@ public class UploadRecipeFragment extends Fragment {
         final List<String> instructionList = Arrays.asList(instructions.split("\n"));
         Log.i(TAG, "Instruction List Uploaded: " + instructionList);
         recipe.setInstructions(instructionList);
-        if (photoFile != null)
+        if (photoFile != null) {
             recipe.setImage(new ParseFile(photoFile));
+        }
         Log.i(TAG, "Finished inputting recipe details");
         recipe.saveInBackground(e -> {
             if (e != null) {
@@ -210,7 +211,7 @@ public class UploadRecipeFragment extends Fragment {
     private void addRecipeToUser(@NonNull final Recipe recipe) {
         final List<Recipe> uploaded = currentUser.getRecipesUploaded();
         if (!uploaded.contains(recipe))
-            uploaded.add(recipe);
+            uploaded.add(0,recipe);
         currentUser.setRecipesUploaded(uploaded);
         currentUser.getParseUser().saveInBackground(e -> {
             if (e != null) {

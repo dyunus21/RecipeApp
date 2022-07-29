@@ -111,6 +111,7 @@ public class UploadPostFragment extends Fragment implements AdapterView.OnItemSe
 
         if (photoFile == null || binding.ivImage.getDrawable() == null) {
             Toast.makeText(requireContext(), "Post does not contain any image!", Toast.LENGTH_SHORT).show();
+            return;
         }
         postRecipe(title, description);
     }
@@ -118,7 +119,7 @@ public class UploadPostFragment extends Fragment implements AdapterView.OnItemSe
     private void postRecipe(@NonNull final String title, @NonNull final String description) {
         Post post = new Post();
         post.setAuthor(new User(ParseUser.getCurrentUser()));
-        post.setImage(new ParseFile(Objects.requireNonNull(photoFile)));
+        post.setImage(new ParseFile(photoFile));
         post.setTitle(title);
         post.setDescription(description);
         post.setType(binding.spinnerType.getSelectedItem().toString());

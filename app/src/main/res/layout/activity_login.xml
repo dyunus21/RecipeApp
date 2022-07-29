@@ -45,6 +45,7 @@
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/tilUsername"
+            style="@style/RecipeQuest.TextInputLayout.Filled"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="50dp"
@@ -66,6 +67,7 @@
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/tilPassword"
+            style="@style/RecipeQuest.TextInputLayout.Filled"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="50dp"

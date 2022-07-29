@@ -1,6 +1,5 @@
 package com.example.recipeapp.fragments;
 
-import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -26,6 +25,7 @@ import com.example.recipeapp.models.Review;
 import com.example.recipeapp.models.User;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.tabs.TabLayout;
+import com.parse.ParseException;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
 
@@ -102,6 +102,12 @@ public class RecipeDetailsFragment extends Fragment {
             for (int i = 0; i < ingredients.size(); i++) {
                 binding.tvIngredientList.append("• " + ingredients.get(i) + "\n");
             }
+            try {
+                currentUser.fetchIfNeeded();
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+            binding.tvUploadedBy.setText("Uploaded by: @" + currentUser.getParseUser().getUsername());
         }
 
         List<String> instructions = recipe.getInstructions();
