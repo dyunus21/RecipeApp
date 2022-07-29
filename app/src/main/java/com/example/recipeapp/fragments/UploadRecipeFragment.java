@@ -22,7 +22,6 @@ import androidx.navigation.fragment.NavHostFragment;
 
 import com.bumptech.glide.Glide;
 import com.example.recipeapp.R;
-import com.example.recipeapp.activities.MainActivity;
 import com.example.recipeapp.clients.ImageClient;
 import com.example.recipeapp.databinding.FragmentUploadRecipeBinding;
 import com.example.recipeapp.models.Recipe;
@@ -113,6 +112,7 @@ public class UploadRecipeFragment extends Fragment {
         Glide.with(requireContext()).load(recipe.getImage().getUrl()).into(binding.ivImage);
         binding.actvCuisine.setText(recipe.getCuisineType());
         binding.etCooktime.setText(String.valueOf(recipe.getCooktime()));
+        binding.etServings.setText(String.valueOf(recipe.getServings()));
         String instructions = "";
         for (int i = 0; i < recipe.getInstructions().size(); i++) {
             instructions += recipe.getInstructions().get(i) + "\n";
@@ -131,10 +131,11 @@ public class UploadRecipeFragment extends Fragment {
         final String title = binding.etRecipeName.getText().toString();
         final String cuisineType = binding.actvCuisine.getText().toString();
         final int cooktime = Integer.parseInt(binding.etCooktime.getText().toString());
+        final int servings = Integer.parseInt(binding.etServings.getText().toString());
         final String ingredients = binding.etIngredientList.getText().toString();
         final String instructions = binding.etInstructions.getText().toString();
 
-        if (title.isEmpty() || cuisineType.isEmpty() || cooktime == 0 || ingredients.isEmpty() || instructions.isEmpty()) {
+        if (title.isEmpty() || cuisineType.isEmpty() || cooktime == 0 || servings == 0 || ingredients.isEmpty() || instructions.isEmpty()) {
             Toast.makeText(requireContext(), "Field cannot be empty!", Toast.LENGTH_SHORT).show();
             return;
         }
@@ -143,13 +144,14 @@ public class UploadRecipeFragment extends Fragment {
             Toast.makeText(requireContext(), "Post does not contain any image!", Toast.LENGTH_SHORT).show();
             return;
         }
-        publishRecipe(title, cuisineType, cooktime, ingredients, instructions);
+        publishRecipe(title, cuisineType, cooktime, servings, ingredients, instructions);
     }
 
-    private void publishRecipe(@NonNull final String title, @NonNull final String cuisineType, final int cooktime, @NonNull final String ingredients, @NonNull final String instructions) {
+    private void publishRecipe(@NonNull final String title, @NonNull final String cuisineType, final int cooktime, final int servings, @NonNull final String ingredients, @NonNull final String instructions) {
         recipe.setTitle(title);
         recipe.setCuisineType(cuisineType);
         recipe.setCooktime(cooktime);
+        recipe.setServings(servings);
         recipe.setAuthor(new User(ParseUser.getCurrentUser()));
         final List<String> ingredientList = Arrays.asList(ingredients.split("\n"));
         Log.i(TAG, "Ingredient List Uploaded: " + ingredientList);
@@ -179,6 +181,7 @@ public class UploadRecipeFragment extends Fragment {
         binding.etRecipeName.setText("");
         binding.actvCuisine.setText("");
         binding.etCooktime.setText("");
+        binding.etServings.setText("");
         binding.etIngredientList.setText("");
         binding.etInstructions.setText("");
         binding.ivImage.setImageResource(0);
@@ -188,6 +191,7 @@ public class UploadRecipeFragment extends Fragment {
         final ParseQuery<Recipe> query = ParseQuery.getQuery(Recipe.class);
         query.include(Recipe.KEY_TITLE);
         query.include(Recipe.KEY_COOKTIME);
+        query.include(Recipe.KEY_SERVINGS);
         query.include(Recipe.KEY_CUISINE_TYPE);
         query.include(Recipe.KEY_AUTHOR);
         query.include(Recipe.KEY_RECIPE_ID);

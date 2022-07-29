@@ -25,7 +25,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="30dp"
-                android:layout_marginTop="10dp"
+                android:layout_marginTop="20dp"
                 android:layout_marginEnd="30dp"
                 android:hint="Recipe Name"
                 app:counterEnabled="true"
@@ -58,10 +58,10 @@
 
             <Button
                 android:id="@+id/btnTakePic"
-                android:layout_width="57dp"
-                android:layout_height="52dp"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
                 android:layout_marginStart="50dp"
-                android:layout_marginTop="5dp"
+                android:layout_marginTop="10dp"
                 android:background="@drawable/ic_outline_photo_camera_24"
                 android:onClick="@{(view)->fragmentUploadRecipeController.imageClient.launchCamera()}"
                 app:layout_constraintStart_toStartOf="@+id/ivImage"
@@ -69,7 +69,7 @@
 
             <Button
                 android:id="@+id/btnGallery"
-                android:layout_width="60dp"
+                android:layout_width="40dp"
                 android:layout_height="0dp"
                 android:layout_marginEnd="50dp"
                 android:background="@drawable/ic_baseline_photo_library_24"
@@ -81,12 +81,16 @@
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/tilCuisine"
                 style="@style/Widget.Material3.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
-                android:layout_width="179dp"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="30dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginEnd="30dp"
                 android:hint="Cuisine Type"
+                app:boxBackgroundColor="@color/light_teal"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="@+id/tilCooktime"
+                app:layout_constraintTop_toBottomOf="@+id/btnGallery"
                 app:startIconDrawable="@drawable/ic_baseline_restaurant_menu_24"
                 app:startIconTint="@color/teal_700">
 
@@ -104,20 +108,39 @@
 
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/tilCooktime"
-                android:layout_width="0dp"
+                android:layout_width="160dp"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="5dp"
                 android:layout_marginTop="10dp"
-                android:layout_marginEnd="30dp"
+                android:layout_marginEnd="10dp"
                 android:hint="Cooktime (mins)"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@+id/tilCuisine"
-                app:layout_constraintTop_toBottomOf="@+id/btnGallery"
+                app:layout_constraintEnd_toStartOf="@+id/tilServings"
+                app:layout_constraintStart_toStartOf="@+id/tilCuisine"
+                app:layout_constraintTop_toBottomOf="@+id/tilCuisine"
                 app:startIconDrawable="@drawable/ic_baseline_access_time_24"
                 app:startIconTint="@color/teal_700">
 
                 <EditText
                     android:id="@+id/etCooktime"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+
+                    android:ems="10"
+                    android:inputType="number" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/tilServings"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:hint="Servings"
+                app:layout_constraintEnd_toEndOf="@+id/tilCuisine"
+                app:layout_constraintStart_toEndOf="@+id/tilCooktime"
+                app:layout_constraintTop_toTopOf="@+id/tilCooktime"
+                app:startIconDrawable="@drawable/ic_baseline_access_time_24"
+                app:startIconTint="@color/teal_700">
+
+                <EditText
+                    android:id="@+id/etServings"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
 
@@ -135,7 +158,7 @@
                 android:hint="Ingredient List:"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/tilCuisine"
+                app:layout_constraintTop_toBottomOf="@+id/tilCooktime"
                 app:startIconDrawable="@drawable/ic_baseline_checklist_ingredient"
                 app:startIconTint="@color/teal_700">
 
@@ -189,11 +212,10 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
-                android:layout_marginEnd="20dp"
                 android:onClick="@{(view)->fragmentUploadRecipeController.validateRecipe()}"
                 android:text="Publish"
                 app:icon="@drawable/ic_baseline_post_add_24"
-                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintEnd_toEndOf="@+id/tilInstructions"
                 app:layout_constraintHorizontal_bias="1.0"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/tilInstructions" />
@@ -203,7 +225,7 @@
                 style="@style/Title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
+                android:layout_marginTop="20dp"
                 android:text="New Recipe"
                 android:textColor="@color/teal_700"
                 app:layout_constraintEnd_toEndOf="parent"

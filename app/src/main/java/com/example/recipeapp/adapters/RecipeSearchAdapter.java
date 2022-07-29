@@ -4,6 +4,7 @@ import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
@@ -82,7 +83,7 @@ public class RecipeSearchAdapter extends RecyclerView.Adapter<RecipeSearchAdapte
                     .addToBackStack(null)
                     .commit();
         });
-        holder.itemView.setOnClickListener(Navigation.createNavigateOnClickListener(R.id.action_recipeSearchFragment_to_recipeDetailsFragment, bundle));
+        holder.itemView.setOnClickListener(Navigation.createNavigateOnClickListener(R.id.recipeDetailsFragment, bundle));
     }
 
     @Override
@@ -118,7 +119,11 @@ public class RecipeSearchAdapter extends RecyclerView.Adapter<RecipeSearchAdapte
             else
                 Glide.with(context).load(recipe.getImageUrl()).into(binding.ivImage);
             binding.tvCookTime.setText(recipe.getCooktime() + "m");
+
             binding.tvCuisine.setText(recipe.getCuisineType());
+            if(Objects.equals(recipe.getCuisineType(), "None")) {
+                binding.tvCuisine.setVisibility(View.GONE);
+            }
         }
 
     }

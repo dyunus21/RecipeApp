@@ -7,7 +7,6 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@android:color/white"
         android:gravity="center_horizontal"
         android:orientation="vertical"
         android:scrollbarAlwaysDrawVerticalTrack="true"
@@ -18,12 +17,13 @@
             style="@style/Widget.Material3.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
             android:layout_marginTop="10dp"
-            android:layout_marginEnd="5dp"
+            android:layout_marginEnd="10dp"
             android:hint="Cuisine Type"
             app:boxBackgroundColor="@color/light_teal"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="@+id/tvMealType"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/tvFilter">
 
             <AutoCompleteTextView
@@ -38,12 +38,11 @@
             android:id="@+id/tvMealType"
             android:layout_width="100dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="15dp"
             android:layout_marginTop="10dp"
             android:text="Meal Type:"
             android:textColor="@color/teal_700"
             android:textSize="20sp"
-            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintStart_toStartOf="@+id/tilCuisine"
             app:layout_constraintTop_toBottomOf="@+id/tilCuisine" />
 
         <com.google.android.material.textfield.TextInputLayout
@@ -71,9 +70,9 @@
 
         <TextView
             android:id="@+id/tvMins"
-            android:layout_width="44dp"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="5dp"
+            android:layout_marginEnd="8dp"
             android:text="mins"
             android:textColor="@color/teal_700"
             android:textSize="20sp"
