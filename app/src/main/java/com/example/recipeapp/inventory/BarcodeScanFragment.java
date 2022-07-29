@@ -201,7 +201,7 @@ public class BarcodeScanFragment extends Fragment {
                 return;
             }
             final List<Ingredient> ingredientList = CURRENT_USER.getIngredientArray();
-            ingredientList.add(ingredient);
+            ingredientList.add(0,ingredient);
 
             CURRENT_USER.setIngredientArray(ingredientList);
             CURRENT_USER.getParseUser().saveInBackground(e1 -> {

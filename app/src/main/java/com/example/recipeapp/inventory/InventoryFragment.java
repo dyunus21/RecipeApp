@@ -121,7 +121,7 @@ public class InventoryFragment extends Fragment {
             }
             final List<Ingredient> ingredientList = currentUser.getIngredientArray();
             adapter.clear();
-            ingredientList.add(ingredient);
+            ingredientList.add(0,ingredient);
             adapter.addAll(ingredientList);
             binding.tvNumIngredients.setText(ingredientList.size() + " items");
             Objects.requireNonNull(progressDialog).dismiss();
