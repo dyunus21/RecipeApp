@@ -14,7 +14,7 @@ import androidx.annotation.Nullable;
 import androidx.core.content.FileProvider;
 import androidx.fragment.app.Fragment;
 
-import com.example.recipeapp.activities.MainActivity;
+import com.example.recipeapp.main.MainActivity;
 import com.example.recipeapp.models.BitmapScaler;
 
 import java.io.ByteArrayOutputStream;

@@ -1,13 +1,11 @@
-package com.example.recipeapp.activities;
+package com.example.recipeapp.main;
 
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
-import android.view.Menu;
 import android.view.View;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 import androidx.navigation.NavController;
@@ -17,7 +15,7 @@ import androidx.navigation.ui.NavigationUI;
 import com.example.recipeapp.R;
 import com.example.recipeapp.databinding.ActivityMainBinding;
 import com.example.recipeapp.models.FabAnimation;
-import com.example.recipeapp.models.User;
+import com.example.recipeapp.models.parse.User;
 import com.parse.ParseUser;
 
 public class MainActivity extends AppCompatActivity {

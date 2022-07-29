@@ -7,7 +7,7 @@
 
         <variable
             name="fragmentRecipeDetailsController"
-            type="com.example.recipeapp.fragments.RecipeDetailsFragment" />
+            type="com.example.recipeapp.recipeSearch.RecipeDetailsFragment" />
 
         <variable
             name="made"
@@ -26,7 +26,7 @@
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            tools:context=".fragments.RecipeDetailsFragment">
+            tools:context=".recipeSearch.RecipeDetailsFragment">
 
             <TextView
                 android:id="@+id/tvServings"

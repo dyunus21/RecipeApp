@@ -1,4 +1,4 @@
-package com.example.recipeapp.adapters;
+package com.example.recipeapp.recipeSearch.adapters;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -18,11 +18,11 @@ import androidx.transition.TransitionSet;
 
 import com.bumptech.glide.Glide;
 import com.example.recipeapp.R;
-import com.example.recipeapp.activities.MainActivity;
 import com.example.recipeapp.databinding.ItemRecipeCardBinding;
-import com.example.recipeapp.fragments.RecipeDetailsFragment;
-import com.example.recipeapp.models.Recipe;
-import com.example.recipeapp.models.User;
+import com.example.recipeapp.main.MainActivity;
+import com.example.recipeapp.models.parse.Recipe;
+import com.example.recipeapp.models.parse.User;
+import com.example.recipeapp.recipeSearch.RecipeDetailsFragment;
 import com.parse.ParseException;
 import com.parse.ParseUser;
 
@@ -115,9 +115,9 @@ public class RecipeSearchAdapter extends RecyclerView.Adapter<RecipeSearchAdapte
             if (Objects.equals(recipe.getImageUrl(), "") && recipe.getImage() == null)
                 Glide.with(context).load(R.drawable.placeholder_image).into(binding.ivImage);
             else if (recipe.getImageUrl() == null)
-                Glide.with(context).load(recipe.getImage().getUrl()).into(binding.ivImage);
+                Glide.with(context).load(recipe.getImage().getUrl()).placeholder(R.drawable.placeholder_image).into(binding.ivImage);
             else
-                Glide.with(context).load(recipe.getImageUrl()).into(binding.ivImage);
+                Glide.with(context).load(recipe.getImageUrl()).placeholder(R.drawable.placeholder_image).into(binding.ivImage);
             binding.tvCookTime.setText(recipe.getCooktime() + "m");
 
             binding.tvCuisine.setText(recipe.getCuisineType());

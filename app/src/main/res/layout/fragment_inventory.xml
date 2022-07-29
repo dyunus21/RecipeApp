@@ -7,14 +7,14 @@
 
         <variable
             name="fragmentInventoryController"
-            type="com.example.recipeapp.fragments.InventoryFragment" />
+            type="com.example.recipeapp.inventory.InventoryFragment" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="#D7ECE9"
-        tools:context=".fragments.InventoryFragment">
+        tools:context=".inventory.InventoryFragment">
 
 
         <TextView

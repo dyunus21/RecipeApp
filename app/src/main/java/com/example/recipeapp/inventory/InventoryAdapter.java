@@ -1,4 +1,4 @@
-package com.example.recipeapp.adapters;
+package com.example.recipeapp.inventory;
 
 import android.content.Context;
 import android.util.Log;
@@ -9,7 +9,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.recipeapp.databinding.ItemIngredientBinding;
-import com.example.recipeapp.models.Ingredient;
+import com.example.recipeapp.models.parse.Ingredient;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
 import java.util.List;

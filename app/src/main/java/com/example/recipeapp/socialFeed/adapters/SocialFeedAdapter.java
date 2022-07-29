@@ -1,4 +1,4 @@
-package com.example.recipeapp.adapters;
+package com.example.recipeapp.socialFeed.adapters;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -10,22 +10,20 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.navigation.Navigation;
-import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.example.recipeapp.R;
 import com.example.recipeapp.databinding.ItemPostBinding;
-import com.example.recipeapp.fragments.RecipeDetailsFragment;
-import com.example.recipeapp.models.Comment;
-import com.example.recipeapp.models.Post;
-import com.example.recipeapp.models.Recipe;
-import com.example.recipeapp.models.User;
+import com.example.recipeapp.recipeSearch.RecipeDetailsFragment;
+import com.example.recipeapp.models.parse.Comment;
+import com.example.recipeapp.models.parse.Post;
+import com.example.recipeapp.models.parse.Recipe;
+import com.example.recipeapp.models.parse.User;
 import com.example.recipeapp.utilities.CurrentTimeProvider;
 import com.example.recipeapp.utilities.TimeUtils;
 import com.parse.ParseQuery;
@@ -102,8 +100,8 @@ public class SocialFeedAdapter extends RecyclerView.Adapter<SocialFeedAdapter.Vi
             currentPost = post;
             final User user = post.getAuthor();
             binding.tvUsername.setText("@" + user.getParseUser().getUsername());
-            Glide.with(context).load(post.getImage().getUrl()).into(binding.ivImage);
-            Glide.with(context).load(user.getProfileImage().getUrl()).circleCrop().into(binding.ivProfileImage);
+            Glide.with(context).load(post.getImage().getUrl()).placeholder(R.drawable.placeholder_image).into(binding.ivImage);
+            Glide.with(context).load(user.getProfileImage().getUrl()).placeholder(R.drawable.ic_baseline_account_circle_24).circleCrop().into(binding.ivProfileImage);
             binding.tvTimestamp.setText(timeUtils.calculateTimeAgo(post.getCreatedAt()));
             binding.tvTitle.setText(post.getTitle());
             final String sourceString = "<b>" + user.getParseUser().getUsername() + "</b> " + post.getDescription();
@@ -126,7 +124,7 @@ public class SocialFeedAdapter extends RecyclerView.Adapter<SocialFeedAdapter.Vi
 
             binding.ibHeart.setOnClickListener(v -> likePost());
 
-            Glide.with(context).load(CURRENT_USER.getProfileImage().getUrl()).circleCrop().into(binding.ivCurrentUserProfileImage);
+            Glide.with(context).load(CURRENT_USER.getProfileImage().getUrl()).placeholder(R.drawable.ic_baseline_account_circle_24).circleCrop().into(binding.ivCurrentUserProfileImage);
             binding.rvComments.setLayoutManager(new LinearLayoutManager(context));
             binding.rvComments.setAdapter(commentsAdapter);
             binding.btnPostComment.setOnClickListener(v -> postComment());
@@ -137,7 +135,6 @@ public class SocialFeedAdapter extends RecyclerView.Adapter<SocialFeedAdapter.Vi
                 @Override
                 public boolean onDoubleTap(@NonNull final MotionEvent e) {
                     Log.i(TAG, "double tapped post: " + currentPost.getTitle());
-                    Toast.makeText(context, "Double tapped post: " + currentPost.getTitle(), Toast.LENGTH_SHORT).show();
                     likePost();
                     return false;
                 }

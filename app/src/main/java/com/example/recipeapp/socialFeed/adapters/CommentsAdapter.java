@@ -1,4 +1,4 @@
-package com.example.recipeapp.adapters;
+package com.example.recipeapp.socialFeed.adapters;
 
 import android.content.Context;
 import android.text.Html;
@@ -9,8 +9,9 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.example.recipeapp.R;
 import com.example.recipeapp.databinding.ItemCommentBinding;
-import com.example.recipeapp.models.Comment;
+import com.example.recipeapp.models.parse.Comment;
 import com.example.recipeapp.utilities.CurrentTimeProvider;
 import com.example.recipeapp.utilities.TimeUtils;
 
@@ -70,7 +71,7 @@ public class CommentsAdapter extends RecyclerView.Adapter<CommentsAdapter.ViewHo
         public void bind(@NonNull final Comment comment) {
             final String sourceString = "<b>" + comment.getAuthor().getParseUser().getUsername() + "</b> " + comment.getDescription();
             binding.tvBody.setText(Html.fromHtml(sourceString));
-            Glide.with(context).load(comment.getAuthor().getProfileImage().getUrl()).circleCrop().into(binding.ivProfileImage);
+            Glide.with(context).load(comment.getAuthor().getProfileImage().getUrl()).placeholder(R.drawable.ic_baseline_account_circle_24).circleCrop().into(binding.ivProfileImage);
             binding.tvTimestamp.setText(timeUtils.calculateTimeAgo(comment.getCreatedAt()));
         }
 

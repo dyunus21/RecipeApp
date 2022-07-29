@@ -1,4 +1,4 @@
-package com.example.recipeapp.fragments;
+package com.example.recipeapp.inventory;
 
 import android.Manifest;
 import android.app.ProgressDialog;
@@ -30,8 +30,8 @@ import com.example.recipeapp.clients.BarcodeAnalyzeClient;
 import com.example.recipeapp.databinding.CameraDialogBinding;
 import com.example.recipeapp.databinding.FragmentBarcodeScanBinding;
 import com.example.recipeapp.models.BarcodeAnalyzer;
-import com.example.recipeapp.models.Ingredient;
-import com.example.recipeapp.models.User;
+import com.example.recipeapp.models.parse.Ingredient;
+import com.example.recipeapp.models.parse.User;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.common.util.concurrent.ListenableFuture;
 import com.google.mlkit.vision.barcode.common.Barcode;
@@ -173,7 +173,7 @@ public class BarcodeScanFragment extends Fragment {
         cameraDialogBinding.tvProductName.setText("Product Name: " + productName);
         final ArrayAdapter<String> unitsAdapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_dropdown_item_1line, getResources().getStringArray(R.array.units));
         cameraDialogBinding.actvUnit.setAdapter(unitsAdapter);
-        Glide.with(requireContext()).load(bitmap).into(cameraDialogBinding.ivPreview);
+        Glide.with(requireContext()).load(bitmap).placeholder(R.drawable.placeholder_image).into(cameraDialogBinding.ivPreview);
         alertDialogBuilder.setNegativeButton("Cancel", (dialog, which) -> {
             dialog.cancel();
             startCamera();

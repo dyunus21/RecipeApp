@@ -7,14 +7,14 @@
 
         <variable
             name="fragmentRecipeSearchController"
-            type="com.example.recipeapp.fragments.RecipeSearchFragment" />
+            type="com.example.recipeapp.recipeSearch.RecipeSearchFragment" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="#D7ECE9"
-        tools:context=".fragments.RecipeSearchFragment">
+        tools:context=".recipeSearch.RecipeSearchFragment">
 
 
         <ImageButton

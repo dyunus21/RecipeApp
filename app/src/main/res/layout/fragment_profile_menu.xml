@@ -6,14 +6,14 @@
     <data>
         <variable
             name="fragmentProfileMenuController"
-            type="com.example.recipeapp.fragments.ProfileMenuFragment" />
+            type="com.example.recipeapp.profile.ProfileMenuFragment" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="#D7ECE9"
-        tools:context=".fragments.ProfileMenuFragment">
+        tools:context=".profile.ProfileMenuFragment">
 
         <TextView
             android:id="@+id/tvPageTitle"

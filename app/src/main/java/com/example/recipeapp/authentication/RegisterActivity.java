@@ -1,4 +1,4 @@
-package com.example.recipeapp.activities;
+package com.example.recipeapp.authentication;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
@@ -18,9 +18,11 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.bumptech.glide.Glide;
+import com.example.recipeapp.R;
 import com.example.recipeapp.databinding.ActivityRegisterBinding;
+import com.example.recipeapp.main.MainActivity;
 import com.example.recipeapp.models.BitmapScaler;
-import com.example.recipeapp.models.User;
+import com.example.recipeapp.models.parse.User;
 import com.parse.ParseFile;
 import com.parse.ParseUser;
 
@@ -96,7 +98,7 @@ public class RegisterActivity extends AppCompatActivity {
             Bitmap selectedImage = loadFromUri(photoUri);
             photoFile = getPhotoFileUri(getFileName(photoUri));
             photoFile = resizeFile(selectedImage);
-            Glide.with(this).load(photoUri).circleCrop().into(binding.ivProfileImage);
+            Glide.with(this).load(photoUri).circleCrop().placeholder(R.drawable.ic_baseline_account_circle_24).into(binding.ivProfileImage);
             Log.i(TAG, "File: " + photoFile.toString());
         }
     }

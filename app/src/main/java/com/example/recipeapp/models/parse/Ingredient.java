@@ -1,4 +1,4 @@
-package com.example.recipeapp.models;
+package com.example.recipeapp.models.parse;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;

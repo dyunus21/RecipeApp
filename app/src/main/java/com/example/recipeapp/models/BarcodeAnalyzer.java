@@ -9,7 +9,7 @@ import androidx.annotation.NonNull;
 import androidx.camera.core.ImageAnalysis;
 import androidx.camera.core.ImageProxy;
 
-import com.example.recipeapp.fragments.BarcodeScanFragment;
+import com.example.recipeapp.inventory.BarcodeScanFragment;
 import com.google.mlkit.common.MlKitException;
 import com.google.mlkit.vision.barcode.BarcodeScanner;
 import com.google.mlkit.vision.barcode.BarcodeScannerOptions;

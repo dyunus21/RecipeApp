@@ -1,4 +1,4 @@
-package com.example.recipeapp.fragments;
+package com.example.recipeapp.recipeSearch;
 
 import static android.app.Activity.RESULT_OK;
 
@@ -24,8 +24,8 @@ import com.bumptech.glide.Glide;
 import com.example.recipeapp.R;
 import com.example.recipeapp.clients.ImageClient;
 import com.example.recipeapp.databinding.FragmentUploadRecipeBinding;
-import com.example.recipeapp.models.Recipe;
-import com.example.recipeapp.models.User;
+import com.example.recipeapp.models.parse.Recipe;
+import com.example.recipeapp.models.parse.User;
 import com.parse.ParseFile;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
@@ -109,7 +109,7 @@ public class UploadRecipeFragment extends Fragment {
 
     private void initializePage() {
         binding.etRecipeName.setText(recipe.getTitle());
-        Glide.with(requireContext()).load(recipe.getImage().getUrl()).into(binding.ivImage);
+        Glide.with(requireContext()).load(recipe.getImage().getUrl()).placeholder(R.drawable.placeholder_image).into(binding.ivImage);
         binding.actvCuisine.setText(recipe.getCuisineType());
         binding.etCooktime.setText(String.valueOf(recipe.getCooktime()));
         binding.etServings.setText(String.valueOf(recipe.getServings()));
@@ -229,7 +229,7 @@ public class UploadRecipeFragment extends Fragment {
             if (resultCode == RESULT_OK) {
                 final Bitmap takenImage = BitmapFactory.decodeFile(Objects.requireNonNull(photoFile).getAbsolutePath());
                 photoFile = imageClient.resizeFile(takenImage);
-                Glide.with(requireContext()).load(photoFile).into(binding.ivImage);
+                Glide.with(requireContext()).load(photoFile).placeholder(R.drawable.placeholder_image).into(binding.ivImage);
                 Log.i(TAG, "File: " + photoFile.toString());
             } else {
                 Toast.makeText(requireContext(), "Picture wasn't taken!", Toast.LENGTH_SHORT).show();
@@ -238,7 +238,7 @@ public class UploadRecipeFragment extends Fragment {
             final Uri photoUri = data.getData();
             final Bitmap selectedImage = imageClient.loadFromUri(photoUri);
             photoFile = imageClient.resizeFile(selectedImage);
-            Glide.with(requireContext()).load(photoFile).into(binding.ivImage);
+            Glide.with(requireContext()).load(photoFile).placeholder(R.drawable.placeholder_image).into(binding.ivImage);
             Log.i(TAG, "File: " + photoFile.toString());
         }
     }

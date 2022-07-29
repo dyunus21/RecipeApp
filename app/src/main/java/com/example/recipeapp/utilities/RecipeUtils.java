@@ -3,9 +3,8 @@ package com.example.recipeapp.utilities;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 
-import com.example.recipeapp.models.Recipe;
+import com.example.recipeapp.models.parse.Recipe;
 
 import org.json.JSONArray;
 import org.json.JSONException;

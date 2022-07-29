@@ -7,7 +7,7 @@
 
         <variable
             name="fragmentUploadRecipeController"
-            type="com.example.recipeapp.fragments.UploadRecipeFragment" />
+            type="com.example.recipeapp.recipeSearch.UploadRecipeFragment" />
     </data>
 
     <ScrollView
@@ -18,7 +18,7 @@
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            tools:context=".fragments.UploadRecipeFragment">
+            tools:context=".recipeSearch.UploadRecipeFragment">
 
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/tilRecipeName"

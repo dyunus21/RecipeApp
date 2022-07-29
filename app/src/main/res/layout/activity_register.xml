@@ -7,14 +7,14 @@
 
         <variable
             name="activityRegisterController"
-            type="com.example.recipeapp.activities.RegisterActivity" />
+            type="com.example.recipeapp.authentication.RegisterActivity" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/teal_700"
-        tools:context=".activities.RegisterActivity">
+        tools:context=".authentication.RegisterActivity">
 
         <ImageView
             android:id="@+id/ivAppLogo"

@@ -1,4 +1,4 @@
-package com.example.recipeapp.fragments;
+package com.example.recipeapp.profile;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
@@ -21,14 +21,14 @@ import androidx.recyclerview.widget.GridLayoutManager;
 
 import com.bumptech.glide.Glide;
 import com.example.recipeapp.R;
-import com.example.recipeapp.activities.LoginActivity;
-import com.example.recipeapp.adapters.PostsAdapter;
-import com.example.recipeapp.adapters.RecipeSearchAdapter;
+import com.example.recipeapp.authentication.LoginActivity;
+import com.example.recipeapp.socialFeed.adapters.PostsAdapter;
+import com.example.recipeapp.recipeSearch.adapters.RecipeSearchAdapter;
 import com.example.recipeapp.clients.ImageClient;
 import com.example.recipeapp.databinding.FragmentProfileBinding;
-import com.example.recipeapp.models.Post;
-import com.example.recipeapp.models.Recipe;
-import com.example.recipeapp.models.User;
+import com.example.recipeapp.models.parse.Post;
+import com.example.recipeapp.models.parse.Recipe;
+import com.example.recipeapp.models.parse.User;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.tabs.TabLayout;
@@ -222,7 +222,7 @@ public class ProfileFragment extends Fragment implements NavigationView.OnNaviga
     }
 
     private void setProfileImage() {
-        Glide.with(requireContext()).load(CURRENT_USER.getProfileImage().getUrl()).circleCrop().into(binding.ivProfileImage);
+        Glide.with(requireContext()).load(CURRENT_USER.getProfileImage().getUrl()).placeholder(R.drawable.ic_baseline_account_circle_24).circleCrop().into(binding.ivProfileImage);
     }
 
     @Override

@@ -1,4 +1,4 @@
-package com.example.recipeapp.activities;
+package com.example.recipeapp.authentication;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -9,6 +9,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.recipeapp.databinding.ActivityLoginBinding;
+import com.example.recipeapp.main.MainActivity;
 import com.parse.ParseUser;
 
 import java.util.Objects;

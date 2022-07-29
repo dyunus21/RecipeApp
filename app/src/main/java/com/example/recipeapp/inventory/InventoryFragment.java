@@ -1,4 +1,4 @@
-package com.example.recipeapp.fragments;
+package com.example.recipeapp.inventory;
 
 import android.app.ProgressDialog;
 import android.os.Bundle;
@@ -16,12 +16,10 @@ import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.example.recipeapp.R;
-import com.example.recipeapp.activities.MainActivity;
-import com.example.recipeapp.adapters.InventoryAdapter;
 import com.example.recipeapp.databinding.AddIngredientDialogBinding;
 import com.example.recipeapp.databinding.FragmentInventoryBinding;
-import com.example.recipeapp.models.Ingredient;
-import com.example.recipeapp.models.User;
+import com.example.recipeapp.models.parse.Ingredient;
+import com.example.recipeapp.models.parse.User;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.parse.ParseException;
 import com.parse.ParseQuery;
