@@ -14,20 +14,19 @@ import androidx.annotation.Nullable;
 import androidx.core.content.FileProvider;
 import androidx.fragment.app.Fragment;
 
-import com.example.recipeapp.activities.MainActivity;
+import com.example.recipeapp.main.MainActivity;
 import com.example.recipeapp.models.BitmapScaler;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.util.Calendar;
 
 public class ImageClient extends MainActivity {
     private static final String TAG = "ImageClient";
     private static final int CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE = 42;
     private final static int PICK_PHOTO_CODE = 1046;
-    public final String photoFileName = Calendar.getInstance().getTime() + ".jpg";
+    public String photoFileName = "photo.jpg";
     @NonNull
     final Context context;
     @NonNull
@@ -42,6 +41,7 @@ public class ImageClient extends MainActivity {
 
 
     public void launchCamera() {
+        photoFileName = Math.random() + photoFileName;
         final Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         photoFile = getPhotoFileUri(photoFileName);
         final Uri fileProvider = FileProvider.getUriForFile(context, "com.example.provider", photoFile);
@@ -53,6 +53,7 @@ public class ImageClient extends MainActivity {
 
 
     public void onPickPhoto() {
+        photoFileName = Math.random() + photoFileName;
         Log.i(TAG, "onPickPhoto!");
         final Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
         Log.i(TAG, "start intent for gallery!");

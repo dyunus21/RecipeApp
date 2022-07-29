@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/recipeSearchFragment"
-        android:name="com.example.recipeapp.fragments.RecipeSearchFragment"
+        android:name="com.example.recipeapp.recipeSearch.RecipeSearchFragment"
         android:label="fragment_recipe_search"
         tools:layout="@layout/fragment_recipe_search">
         <action
@@ -16,7 +16,7 @@
     </fragment>
     <fragment
         android:id="@+id/profileFragment"
-        android:name="com.example.recipeapp.fragments.ProfileFragment"
+        android:name="com.example.recipeapp.profile.ProfileFragment"
         android:label="fragment_profile"
         tools:layout="@layout/fragment_profile">
         <action
@@ -25,7 +25,7 @@
     </fragment>
     <fragment
         android:id="@+id/recipeDetailsFragment"
-        android:name="com.example.recipeapp.fragments.RecipeDetailsFragment"
+        android:name="com.example.recipeapp.recipeSearch.RecipeDetailsFragment"
         android:label="fragment_recipe_details"
         tools:layout="@layout/fragment_recipe_details">
         <action
@@ -40,7 +40,7 @@
     </fragment>
     <fragment
         android:id="@+id/socialFeedFragment"
-        android:name="com.example.recipeapp.fragments.SocialFeedFragment"
+        android:name="com.example.recipeapp.socialFeed.SocialFeedFragment"
         android:label="fragment_social_feed"
         tools:layout="@layout/fragment_social_feed">
         <action
@@ -64,7 +64,7 @@
     </fragment>
     <fragment
         android:id="@+id/inventoryFragment"
-        android:name="com.example.recipeapp.fragments.InventoryFragment"
+        android:name="com.example.recipeapp.inventory.InventoryFragment"
         android:label="fragment_inventory"
         tools:layout="@layout/fragment_inventory">
         <action
@@ -73,17 +73,17 @@
     </fragment>
     <fragment
         android:id="@+id/uploadRecipeFragment"
-        android:name="com.example.recipeapp.fragments.UploadRecipeFragment"
+        android:name="com.example.recipeapp.recipeSearch.UploadRecipeFragment"
         android:label="fragment_upload_recipe"
         tools:layout="@layout/fragment_upload_recipe" />
     <fragment
         android:id="@+id/uploadPostFragment"
-        android:name="com.example.recipeapp.fragments.UploadPostFragment"
+        android:name="com.example.recipeapp.socialFeed.UploadPostFragment"
         android:label="fragment_upload_post"
         tools:layout="@layout/fragment_upload_post" />
     <fragment
         android:id="@+id/barcodeScanFragment"
-        android:name="com.example.recipeapp.fragments.BarcodeScanFragment"
+        android:name="com.example.recipeapp.inventory.BarcodeScanFragment"
         android:label="fragment_barcode_scan"
         tools:layout="@layout/fragment_barcode_scan" >
         <action
@@ -92,7 +92,7 @@
     </fragment>
     <fragment
         android:id="@+id/profileMenuFragment"
-        android:name="com.example.recipeapp.fragments.ProfileMenuFragment"
+        android:name="com.example.recipeapp.profile.ProfileMenuFragment"
         android:label="fragment_profile_menu"
         tools:layout="@layout/fragment_profile_menu" >
         <action

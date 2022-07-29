@@ -1,4 +1,4 @@
-package com.example.recipeapp.fragments;
+package com.example.recipeapp.socialFeed;
 
 import static android.app.Activity.RESULT_OK;
 
@@ -23,12 +23,11 @@ import androidx.navigation.fragment.NavHostFragment;
 
 import com.bumptech.glide.Glide;
 import com.example.recipeapp.R;
-import com.example.recipeapp.activities.MainActivity;
 import com.example.recipeapp.clients.ImageClient;
 import com.example.recipeapp.databinding.FragmentUploadPostBinding;
-import com.example.recipeapp.models.Post;
-import com.example.recipeapp.models.Recipe;
-import com.example.recipeapp.models.User;
+import com.example.recipeapp.models.parse.Post;
+import com.example.recipeapp.models.parse.Recipe;
+import com.example.recipeapp.models.parse.User;
 import com.parse.ParseFile;
 import com.parse.ParseUser;
 
@@ -111,6 +110,7 @@ public class UploadPostFragment extends Fragment implements AdapterView.OnItemSe
 
         if (photoFile == null || binding.ivImage.getDrawable() == null) {
             Toast.makeText(requireContext(), "Post does not contain any image!", Toast.LENGTH_SHORT).show();
+            return;
         }
         postRecipe(title, description);
     }
@@ -118,7 +118,7 @@ public class UploadPostFragment extends Fragment implements AdapterView.OnItemSe
     private void postRecipe(@NonNull final String title, @NonNull final String description) {
         Post post = new Post();
         post.setAuthor(new User(ParseUser.getCurrentUser()));
-        post.setImage(new ParseFile(Objects.requireNonNull(photoFile)));
+        post.setImage(new ParseFile(photoFile));
         post.setTitle(title);
         post.setDescription(description);
         post.setType(binding.spinnerType.getSelectedItem().toString());
@@ -155,7 +155,7 @@ public class UploadPostFragment extends Fragment implements AdapterView.OnItemSe
             if (resultCode == RESULT_OK) {
                 final Bitmap takenImage = BitmapFactory.decodeFile(Objects.requireNonNull(photoFile).getAbsolutePath());
                 photoFile = imageClient.resizeFile(takenImage);
-                Glide.with(requireContext()).load(photoFile).into(binding.ivImage);
+                Glide.with(requireContext()).load(photoFile).placeholder(R.drawable.placeholder_image).into(binding.ivImage);
                 Log.i(TAG, "File: " + photoFile.toString());
             } else {
                 Toast.makeText(requireContext(), "Picture wasn't taken!", Toast.LENGTH_SHORT).show();
@@ -164,7 +164,7 @@ public class UploadPostFragment extends Fragment implements AdapterView.OnItemSe
             final Uri photoUri = data.getData();
             final Bitmap selectedImage = imageClient.loadFromUri(photoUri);
             photoFile = imageClient.resizeFile(selectedImage);
-            Glide.with(requireContext()).load(photoFile).into(binding.ivImage);
+            Glide.with(requireContext()).load(photoFile).placeholder(R.drawable.placeholder_image).into(binding.ivImage);
             Log.i(TAG, "File: " + photoFile.toString());
         }
     }

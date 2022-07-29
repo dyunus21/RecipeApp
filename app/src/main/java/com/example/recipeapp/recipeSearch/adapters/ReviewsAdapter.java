@@ -1,4 +1,4 @@
-package com.example.recipeapp.adapters;
+package com.example.recipeapp.recipeSearch.adapters;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -8,8 +8,9 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.example.recipeapp.R;
 import com.example.recipeapp.databinding.ItemReviewBinding;
-import com.example.recipeapp.models.Review;
+import com.example.recipeapp.models.parse.Review;
 import com.example.recipeapp.utilities.CurrentTimeProvider;
 import com.example.recipeapp.utilities.TimeUtils;
 
@@ -72,7 +73,7 @@ public class ReviewsAdapter extends RecyclerView.Adapter<ReviewsAdapter.ViewHold
             binding.tvTimestamp.setText(timeUtils.calculateTimeAgo(review.getCreatedAt()));
             binding.tvDescription.setText(review.getDescription());
             binding.rbRating.setRating(review.getRating());
-            Glide.with(context).load(review.getAuthor().getProfileImage().getUrl()).circleCrop().into(binding.ivProfileImage);
+            Glide.with(context).load(review.getAuthor().getProfileImage().getUrl()).placeholder(R.drawable.ic_baseline_account_circle_24).circleCrop().into(binding.ivProfileImage);
         }
 
     }

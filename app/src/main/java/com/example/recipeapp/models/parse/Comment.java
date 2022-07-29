@@ -1,4 +1,4 @@
-package com.example.recipeapp.models;
+package com.example.recipeapp.models.parse;
 
 import androidx.annotation.NonNull;
 
@@ -7,13 +7,13 @@ import com.parse.ParseObject;
 
 import java.util.Objects;
 
-@ParseClassName("Review")
-public class Review extends ParseObject {
+@ParseClassName("Comment")
+public class Comment extends ParseObject {
     public static final String KEY_AUTHOR = "author";
     public static final String KEY_DESCRIPTION = "description";
-    public static final String KEY_RATING = "rating";
-    public static final String KEY_RECIPE = "recipe";
-    private static final String TAG = "Review";
+    public static final String KEY_POST = "post";
+    private static final String TAG = "Comment";
+
 
     public User getAuthor() {
         return new User(Objects.requireNonNull(getParseUser(KEY_AUTHOR)));
@@ -31,19 +31,11 @@ public class Review extends ParseObject {
         put(KEY_DESCRIPTION, description);
     }
 
-    public float getRating() {
-        return (float) getDouble(KEY_RATING);
+    public Post getPost() {
+        return (Post) getParseObject(KEY_POST);
     }
 
-    public void setRating(final double rating) {
-        put(KEY_RATING, rating);
-    }
-
-    public Recipe getRecipe() {
-        return (Recipe) getParseObject(KEY_RECIPE);
-    }
-
-    public void setRecipe(@NonNull final Recipe recipe) {
-        put(KEY_RECIPE, recipe);
+    public void setPost(@NonNull final Post post) {
+        put(KEY_POST, post);
     }
 }

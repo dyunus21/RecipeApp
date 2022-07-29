@@ -1,4 +1,4 @@
-package com.example.recipeapp.fragments;
+package com.example.recipeapp.profile;
 
 import android.os.Bundle;
 import android.util.Log;
@@ -12,12 +12,12 @@ import androidx.fragment.app.Fragment;
 import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 
-import com.example.recipeapp.adapters.PostsAdapter;
-import com.example.recipeapp.adapters.RecipeSearchAdapter;
+import com.example.recipeapp.socialFeed.adapters.PostsAdapter;
+import com.example.recipeapp.recipeSearch.adapters.RecipeSearchAdapter;
 import com.example.recipeapp.databinding.FragmentProfileMenuBinding;
-import com.example.recipeapp.models.Post;
-import com.example.recipeapp.models.Recipe;
-import com.example.recipeapp.models.User;
+import com.example.recipeapp.models.parse.Post;
+import com.example.recipeapp.models.parse.Recipe;
+import com.example.recipeapp.models.parse.User;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
 

@@ -2,12 +2,12 @@ package com.example.recipeapp;
 
 import android.app.Application;
 
-import com.example.recipeapp.models.Comment;
-import com.example.recipeapp.models.Ingredient;
-import com.example.recipeapp.models.Post;
-import com.example.recipeapp.models.Recipe;
-import com.example.recipeapp.models.Review;
-import com.example.recipeapp.models.User;
+import com.example.recipeapp.models.parse.Comment;
+import com.example.recipeapp.models.parse.Ingredient;
+import com.example.recipeapp.models.parse.Post;
+import com.example.recipeapp.models.parse.Recipe;
+import com.example.recipeapp.models.parse.Review;
+import com.example.recipeapp.models.parse.User;
 import com.parse.Parse;
 import com.parse.ParseObject;
 

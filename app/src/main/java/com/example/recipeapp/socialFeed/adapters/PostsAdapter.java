@@ -1,4 +1,4 @@
-package com.example.recipeapp.adapters;
+package com.example.recipeapp.socialFeed.adapters;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -8,8 +8,9 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.example.recipeapp.R;
 import com.example.recipeapp.databinding.ItemProfilePostBinding;
-import com.example.recipeapp.models.Post;
+import com.example.recipeapp.models.parse.Post;
 
 import java.util.List;
 
@@ -61,7 +62,7 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.ViewHolder> 
         }
 
         public void bind(@NonNull final Post post) {
-            Glide.with(context).load(post.getImage().getUrl()).into(binding.ivImage);
+            Glide.with(context).load(post.getImage().getUrl()).placeholder(R.drawable.placeholder_image).into(binding.ivImage);
         }
     }
 }

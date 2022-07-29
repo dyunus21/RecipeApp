@@ -1,4 +1,4 @@
-package com.example.recipeapp.models;
+package com.example.recipeapp.models.parse;
 
 import android.util.Log;
 
@@ -158,7 +158,7 @@ public class User extends ParseObject {
                 return;
             }
         }
-        recipesLiked.add(recipe);
+        recipesLiked.add(0,recipe);
         setRecipesLiked(recipesLiked);
     }
 
@@ -183,7 +183,7 @@ public class User extends ParseObject {
                 return;
             }
         }
-        recipesMade.add(recipe);
+        recipesMade.add(0,recipe);
         setRecipesMade(recipesMade);
     }
 

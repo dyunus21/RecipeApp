@@ -6,7 +6,7 @@
 
         <variable
             name="controller"
-            type="com.example.recipeapp.activities.MainActivity" />
+            type="com.example.recipeapp.main.MainActivity" />
     </data>
 
     <androidx.coordinatorlayout.widget.CoordinatorLayout
@@ -14,7 +14,7 @@
         android:layout_height="match_parent"
         android:background="@android:color/transparent"
         android:fitsSystemWindows="true"
-        tools:context=".activities.MainActivity">
+        tools:context=".main.MainActivity">
 
 
         <androidx.constraintlayout.widget.ConstraintLayout

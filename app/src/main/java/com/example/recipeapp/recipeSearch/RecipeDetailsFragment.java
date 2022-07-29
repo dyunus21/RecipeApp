@@ -1,6 +1,5 @@
-package com.example.recipeapp.fragments;
+package com.example.recipeapp.recipeSearch;
 
-import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -17,15 +16,16 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import com.bumptech.glide.Glide;
 import com.codepath.asynchttpclient.callback.JsonHttpResponseHandler;
 import com.example.recipeapp.R;
-import com.example.recipeapp.adapters.ReviewsAdapter;
 import com.example.recipeapp.clients.RecipeClient;
 import com.example.recipeapp.databinding.FragmentRecipeDetailsBinding;
-import com.example.recipeapp.models.Comment;
-import com.example.recipeapp.models.Recipe;
-import com.example.recipeapp.models.Review;
-import com.example.recipeapp.models.User;
+import com.example.recipeapp.models.parse.Comment;
+import com.example.recipeapp.models.parse.Recipe;
+import com.example.recipeapp.models.parse.Review;
+import com.example.recipeapp.models.parse.User;
+import com.example.recipeapp.recipeSearch.adapters.ReviewsAdapter;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.tabs.TabLayout;
+import com.parse.ParseException;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
 
@@ -87,7 +87,7 @@ public class RecipeDetailsFragment extends Fragment {
         binding.tvCuisine.setText(recipe.getCuisineType());
         binding.tvServings.setText(recipe.getServings() + " Servings");
         String url = recipe.getImageUrl() == null ? recipe.getImage().getUrl() : recipe.getImageUrl();
-        Glide.with(requireContext()).load(url).into(binding.ivImage);
+        Glide.with(requireContext()).load(url).placeholder(R.drawable.placeholder_image).into(binding.ivImage);
         if (recipe.getRecipeId() != 0) {
             binding.tvUploadedBy.setVisibility(View.GONE);
             try {
@@ -102,6 +102,12 @@ public class RecipeDetailsFragment extends Fragment {
             for (int i = 0; i < ingredients.size(); i++) {
                 binding.tvIngredientList.append("• " + ingredients.get(i) + "\n");
             }
+            try {
+                currentUser.fetchIfNeeded();
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+            binding.tvUploadedBy.setText("Uploaded by: @" + currentUser.getParseUser().getUsername());
         }
 
         List<String> instructions = recipe.getInstructions();
@@ -132,7 +138,7 @@ public class RecipeDetailsFragment extends Fragment {
         } else {
             binding.ibEdit.setVisibility(View.GONE);
         }
-        Glide.with(requireContext()).load(currentUser.getProfileImage().getUrl()).circleCrop().into(binding.ivProfileImage);
+        Glide.with(requireContext()).load(currentUser.getProfileImage().getUrl()).placeholder(R.drawable.placeholder_image).circleCrop().into(binding.ivProfileImage);
         binding.rvReviews.setLayoutManager(new LinearLayoutManager(getContext()));
         binding.rvReviews.setAdapter(reviewsAdapter);
         queryReviews();

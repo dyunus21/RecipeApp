@@ -1,4 +1,4 @@
-package com.example.recipeapp.fragments;
+package com.example.recipeapp.recipeSearch;
 
 import static android.app.Activity.RESULT_OK;
 
@@ -27,14 +27,14 @@ import com.arlib.floatingsearchview.suggestions.model.SearchSuggestion;
 import com.bumptech.glide.Glide;
 import com.codepath.asynchttpclient.callback.JsonHttpResponseHandler;
 import com.example.recipeapp.R;
-import com.example.recipeapp.adapters.RecipeSearchAdapter;
 import com.example.recipeapp.clients.ImageClient;
 import com.example.recipeapp.clients.RecipeClient;
 import com.example.recipeapp.databinding.FilterDialogBinding;
 import com.example.recipeapp.databinding.FragmentRecipeSearchBinding;
 import com.example.recipeapp.databinding.ImageSearchDialogBinding;
-import com.example.recipeapp.models.Recipe;
-import com.example.recipeapp.models.User;
+import com.example.recipeapp.models.parse.Recipe;
+import com.example.recipeapp.models.parse.User;
+import com.example.recipeapp.recipeSearch.adapters.RecipeSearchAdapter;
 import com.example.recipeapp.utilities.RecipeUtils;
 import com.google.android.material.chip.Chip;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
@@ -280,7 +280,7 @@ public class RecipeSearchFragment extends Fragment {
         final MaterialAlertDialogBuilder alertDialogBuilder = new MaterialAlertDialogBuilder(requireContext());
         alertDialogBuilder.setTitle("Preview");
         final ImageSearchDialogBinding imageSearchDialogBinding = ImageSearchDialogBinding.inflate(getLayoutInflater());
-        Glide.with(requireContext()).load(photoFile).into(imageSearchDialogBinding.ivPreview);
+        Glide.with(requireContext()).load(photoFile).placeholder(R.drawable.placeholder_image).into(imageSearchDialogBinding.ivPreview);
         alertDialogBuilder.setPositiveButton("Search", (dialog, which) -> {
             Log.i(TAG, "Search for recipes based on image");
             try {

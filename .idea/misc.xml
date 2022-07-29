@@ -18,7 +18,7 @@
         <entry key="app/src/main/res/drawable/rounded_rectangle.xml" value="0.26413726806640625" />
         <entry key="app/src/main/res/drawable/rounded_rectangle_teal.xml" value="0.3315" />
         <entry key="app/src/main/res/drawable/splash_background.xml" value="0.10186053466796871" />
-        <entry key="app/src/main/res/layout/activity_login.xml" value="0.5120772946859904" />
+        <entry key="app/src/main/res/layout/activity_login.xml" value="0.36826524084485074" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.324310302734375" />
         <entry key="app/src/main/res/layout/activity_main2.xml" value="0.14235055724417425" />
         <entry key="app/src/main/res/layout/activity_register.xml" value="0.44428710937500004" />
@@ -36,8 +36,8 @@
         <entry key="app/src/main/res/layout/fragment_login.xml" value="0.19022327367810235" />
         <entry key="app/src/main/res/layout/fragment_profile.xml" value="0.42566280135189194" />
         <entry key="app/src/main/res/layout/fragment_profile_menu.xml" value="0.20088432422582653" />
-        <entry key="app/src/main/res/layout/fragment_recipe_details.xml" value="0.2011664717726221" />
-        <entry key="app/src/main/res/layout/fragment_recipe_search.xml" value="0.3265625" />
+        <entry key="app/src/main/res/layout/fragment_recipe_details.xml" value="0.4058722823194971" />
+        <entry key="app/src/main/res/layout/fragment_recipe_search.xml" value="0.3469390869140625" />
         <entry key="app/src/main/res/layout/fragment_register.xml" value="0.41893115942028986" />
         <entry key="app/src/main/res/layout/fragment_social_feed.xml" value="0.37144673665364586" />
         <entry key="app/src/main/res/layout/fragment_upload.xml" value="0.17231343587239584" />
